@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnostic Experiment</title>
+    <!--title>
+          This is the advisor choice experiment with reliability changes
+    </title> -->
+    <script type="text/javascript">
+        window.prolificID = window.location.search.match('[?&]PROLIFIC_PID=\\w+');
+        if(prolificID !== null)
+            prolificID = prolificID[0].substring(14);
+        // redirect if we don't have consent for participation
+        let consent = window.location.search.match("[?&]consent=true");
+        if(consent === null) {
+            redirectURL = "../consent.html?study=AdvisorChoice";
+            if(prolificID !== null)
+                redirectURL += "&PROLIFIC_PID=" + prolificID;
+            window.location.replace(redirectURL); // simulate redirect (no history)
+        }
+    </script>
+    <script src="../src/sha1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../src/bowser.min.js"></script>
+    <link rel="shortcut icon" href="#" />
+</head>
+<body class="jspsych-display-element" tabindex="0" style="margin: 0; height: 100%; width: 100%;">
+    <div class="jspsych-content-wrapper" style="height: 100vh;">
+        <div id="jspsych-content" class="jspsych-content">
+            <h1 id="initHeader">Loading...</h1>
+            <p id="initText">If you continue to see this message after around 10 seconds, something has gone wrong. In order to run
+                properly the experiment requires a modern browser with javascript enabled.</p>
+        </div>
+    </div>
+<script type="module">
+    // MAKE CHANGES BELOW
+    // You can control the whole program for here by changing the value
+    // of the parameters here.
+
+    // (If there are comments next to the variable setting, you can change it.)
+    // (If no comments, that variable is not functional yet so LEAVE IT AS IS!)
+
+    const betaTest = true; // If true, only shows a single trial
+    const doInstruct = true; // If true, shows instructions.
+    const doTutorial = true; // If true, shows tutorial of how to use platform.
+    const doQuestionnaire = true; // If true, includes questionnaires. 
+    const demoQuestions = false; // If true, asks participants for age, gender and medical experience.
+    const timeLimit = false; // If true, set a time limit for participants before they are forced to make a decision.
+    const trialTime = 0; // If previous conditional is true, this is the amount of time (in seconds) allotted for each scenario.
+
+    const scenarioFile = 'assets/image/human.jpg'; // filepath for where scenarios are defined.
+    const endRedirectURL = 'https://app.prolific.co/submissions/complete?cc=88EDD1C0'; //What URL to redirect to after the experiment.
+
+    // - Figure out structure of scenario file
+    // - Show initial patient complaint
+    // - Initial hypothesis generation and confidence
+    // - Autopopulated list of diagnoses
+    // - Define set of information tests
+    // - Link file to retrival of information
+    // - Button to lock in answer
+    // - Provide final answer and confidence
+
+</script>
+</body>
+</html>
