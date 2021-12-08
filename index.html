@@ -65,9 +65,9 @@
     // What independent and dependent data variables do we have? 
 
     let numOfTrials = scenarios.length;
-    let hypothesisCondition = 0; // 1: no working diagnosis, 2: initial hypothesis provided, 3: free hypothesis generation
+    let hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
     let shuffledScenarios = utils.shuffle(scenarios);
-    let scenarioOrder = scenarios.map(function(a) {return a.ID;});
+    let scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
     scenarioOrder = scenarioOrder.join('');
 
     // Trial level data
@@ -88,8 +88,46 @@
 
     // Likelihood data?
 
+    ////////////////////////////////////////////
+    ////////////////////////////////////////////
 
-    var startExperiment = Date.now();
+    const conditionNames = ["Non-Directed", "Directed", "Generation"]
+    var startExperimentTime = Date.now();
+
+
+    let exp = new Structure({
+        condition: hypothesisCondition,
+        conditionName: conditionNames[hypothesisCondition],
+        completionURL: endRedirectURL,
+        timeStart: startExperimentTime,
+        date: dateCompleted,
+        order: scenarioOrder,
+        scenarioObject: shuffledScenarios
+    });
+
+
+    const browserInstruct = {
+        type: 'instructions',
+        pages: ["<p>Please do not use the back or forward buttons on your browser during the experiment. Data on your performance will not save until the end of the experiment so do not close your browser unless you would no longer like to participate. Thank you for cooperation!</p>" + "<p>Press Next to begin.</p>"],
+        show_clickable_nav: true
+    };
+
+    const welcome = {
+        type: 'instructions',
+         pages: [
+             "<p>Hello and thank you for participating in this study! " +
+             "In each trial of this task, you will be presented with a patient.</p>"+
+             "<p>You can gather as much information as you want to diagnose the patient's condition" +
+            "<p>Click 'next' to enter fullscreen mode and proceed.</p>"
+        ],
+        show_clickable_nav: true,
+        on_load: ()=>exp.fullscreenMode(),
+        on_finish: (trial)=>{
+            exp.fullscreenMode();
+            exp.storeMiscTrialData(trial);
+        }
+    };
+
 
     jsPsych.init({
     timeline: timeline,
@@ -102,6 +140,8 @@
 
     }
   });
+
+
 
 
 
