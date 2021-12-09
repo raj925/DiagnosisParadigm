@@ -118,21 +118,28 @@
              "<p>Hello and thank you for participating in this study! " +
              "In each trial of this task, you will be presented with a patient.</p>"+
              "<p>You can gather as much information as you want to diagnose the patient's condition" +
-            "<p>Click 'next' to enter fullscreen mode and proceed.</p>"
+            "<p>Click 'next' to proceed.</p>"
         ],
         show_clickable_nav: true,
         on_load: ()=>exp.fullscreenMode(),
         on_finish: (trial)=>{
             exp.fullscreenMode();
-            exp.storeMiscTrialData(trial);
         }
     };
+
+    const mainTrial = {
+        type: 'diagnosis',
+        on_load: ()=>{
+            exp.fullscreenMode();
+            exp.setupInterface(exp.currentTrial.trialInfoSet);
+        }
+    }
 
 
     jsPsych.init({
     timeline: timeline,
     preload_images: images,
-    show_preload_progress_bar: false, // hide preload progress bar
+    show_preload_progress_bar: true, // hide preload progress bar
     on_finish: function() {
       var endExperiment = Date.now();
       var expTime = msToMinSec(endExperiment - startExperiment);
