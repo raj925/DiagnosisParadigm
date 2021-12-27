@@ -311,5 +311,5 @@ function stDev(list, population = true) {
 }
 
 
-export {genRandInt, longformDate, mean, msToMinSec, noDragSlider, round, shuffle, stDev}
+//export {genRandInt, longformDate, mean, msToMinSec, noDragSlider, round, shuffle, stDev}
 

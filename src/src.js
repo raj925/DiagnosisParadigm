@@ -1,6 +1,6 @@
 "use strict";
 
-import * as utils from "./utils.js"
+//import * as utils from "./utils.js"
 
 /**
  * A Trial aggregates the information needed to run a single judge-advisor system trial.
@@ -19,6 +19,7 @@ class Trial
         this.scenarioID = typeof args.scenarioID === 'undefined'? null : args.scenarioID;
         this.trueCondition = typeof args.trueCondition === 'undefined'? null : args.trueCondition;
         this.trialInfoSet = typeof args.trialInfoSet === 'undefined'? {} : args.trialInfoSet;
+        this.trialCost = typeof args.trialCost === 'undefined'? 0 : args.trialCost
     }
 }
 
@@ -35,16 +36,12 @@ class Structure {
      */
 	constructor(args = {}) 
 	{
-        for (let key in args) {
-            if (args.hasOwnProperty(key))
-                this[key] = args[key];
-        }
         this.numOfTrials = args.numOfTrials || 0;
         this.currentTrialIndex = args.currentTrialIndex || 0;
         this.completionURL = typeof args.completionURL === 'undefined'? '' : args.completionURL;
         this.timeStart = typeof args.timeStart === 'undefined' ? (new Date).getTime(): args.timeStart;
-        this.scenarioObject = typeof args.scenarioObject === 'undefined' ? {} : args.scenarioObject;
-        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Governor.addTrials(numOfTrials);
+        this.scenarioObject = typeof args.scenarioObject === 'undefined'? [] : args.scenarioObject;
+        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials);
     }
 
      /**
@@ -52,14 +49,15 @@ class Structure {
      * @param {Object[]} trials - trials stored as JSON-compressed objects
      * @return {Trial[]} - trials expanded to be Trial objects
      */
-    static addTrials(len) 
+    static addTrials(scenarioObject, len) 
     {
         let out = [];
         for(let i=0; i<len; i++) {
             out[i] = new Trial(i+1, {
             	scenarioID: scenarioObject[i]["ID"], 
             	trueCondition: scenarioObject[i]["True Condition"], 
-            	trialInfoSet: ((scenarioObject[i]).delete["True Condition"]).delete["ID"];
+            	//trialInfoSet: ((scenarioObject[i]).delete["True Condition"]).delete["ID"]
+              trialInfoSet: scenarioObject[i]
             });
         }
         return out;
@@ -162,9 +160,9 @@ class Structure {
       let btn;
       let count = 1;
       let alphabet = "abcdefghijklmnopqrstuvwxyz";
-      for key in trialObject
+      for (key in trialObject)
       {
-
+        console.log(key);
       	btn = document.createElement("button");
       	btn.innerHTML = key;
       	btn.id = "Category" + (key.replace(/\s/g, ''));
@@ -176,7 +174,7 @@ class Structure {
       		// for loop on test buttons
       		let testObject = trialObject[btn.innerHTML];
       		let innerValue = 1;
-      		for innerKey in testObject 
+      		for (innerKey in testObject) 
       		{
       			innerBtn = document.createElement("button");
       			innerBtn.innerHTML = innerKey;
@@ -184,6 +182,7 @@ class Structure {
       			innerBtn.value = alphabet[innerValue];
       			innerBtn.onclick = function ()
       			{
+
       				// show result of test
       				// record click in trial data
       			}

@@ -125,7 +125,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60
@@ -287,7 +287,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60
@@ -449,7 +449,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60
@@ -611,7 +611,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60
@@ -773,7 +773,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60
@@ -935,7 +935,7 @@ let scenarios = [
             "Output": "Image required",
             "Duration": 180
         }
-    }
+    },
     "Patient Chart": {
             "Output": "Image required",
             "Duration": 60

@@ -5,19 +5,24 @@
     <!--title>
           This is the advisor choice experiment with reliability changes
     </title> -->
+    <script src="/src/utils.js"></script>
+    <script src="/src/scenarioFile.js"></script>
+    <script src="/src/src.js"></script>
     <script type="text/javascript">
-        const chars = utils.shuffle(["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","1","2","3","4","5","6","7","8","9"]);
+        const chars = shuffle(["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","1","2","3","4","5","6","7","8","9"]);
         const participantID = (chars.slice(1,7)).join('');
         // redirect if we don't have consent for participation
         let consent = window.location.search.match("[?&]consent=true");
         if(consent === null) {
             let redirectURL = "consent.html";
-            redirectURL += "&ParticipantID=" + participantID;
+            redirectURL += "?ParticipantID=" + participantID;
             window.location.replace(redirectURL); // simulate redirect (no history)
         }
     </script>
-    <script src="/src/utils.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/jspsych/dist/jspsych.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-image-button-response.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-instructions.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style/styleIST.css"/>
     <link rel="shortcut icon" href="#" />
 </head>
@@ -45,7 +50,6 @@
     const timeLimit = false; // If true, set a time limit for participants before they are forced to make a decision.
     const trialTime = 0; // If previous conditional is true, this is the amount of time (in seconds) allotted for each scenario.
 
-    const scenarioFile = 'assets/image/human.jpg'; // filepath for where scenarios are defined.
     const endRedirectURL = 'https://bbc.co.uk'; //What URL to redirect to after the experiment.
 
     // - Show initial patient complaint
@@ -60,15 +64,18 @@
     let yearsOfMedicalExperience;
     let gender;
     let age;
-    let dateCompleted = utils.longformDate();
+    let dateCompleted = longformDate();
 
     // What independent and dependent data variables do we have? 
-
-    let numOfTrials = scenarios.length;
     let hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
-    let shuffledScenarios = utils.shuffle(scenarios);
+    let shuffledScenarios = shuffle(scenarios);
     let scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
     scenarioOrder = scenarioOrder.join('');
+    let buttons = shuffledScenarios[0];
+    buttons = Object.keys(buttons);
+    buttons.splice(buttons.indexOf("ID"), 1);
+    buttons.splice(buttons.indexOf("True Condition"), 1);
+    buttons.push("RECORD FINAL DIAGNOSIS")
 
     // Trial level data
     let numOfTestsArray;
@@ -79,7 +86,6 @@
 
     // Aggregate data
     let correctTrials;
-    let accuracy = correctTrials/numOfTrials;
     let meanNumOfTests;
     let meanTestTime;
     let meanTrialTime;
@@ -92,28 +98,35 @@
     ////////////////////////////////////////////
 
     const conditionNames = ["Non-Directed", "Directed", "Generation"]
+    let numOfScenarios = scenarios.length;
     var startExperimentTime = Date.now();
+    let timeline = [];
 
 
     let exp = new Structure({
-        condition: hypothesisCondition,
-        conditionName: conditionNames[hypothesisCondition],
-        completionURL: endRedirectURL,
+    	numOfTrials: numOfScenarios,
+    	currentTrialIndex: 0,
+    	completionURL: endRedirectURL,
         timeStart: startExperimentTime,
+        scenarioObject: shuffledScenarios,
         date: dateCompleted,
         order: scenarioOrder,
-        scenarioObject: shuffledScenarios
+        condition: hypothesisCondition,
+        conditionName: conditionNames[hypothesisCondition]
     });
+
+    console.log(exp.currentTrial.trialInfoSet);
 
 
     const browserInstruct = {
-        type: 'instructions',
+        type: jsPsychInstructions,
         pages: ["<p>Please do not use the back or forward buttons on your browser during the experiment. Data on your performance will not save until the end of the experiment so do not close your browser unless you would no longer like to participate. Thank you for cooperation!</p>" + "<p>Press Next to begin.</p>"],
-        show_clickable_nav: true
+        show_clickable_nav: false,
+        allow_backward: false
     };
 
     const welcome = {
-        type: 'instructions',
+        type: jsPsychInstructions,
          pages: [
              "<p>Hello and thank you for participating in this study! " +
              "In each trial of this task, you will be presented with a patient.</p>"+
@@ -121,6 +134,7 @@
             "<p>Click 'next' to proceed.</p>"
         ],
         show_clickable_nav: true,
+        allow_backward: false,
         on_load: ()=>exp.fullscreenMode(),
         on_finish: (trial)=>{
             exp.fullscreenMode();
@@ -128,25 +142,38 @@
     };
 
     const mainTrial = {
-        type: 'diagnosis',
+        type: jsPsychImageButtonResponse,
+        stimulus: '',
+    	choices: buttons,
+    	response_ends_trial: false,
+    	scenarioObject: exp.currentTrial.trialInfoSet,
+    	prompt: "<p>Click a button to gather information or click RECORD FINAL DIAGNOSIS to report your final answer.</p>",
         on_load: ()=>{
             exp.fullscreenMode();
-            exp.setupInterface(exp.currentTrial.trialInfoSet);
+            //exp.setupInterface(exp.currentTrial.trialInfoSet);
         }
     }
 
+    timeline.push(welcome);
+    //timeline.push(mainTrial);
 
-    jsPsych.init({
-    timeline: timeline,
-    preload_images: images,
-    show_preload_progress_bar: true, // hide preload progress bar
-    on_finish: function() {
-      var endExperiment = Date.now();
-      var expTime = msToMinSec(endExperiment - startExperiment);
-      // add all experimental details to aggregateObject
-
+    for (let i = 0; i < numOfScenarios; i ++)
+    {
+    	timeline.push(mainTrial);
     }
-  });
+
+
+   	//const jsPsych = initJsPsych();
+	const jsPsych = initJsPsych({
+	  //preload_images: images,
+	  show_preload_progress_bar: false,
+	  on_finish: function(){
+	  	var endExperimentTime = Date.now();
+      	var expTime = msToMinSec(endExperimentTime - startExperimentTime);
+	    jsPsych.data.displayData();
+	}});
+
+    jsPsych.run(timeline);
 
 
 
