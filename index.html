@@ -23,6 +23,10 @@
     <script src="/jspsych/dist/jspsych.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-image-button-response.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-instructions.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-survey-multi-choice.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-survey-multi-select.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-survey-text.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-canvas-slider-response.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style/styleIST.css"/>
     <link rel="shortcut icon" href="#" />
 </head>
@@ -52,13 +56,18 @@
 
     const endRedirectURL = 'https://bbc.co.uk'; //What URL to redirect to after the experiment.
 
-    // - Show initial patient complaint
-    // - Initial hypothesis generation and confidence
-    // - Autopopulated list of diagnoses
-    // - Define set of information tests
-    // - Link file to retrival of information
-    // - Button to lock in answer
-    // - Provide final answer and confidence
+    // 1. Show extra options upon click at top level
+    // 2. Show information when a test is performed
+    // 3. Allow for recording of final diagnosis, with list
+    // 4. Allow for generation of hypotheses at the start
+    // 5. Confidence recording with final response
+    // 6. Intermittently ask for likelihood of top N diagnoses
+    // 7. Record clicks on tests
+    // 8. Calculate overall fields
+    // 9. Export data
+    // 10. Debrief questionnaire
+    // 11. Allow for different hypothesis modes (maybe add suggested hypothesis to data file)
+    // 12. Demographic questionnaire (medical experience, gender, age)
 
     // Demographic data
     let yearsOfMedicalExperience;
@@ -114,10 +123,7 @@
         condition: hypothesisCondition,
         conditionName: conditionNames[hypothesisCondition]
     });
-
-    console.log(exp.currentTrial.trialInfoSet);
-
-
+    
     const browserInstruct = {
         type: jsPsychInstructions,
         pages: ["<p>Please do not use the back or forward buttons on your browser during the experiment. Data on your performance will not save until the end of the experiment so do not close your browser unless you would no longer like to participate. Thank you for cooperation!</p>" + "<p>Press Next to begin.</p>"],
@@ -141,7 +147,23 @@
         }
     };
 
-    const mainTrial = {
+    const hypothesisGeneration = {
+        type: jsPsychSurveyMultiSelect,
+        stimulus: '',
+        options: diagnoses,
+        required: true,
+        hozizontal: false,
+        button_label: "Submit",
+        prompt: "<p>Choose from the list below any diagnoses you feel are plausible at this stage.</p>",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (pluginData)=>{
+            exp.storePluginData(pluginData);
+        }
+    }
+
+    const infoSeeking = {
         type: jsPsychImageButtonResponse,
         stimulus: '',
     	choices: buttons,
@@ -150,16 +172,67 @@
     	prompt: "<p>Click a button to gather information or click RECORD FINAL DIAGNOSIS to report your final answer.</p>",
         on_load: ()=>{
             exp.fullscreenMode();
-            //exp.setupInterface(exp.currentTrial.trialInfoSet);
+        },
+        on_finish: (pluginData)=>{
+            exp.storePluginData(pluginData);
         }
     }
 
-    timeline.push(welcome);
-    //timeline.push(mainTrial);
+    const finalDiagnosis = {
+        type: jsPsychSurveyMultiChoice,
+        stimulus: '',
+        questions: [{
+          prompt: "Choose from the list below to record your final diagnosis.", 
+          name: 'finalDiagnosis', 
+          options: shuffle(diagnoses), 
+          required: true
+        }],
+        button_label: "Submit",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (pluginData)=>{
+            exp.storePluginData(pluginData);
+        }
+    }
 
-    for (let i = 0; i < numOfScenarios; i ++)
+    const confidence = {
+        type: jsPsychCanvasSliderResponse,
+        stimulus: '',
+        labels: ["Not At All Confident", "Fully Confident"],
+        require_movement: false,
+        prompt: "<p>Record your confidence in your diagnosis below.</p>",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (pluginData)=>{
+            exp.currentTrialIndex++;
+            exp.storePluginData(pluginData);
+        }
+    }
+
+    const debrief = {
+        type: jsPsychSurveyText,
+        preamble: "Please take some time to answer a couple of final questions.",
+        questions: ["What do you think this study was investigating?", "What was your general thought process when approaching this task?"],
+        button_label: "Finish",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (pluginData)=>{
+            exp.storePluginData(pluginData);
+            jsPsych.finishTrial(exp);
+        }
+    }
+
+    let trial = [infoSeeking, finalDiagnosis, confidence];
+
+    timeline.push(welcome);
+    //timeline.push(trial);
+
+    for (let i = 0; i < numOfScenarios; i++)
     {
-    	timeline.push(mainTrial);
+    	timeline.push({timeline: trial});
     }
 
 
@@ -174,11 +247,6 @@
 	}});
 
     jsPsych.run(timeline);
-
-
-
-
-
 
 </script>
 </body>

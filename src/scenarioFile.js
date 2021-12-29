@@ -40,17 +40,17 @@ let scenarios = [
             "Duration": 30
         },
     	"3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID1ECG3Channel.jpg",
             "Duration": 90
         },
     	"12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID1ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
     	"X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID1XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -76,27 +76,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "I feel my heart rate rising. I can hardly breathe and feel pressure on my chest.",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "Very suddenly, doctor, 10 minutes ago.",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "Yes, high blood pressure, diabetes and joint pains.",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "I take Norvasc for my blood pressure and something for my joints. And water pill.",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Only Penicillin.",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "No, Doctor.",
             "Duration": 20
         },
     },
@@ -106,7 +106,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID1XRAYThoraxPrevious.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -126,10 +126,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",
@@ -202,17 +202,17 @@ let scenarios = [
             "Duration": 30
         },
         "3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID2ECG3Channel.jpg",
             "Duration": 90
         },
         "12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID2ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
         "X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID2XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -238,27 +238,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "Coughing and shortness of breath.",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "It started in the last few days.",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "High blood pressure and diabetes.",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "I have an inhaler with Salbutamol. And I have heart pill and water pill.",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Only Penicillin.",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "Had it once 2 years ago in the winter. But that surely cam from smoking.",
             "Duration": 20
         },
     },
@@ -268,7 +268,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID2XRAYPreviousThorax.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -288,10 +288,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",
@@ -364,17 +364,17 @@ let scenarios = [
             "Duration": 30
         },
         "3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID3ECG3Channel.jpg",
             "Duration": 90
         },
         "12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID3ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
         "X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID3XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -400,27 +400,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "Shortness of breath and pressure on my chest.",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "Started only today.",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "High blood pressure and diabetes.",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "I take the water pill and something for joint pain.",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Penicillin",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "No, never this bad before.",
             "Duration": 20
         },
     },
@@ -430,7 +430,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID3XRAYThoraxPrevious.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -450,10 +450,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",
@@ -526,17 +526,17 @@ let scenarios = [
             "Duration": 30
         },
         "3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID4ECG3Channel.jpg",
             "Duration": 90
         },
         "12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID4ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
         "X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID4XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -562,27 +562,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "I feel very weak. And I think I have a fever. Also a cough.",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "In the last few days.",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "Only high blood pressure and some diabetes and gout.",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "The heart pill, B-lock, water-pill, Torem I think and Norvasc, and something for my joint pains.",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Penicillin",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "No never this bad.",
             "Duration": 20
         },
     },
@@ -592,7 +592,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID4XRAYThoraxPrevious.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -612,10 +612,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",
@@ -688,17 +688,17 @@ let scenarios = [
             "Duration": 30
         },
         "3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID5ECG3Channel.jpg",
             "Duration": 90
         },
         "12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID5ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
         "X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID5XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -724,27 +724,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "There is some pressure on my chest and I feel I am short of breath. Sometimes my heart stumbles.",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "Started very suddenly half an hour ago.",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "I have always had high blood pressure and diabetes and gout. And I had thrombosis in the past.",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "Heart-pill, B-lock, Torem, Norvasc and something for joint pains.",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Penicillin",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "No",
             "Duration": 20
         },
     },
@@ -754,7 +754,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID5XRAYThoraxPrevious.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -774,10 +774,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",
@@ -850,17 +850,17 @@ let scenarios = [
             "Duration": 30
         },
         "3-channel ECG": {
-            "Output": "Image required",
+            "Output": "ID6ECG3Channel.jpg",
             "Duration": 90
         },
         "12-lead ECG": {
-            "Output": "Image required",
+            "Output": "ID6ECG12Channel.jpg",
             "Duration": 180
         }
     },
     "Further Diagnostics": {
         "X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID6XRAYThorax.jpg",
             "Duration": 1200
         },
         "Arterial ABG": {
@@ -886,27 +886,27 @@ let scenarios = [
     },
     "Patient Interview": {
         "Any current complaints?": {
-            "Output": "Audio required",
+            "Output": "Patient moans in response",
             "Duration": 20
         },
         "When did the current complaints start?": {
-            "Output": "Audio required",
+            "Output": "I have pain right now",
             "Duration": 20
         },
         "Pre-existing conditions": {
-            "Output": "Audio required",
+            "Output": "High blood pressure",
             "Duration": 20
         },
         "Home medication?": {
-            "Output": "Audio required",
+            "Output": "Heart-pill, Torem, Norvasc",
             "Duration": 20
         },
         "Allergies?": {
-            "Output": "Audio required",
+            "Output": "Penicillin",
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Audio required",
+            "Output": "Only after surgery",
             "Duration": 20
         },
     },
@@ -916,7 +916,7 @@ let scenarios = [
             "Duration": 60
         },
         "Previous X-ray Thorax": {
-            "Output": "Image required",
+            "Output": "ID6XRAYThoraxPrevious.jpg",
             "Duration": 60
         },
         "OP Protocol": {
@@ -936,10 +936,10 @@ let scenarios = [
             "Duration": 180
         }
     },
-    "Patient Chart": {
-            "Output": "Image required",
-            "Duration": 60
-    },
+    // "Patient Chart": {
+    //         "Output": "Image required",
+    //         "Duration": 60
+    // },
     "First Measures": {
         "Storage": {
             "Output": "Image required",

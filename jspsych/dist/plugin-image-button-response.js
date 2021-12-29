@@ -90,7 +90,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
           scenarioObject: {
               type: Object,
               pretty_name: "Trial Object",
-              default: true,
+              default: {},
           }
       },
   };
@@ -284,24 +284,80 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   var btn_el = e.currentTarget;
                   var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
                   var txt = btn_el.textContent || btn_el.innerText;
-                  if (!typeof document.querySelector('p') === 'undefined')
+                  var canvas = document.querySelector('#jspsych-content');
+                  if (canvas.querySelector('p') != null)
                   {
-                    document.querySelector('p').remove();
+                    canvas.querySelector('p').remove();
                   }
-                  console.log(trial.scenarioObject);
+                  if (canvas.querySelector('img') != null)
+                  {
+                    canvas.querySelector('img').remove();
+                  }
+                  if (canvas.querySelector('#currentRes') != null)
+                  {
+                    canvas.querySelector('#currentRes').remove();
+                  }
+                  if (canvas.querySelector('#jspsych-image-button-response-btngrouplevel2') != null)
+                  {
+                    canvas.querySelector('#jspsych-image-button-response-btngrouplevel2').remove();
+                  }
                   display_element.querySelector("#jspsych-image-button-response-stimulus").className +=
                   " responded";
                   if (txt == "RECORD FINAL DIAGNOSIS")
                   {
-                    var btns = document.querySelectorAll(".jspsych-image-button-response-button button");
-                    for (var i = 0; i < btns.length; i++) 
+                    var end_time = performance.now();
+                    var rt = Math.round(end_time - start_time);
+                    response.button = parseInt(choice);
+                    response.rt = rt;
+                    end_trial();
+                  }
+                  else
+                  {
+                    let testObject = trial.scenarioObject[txt];
+                    let divGroup;
+                    let canvas = document.querySelector("#jspsych-content");
+                    if (typeof document.querySelector("#jspsych-image-button-response-btngrouplevel2" === 'undefined'))
                     {
-                      btns[i].setAttribute("disabled", "disabled");
-                      var end_time = performance.now();
-                      var rt = Math.round(end_time - start_time);
-                      response.button = parseInt(choice);
-                      response.rt = rt;
-                      end_trial();
+                      divGroup = canvas.appendChild(document.createElement('div'));
+                      divGroup.id = "jspsych-image-button-response-btngrouplevel2";
+                    }
+                    else
+                    {
+                      divGroup = document.querySelector("#jspsych-image-button-response-btngrouplevel2");
+                    }
+                    let count = 1;
+                    let alphabet = "abcdefghijklmnopqrstuvwxyz";
+                    for (const [innerkey, value] of Object.entries(testObject)) 
+                    {
+                      let btnDiv = divGroup.appendChild(document.createElement("div"));
+                      btnDiv.className = "jspsych-image-button-response-button";
+                      btnDiv.id = "jspsych-image-button-response-button-level2-" + count;
+                      let innerBtn = btnDiv.appendChild(document.createElement("button"));
+                      innerBtn.innerHTML = innerkey;
+                      innerBtn.id = "Test" + (innerkey.replace(/\s/g, ''));
+                      innerBtn.className = "jspsych-btn"
+                      innerBtn.value = alphabet[count];
+                      innerBtn.style = "display: inline-block; margin:5px 8px";
+                      innerBtn.addEventListener("click", (e) => 
+                      {
+                        let output = testObject[innerkey]["Output"];
+
+                        if (output.includes(".jpg"))
+                        {
+                          let testRes = innerBtn.appendChild(document.createElement("img"));
+                          img.src = "./assets/" + output;
+                          img.style = "height: 10em; width: 10em";
+                        }
+
+                        else
+                        {
+                          // need to add different test results depending on image/text/audio
+                          let testRes = innerBtn.appendChild(document.createElement("p"));
+                          testRes.innerHTML = output
+                          testRes.id = "currentRes";
+                        }
+                      });
+                      count = count + 1;
                     }
                   }
               });

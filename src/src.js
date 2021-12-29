@@ -155,41 +155,15 @@ class Structure {
        // ask.send(info);
     }
 
-    setupInterface(trialObject)
-    {
-      let btn;
-      let count = 1;
-      let alphabet = "abcdefghijklmnopqrstuvwxyz";
-      for (key in trialObject)
-      {
-        console.log(key);
-      	btn = document.createElement("button");
-      	btn.innerHTML = key;
-      	btn.id = "Category" + (key.replace(/\s/g, ''));
-      	btn.value = count;
-      	btn.onclick = function () 
-      	{
-      		var tests = document.querySelectorAll('[id^="Test"]');
-      		tests.classList.add('hidden');
-      		// for loop on test buttons
-      		let testObject = trialObject[btn.innerHTML];
-      		let innerValue = 1;
-      		for (innerKey in testObject) 
-      		{
-      			innerBtn = document.createElement("button");
-      			innerBtn.innerHTML = innerKey;
-      			innerBtn = "Test" + (innerKey.replace(/\s/g, ''));
-      			innerBtn.value = alphabet[innerValue];
-      			innerBtn.onclick = function ()
-      			{
-
-      				// show result of test
-      				// record click in trial data
-      			}
-      		}
-      	}
-      	count = count + 1;
-      	document.body.appendChild(btn);
-      }
+        /**
+     * Save the data sent from the plugin in the Trial object
+     *
+     * @param {Object} pluginData - response data sent by a jsPsych plugin
+     */
+    storePluginData(pluginData) {
+        if (Object.keys(this.currentTrial).indexOf('pluginResponse') === -1)
+            this.currentTrial.pluginResponse = [];
+        // Save this trial data (jspsych would do this for us, but we have access to a bunch of stuff it doesn't
+        this.currentTrial.pluginResponse.push(pluginData);
     }
 }

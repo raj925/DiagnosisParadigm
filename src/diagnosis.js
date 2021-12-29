@@ -96,7 +96,6 @@ jsPsych.plugins["diagnosis"] = (function() {
         // function to end trial when it is time
         function end_trial() {
             response.totalTime = performance.now() - start_time;
-            response.adviceTime = response.totalTime - response.choiceTime;
 
             // kill any remaining setTimeout handlers
             jsPsych.pluginAPI.clearAllTimeouts();
