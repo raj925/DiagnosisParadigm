@@ -1,6 +1,7 @@
 "use strict";
 
 //import * as utils from "./utils.js"
+//import processData from "./saveData.js";
 
 /**
  * A Trial aggregates the information needed to run a single judge-advisor system trial.
@@ -100,6 +101,54 @@ class Structure {
             else if (document.msExitFullscreen)  /* IE/Edge */
                 document.msExitFullscreen();
         }
+    }
+
+    processData(data) 
+    {
+        // Data about the participant
+        let participantData = {
+            id: data.participantId,
+            groupId: typeof data.groupId === 'undefined'? null : data.groupId,
+            blockCount: data.blockCount,
+            blockLength: data.blockLength,
+            difficultyStep: data.difficultyStep,
+            dotCount: data.dotCount,
+            preTrialInterval: data.preTrialInterval,
+            preStimulusInterval: data.preStimulusInterval,
+            stimulusDuration: data.stimulusDuration,
+            feedbackDuration: data.feedbackDuration,
+            changeDuration: data.changeTime,
+            timeStart: data.timeStart,
+            timeEnd: data.timeEnd,
+            experimentDuration: data.timeEnd - data.timeStart
+        };
+
+        // Questionnaires
+        let questionnaireData = [];
+        if(typeof data.questionnaires !== 'undefined')
+            for (let q=0; q<data.questionnaires.length; q++)
+                if(data.questionnaires[q])
+                {
+                    questionnaireData.push(flattenQuestionnaireData(data.questionnaires[q], participantData.id))
+                }
+        participantData.questionnaires = questionnaireData;
+
+        // Trials
+        let trialData = [];
+        for (let t=0; t<data.trials.length; t++)
+            trialData.push(flattenTrialData(data.trials[t], participantData.id));
+        participantData.trials = trialData;
+
+        // Debrief stuff
+        participantData.debrief = [];
+        if(typeof data.debrief !== 'undefined') {
+            if(data.debrief)
+            {
+                participantData.debrief = flattenDebriefData(data.debrief, participantData.id);
+            }
+        }
+
+        return participantData;
     }
 
     /**

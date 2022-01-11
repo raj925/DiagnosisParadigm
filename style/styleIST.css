@@ -740,6 +740,10 @@ button, .button {
   -webkit-user-select: none;
 }
 
+div.jspsych-image-button-response-button button {
+  color: red;
+}
+
 #jspsych-survey-multi-choice-next {
   display: flex;
   justify-content: center;

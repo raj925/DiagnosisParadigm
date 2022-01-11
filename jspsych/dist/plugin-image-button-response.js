@@ -277,21 +277,18 @@ var jsPsychImageButtonResponse = (function (jspsych) {
           // start timing
           var start_time = performance.now();
           for (var i = 0; i < trial.choices.length; i++) {
-              display_element
-                  .querySelector("#jspsych-image-button-response-button-" + i)
-                  .addEventListener("click", (e) => {
+              let button = display_element.querySelector("#jspsych-image-button-response-button-" + i);
+              button.addEventListener("click", (e) => {
                   // when a button is clicked.
                   var btn_el = e.currentTarget;
                   var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
                   var txt = btn_el.textContent || btn_el.innerText;
                   var canvas = document.querySelector('#jspsych-content');
+                  let img = display_element.querySelector("#jspsych-image-button-response-stimulus");
+                  img.classList.add('hidden');
                   if (canvas.querySelector('p') != null)
                   {
                     canvas.querySelector('p').remove();
-                  }
-                  if (canvas.querySelector('img') != null)
-                  {
-                    canvas.querySelector('img').remove();
                   }
                   if (canvas.querySelector('#currentRes') != null)
                   {
@@ -330,23 +327,33 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                     for (const [innerkey, value] of Object.entries(testObject)) 
                     {
                       let btnDiv = divGroup.appendChild(document.createElement("div"));
-                      btnDiv.className = "jspsych-image-button-response-button";
+                      btnDiv.className = "jspsych-image-button-response-button-level2";
                       btnDiv.id = "jspsych-image-button-response-button-level2-" + count;
                       let innerBtn = btnDiv.appendChild(document.createElement("button"));
                       innerBtn.innerHTML = innerkey;
                       innerBtn.id = "Test" + (innerkey.replace(/\s/g, ''));
                       innerBtn.className = "jspsych-btn"
                       innerBtn.value = alphabet[count];
-                      innerBtn.style = "display: inline-block; margin:5px 8px";
+                      innerBtn.style = "display: inline-block; margin:7px 8px";
                       innerBtn.addEventListener("click", (e) => 
                       {
+                        if (canvas.querySelector('p') != null)
+                        {
+                          canvas.querySelector('p').remove();
+                        }
+                        if (canvas.querySelector('#currentRes') != null)
+                        {
+                          canvas.querySelector('#currentRes').remove();
+                        }
+
                         let output = testObject[innerkey]["Output"];
 
                         if (output.includes(".jpg"))
                         {
                           let testRes = innerBtn.appendChild(document.createElement("img"));
-                          img.src = "./assets/" + output;
-                          img.style = "height: 10em; width: 10em";
+                          testRes.src = "./assets/" + output;
+                          testRes.style = "height: 30em; width: 50em";
+                          testRes.id = "currentRes";
                         }
 
                         else
@@ -355,6 +362,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                           let testRes = innerBtn.appendChild(document.createElement("p"));
                           testRes.innerHTML = output
                           testRes.id = "currentRes";
+                          testRes.style = "color: blue;";
                         }
                       });
                       count = count + 1;

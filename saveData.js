@@ -8,7 +8,7 @@
 
 import {Trial, Advisor, Cue, DoubleDotGrid} from "./exploringSocialMetacognition.js";
 
-export default function processData(data) {
+function processData(data) {
     // Data about the participant
     let participantData = {
         id: data.participantId,
@@ -87,7 +87,6 @@ function flattenTrialData(trial, id) {
     out.participantId = id;
     out.id = trial.id;
     out.block = trial.block;
-    out.practice = trial.practice;
     out.type = trial.type;
     out.typeName = trial.typeName;
     out.dotDifference = trial.dotDifference;

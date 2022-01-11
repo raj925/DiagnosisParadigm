@@ -162,8 +162,11 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                   "</button>";
           display_element.innerHTML = html;
           // draw
-          let c = document.getElementById("jspsych-canvas-stimulus");
-          trial.stimulus(c);
+          if (!typeof trial.stimulus === 'undefined')
+          {
+            let c = document.getElementById("jspsych-canvas-stimulus");
+            trial.stimulus(c);
+          }
           var response = {
               rt: null,
               response: null,

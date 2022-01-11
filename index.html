@@ -59,7 +59,7 @@
     // 1. Show extra options upon click at top level
     // 2. Show information when a test is performed
     // 3. Allow for recording of final diagnosis, with list
-    // 4. Allow for generation of hypotheses at the start
+    // 4. Allow for generation of hypotheses at the start (need to add to scenario file for starting info)
     // 5. Confidence recording with final response
     // 6. Intermittently ask for likelihood of top N diagnoses
     // 7. Record clicks on tests
@@ -202,12 +202,14 @@
         labels: ["Not At All Confident", "Fully Confident"],
         require_movement: false,
         prompt: "<p>Record your confidence in your diagnosis below.</p>",
+        response_ends_trial: true,
         on_load: ()=>{
             exp.fullscreenMode();
         },
         on_finish: (pluginData)=>{
             exp.currentTrialIndex++;
             exp.storePluginData(pluginData);
+            exp.exportGovernor();
         }
     }
 
