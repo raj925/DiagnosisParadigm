@@ -258,7 +258,7 @@ let scenarios = [
             "Duration": 20
         },
         "Have you had these complaints before?": {
-            "Output": "Had it once 2 years ago in the winter. But that surely cam from smoking.",
+            "Output": "Had it once 2 years ago in the winter. But that surely came from smoking.",
             "Duration": 20
         },
     },

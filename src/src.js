@@ -21,6 +21,7 @@ class Trial
         this.trueCondition = typeof args.trueCondition === 'undefined'? null : args.trueCondition;
         this.trialInfoSet = typeof args.trialInfoSet === 'undefined'? {} : args.trialInfoSet;
         this.trialCost = typeof args.trialCost === 'undefined'? 0 : args.trialCost
+
     }
 }
 
@@ -42,6 +43,8 @@ class Structure {
         this.completionURL = typeof args.completionURL === 'undefined'? '' : args.completionURL;
         this.timeStart = typeof args.timeStart === 'undefined' ? (new Date).getTime(): args.timeStart;
         this.scenarioObject = typeof args.scenarioObject === 'undefined'? [] : args.scenarioObject;
+        this.participantID = typeof args.participantID === 'undefined'? "NO_ID" : args.participantID;
+        this.complete = typeof args.complete === 'undefined'? false : args.complete;
         this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials);
     }
 
@@ -57,8 +60,7 @@ class Structure {
             out[i] = new Trial(i+1, {
             	scenarioID: scenarioObject[i]["ID"], 
             	trueCondition: scenarioObject[i]["True Condition"], 
-            	//trialInfoSet: ((scenarioObject[i]).delete["True Condition"]).delete["ID"]
-              trialInfoSet: scenarioObject[i]
+                trialInfoSet: scenarioObject[i]
             });
         }
         return out;
@@ -103,21 +105,56 @@ class Structure {
         }
     }
 
+    saveQuestionnaire(trial)
+    {
+        //this.storePluginData(trial);
+        this.demoQuestionnaire = trial.response;
+    }
+
+    saveHypotheses(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.startingHypotheses = trial.response;
+        this.currentTrial.hypothesisOptions = trial.question_order;
+    }
+
+    saveInfoSeeking(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.requestedTests = trial.response;
+        this.currentTrial.availableTests = trial.tests;
+        this.currentTrial.rts = trial.rt;
+        this.currentTrial.totalInfoSeekingTime = trial.trialTime;
+        this.currentTrial.totalTestDuration = trial.totalTestDuration;
+    }
+
+    saveFinalDiagnosis(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.finalDiagnosis = trial.response;
+        this.currentTrial.finalDiagnosisRT = trial.rt;
+    }
+
+    saveConfidence(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.confidence = trial.response;
+        this.currentTrialIndex++;
+        if (this.currentTrialIndex > this.numOfTrials)
+        {
+            this.complete = true;
+        }
+    }
+
     processData(data) 
     {
         // Data about the participant
         let participantData = {
-            id: data.participantId,
-            groupId: typeof data.groupId === 'undefined'? null : data.groupId,
-            blockCount: data.blockCount,
-            blockLength: data.blockLength,
-            difficultyStep: data.difficultyStep,
-            dotCount: data.dotCount,
-            preTrialInterval: data.preTrialInterval,
-            preStimulusInterval: data.preStimulusInterval,
-            stimulusDuration: data.stimulusDuration,
-            feedbackDuration: data.feedbackDuration,
-            changeDuration: data.changeTime,
+            id: data.participantID,
+            numOfScenarios: data.numOfTrials,
+            completionCheck: data.complete,
+            scenarioOrder: data.order,
+            hypothesisCondition: data.condition,
             timeStart: data.timeStart,
             timeEnd: data.timeEnd,
             experimentDuration: data.timeEnd - data.timeStart
@@ -125,18 +162,18 @@ class Structure {
 
         // Questionnaires
         let questionnaireData = [];
-        if(typeof data.questionnaires !== 'undefined')
-            for (let q=0; q<data.questionnaires.length; q++)
-                if(data.questionnaires[q])
+        if(typeof data.demoQuestionnaire !== 'undefined')
+            for (let q=0; q<data.demoQuestionnaire.length; q++)
+                if(data.demoQuestionnaire[q])
                 {
-                    questionnaireData.push(flattenQuestionnaireData(data.questionnaires[q], participantData.id))
+                    questionnaireData.push(this.flattenQuestionnaireData(data.demoQuestionnaire[q], participantData.id))
                 }
-        participantData.questionnaires = questionnaireData;
+        participantData.demoQuestionnaire = questionnaireData;
 
         // Trials
         let trialData = [];
         for (let t=0; t<data.trials.length; t++)
-            trialData.push(flattenTrialData(data.trials[t], participantData.id));
+            trialData.push(this.flattenTrialData(data.trials[t], participantData.id));
         participantData.trials = trialData;
 
         // Debrief stuff
@@ -144,11 +181,36 @@ class Structure {
         if(typeof data.debrief !== 'undefined') {
             if(data.debrief)
             {
-                participantData.debrief = flattenDebriefData(data.debrief, participantData.id);
+                participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
             }
         }
 
         return participantData;
+    }
+
+    /** Return a trial squeezed into a format suitable for saving as .csv
+     * @param {Trial} trial - trial object to squeeze
+     * @param {int} id - id of the participant (inserted as first column)
+     * @returns {Object} - slim representation of trial object
+     */
+    flattenTrialData(trial, id) 
+    {
+        let out = {};
+        out.participantID = id;
+        out.scenarioID = trial.id;
+        out.trueCondition = trial.trueCondition;
+        out.startingHypotheses = trial.startingHypotheses;
+        out.hypothesisOptions = trial.hypothesisOptions;
+        out.requestedTests = trial.requestedTests;
+        out.availableTests = trial.availableTests;
+        out.rts = trial.rts;
+        out.totalInfoSeekingTime = trial.totalInfoSeekingTime;
+        out.totalTestDuration = trial.totalTestDuration;
+        out.finalDiagnosis = trial.finalDiagnosis;
+        out.finalDiagnosisRT = trial.finalDiagnosisRT;
+        out.confidence = trial.confidence;
+
+        return out;
     }
 
     /**
@@ -159,7 +221,7 @@ class Structure {
     {
         return {
             rawData: JSON.stringify(this),
-            processedData: JSON.stringify(processData(this))
+            processedData: JSON.stringify(this.processData(this))
         }
     }
 

@@ -25,6 +25,7 @@
     <script src="/jspsych/dist/plugin-instructions.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-survey-multi-choice.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-survey-multi-select.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-survey-multi-select-limit.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-survey-text.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-canvas-slider-response.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style/styleIST.css"/>
@@ -51,8 +52,12 @@
     const doTutorial = true; // If true, shows tutorial of how to use platform.
     const doQuestionnaire = true; // If true, includes questionnaires. 
     const demoQuestions = false; // If true, asks participants for age, gender and medical experience.
+    const doDebrief = false; // If true, run debrief questionnaire at the end.
     const timeLimit = false; // If true, set a time limit for participants before they are forced to make a decision.
     const trialTime = 0; // If previous conditional is true, this is the amount of time (in seconds) allotted for each scenario.
+    const hypothesisGenerationTrials = true; // If true, run trials with starting part where participants say which diagnoses they are considering at the start.
+    const doLikelihoodEstimates = true;
+    const topXLikelihood = 3;
 
     const endRedirectURL = 'https://bbc.co.uk'; //What URL to redirect to after the experiment.
 
@@ -110,6 +115,9 @@
     let numOfScenarios = scenarios.length;
     var startExperimentTime = Date.now();
     let timeline = [];
+    const queryString = window.location.search;
+    var pid = queryString.split("ParticipantID=")[1];
+    console.log(pid);
 
 
     let exp = new Structure({
@@ -121,7 +129,9 @@
         date: dateCompleted,
         order: scenarioOrder,
         condition: hypothesisCondition,
-        conditionName: conditionNames[hypothesisCondition]
+        conditionName: conditionNames[hypothesisCondition],
+        complete: false,
+        participantID: pid
     });
     
     const browserInstruct = {
@@ -147,19 +157,36 @@
         }
     };
 
-    const hypothesisGeneration = {
-        type: jsPsychSurveyMultiSelect,
-        stimulus: '',
-        options: diagnoses,
-        required: true,
-        hozizontal: false,
-        button_label: "Submit",
-        prompt: "<p>Choose from the list below any diagnoses you feel are plausible at this stage.</p>",
+    const demoQuestionnaire = {
+      type: jsPsychSurveyText,
+      questions: [
+        {prompt: 'Please input your age', required: true},
+        {prompt: 'Please input your gender', required: true},
+        {prompt: 'Please input how many years of medical experience you have', required: true}
+      ],
         on_load: ()=>{
             exp.fullscreenMode();
         },
-        on_finish: (pluginData)=>{
-            exp.storePluginData(pluginData);
+        on_finish: (trial)=>{
+            exp.saveQuestionnaire(trial);
+        }
+    }
+
+    const hypothesisGeneration = {
+        type: jsPsychSurveyMultiSelect,
+        questions: [{
+          prompt: "Choose from the list below any diagnoses you feel are plausible at this stage.", 
+          name: 'initalDiagnoses', 
+          options: shuffle(diagnoses), 
+          required: true
+        }],
+        hozizontal: false,
+        button_label: "Submit",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.saveHypotheses(trial);
         }
     }
 
@@ -173,9 +200,29 @@
         on_load: ()=>{
             exp.fullscreenMode();
         },
-        on_finish: (pluginData)=>{
-            exp.storePluginData(pluginData);
+        on_finish: (trial)=>{
+            exp.saveInfoSeeking(trial);
         }
+    }
+
+    const likelihoodRank = {
+        type: jsPsychSurveyMultiSelectLimit,
+        questions: [{
+          prompt: "Choose from the list below as to what your top " + topXLikelihood + " most likely diagnoses at this stage.", 
+          name: 'initalDiagnoses', 
+          options: shuffle(diagnoses), 
+          required: true
+        }],
+        hozizontal: false,
+        limit: topXLikelihood,
+        button_label: "Submit",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.saveHypotheses(trial);
+        }
+        
     }
 
     const finalDiagnosis = {
@@ -191,8 +238,8 @@
         on_load: ()=>{
             exp.fullscreenMode();
         },
-        on_finish: (pluginData)=>{
-            exp.storePluginData(pluginData);
+        on_finish: (trial)=>{
+            exp.saveFinalDiagnosis(trial);
         }
     }
 
@@ -206,9 +253,8 @@
         on_load: ()=>{
             exp.fullscreenMode();
         },
-        on_finish: (pluginData)=>{
-            exp.currentTrialIndex++;
-            exp.storePluginData(pluginData);
+        on_finish: (trial)=>{
+            exp.saveConfidence(trial);
             exp.exportGovernor();
         }
     }
@@ -221,20 +267,36 @@
         on_load: ()=>{
             exp.fullscreenMode();
         },
-        on_finish: (pluginData)=>{
-            exp.storePluginData(pluginData);
-            jsPsych.finishTrial(exp);
+        on_finish: (trial)=>{
+            jsPsych.finishTrial(trial);
         }
     }
 
     let trial = [infoSeeking, finalDiagnosis, confidence];
 
+    if (hypothesisGenerationTrials == true)
+    {
+        trial.unshift(hypothesisGeneration);
+    }
+
     timeline.push(welcome);
-    //timeline.push(trial);
+
+    if (demoQuestions == true)
+    {
+        timeline.push(demoQuestionnaire);
+    }
+
+    
+    //timeline.push(regTrial);
 
     for (let i = 0; i < numOfScenarios; i++)
     {
     	timeline.push({timeline: trial});
+    }
+
+    if (doDebrief == true)
+    {
+        timeline.push(debrief);
     }
 
 

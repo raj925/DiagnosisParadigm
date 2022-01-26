@@ -203,6 +203,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
               }
               // add buttons to screen
               display_element.insertBefore(btngroup_div, canvas.nextElementSibling);
+
               // add prompt if there is one
               if (trial.prompt !== null) {
                   display_element.insertAdjacentHTML("beforeend", trial.prompt);
@@ -276,6 +277,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
           }
           // start timing
           var start_time = performance.now();
+          let count = 1;
           for (var i = 0; i < trial.choices.length; i++) {
               let button = display_element.querySelector("#jspsych-image-button-response-button-" + i);
               button.addEventListener("click", (e) => {
@@ -304,8 +306,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   {
                     var end_time = performance.now();
                     var rt = Math.round(end_time - start_time);
-                    response.button = parseInt(choice);
-                    response.rt = rt;
+                    response.totalTime = parseInt(rt);
                     end_trial();
                   }
                   else
@@ -322,7 +323,6 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                     {
                       divGroup = document.querySelector("#jspsych-image-button-response-btngrouplevel2");
                     }
-                    let count = 1;
                     let alphabet = "abcdefghijklmnopqrstuvwxyz";
                     for (const [innerkey, value] of Object.entries(testObject)) 
                     {
@@ -333,8 +333,9 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                       innerBtn.innerHTML = innerkey;
                       innerBtn.id = "Test" + (innerkey.replace(/\s/g, ''));
                       innerBtn.className = "jspsych-btn"
-                      innerBtn.value = alphabet[count];
+                      innerBtn.value = count;
                       innerBtn.style = "display: inline-block; margin:7px 8px";
+                      (response.tests).push(innerkey);
                       innerBtn.addEventListener("click", (e) => 
                       {
                         if (canvas.querySelector('p') != null)
@@ -346,8 +347,13 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                           canvas.querySelector('#currentRes').remove();
                         }
 
+                        (response.buttons).push(innerBtn.value);
+                        let timeNow = performance.now();
+                        var rt = Math.round(timeNow - start_time);
+                        (response.rt).push(parseInt(rt));
                         let output = testObject[innerkey]["Output"];
-
+                        let duration = testObject[innerkey]["Duration"];
+                        response.totalTestDuration = response.totalTestDuration + duration;
                         if (output.includes(".jpg"))
                         {
                           let testRes = innerBtn.appendChild(document.createElement("img"));
@@ -372,8 +378,11 @@ var jsPsychImageButtonResponse = (function (jspsych) {
           }
           // store response
           var response = {
-              rt: null,
-              button: null,
+              rt: [],
+              buttons: [],
+              tests: [],
+              totalTime: null,
+              totalTestDuration: 0
           };
           // function to end trial when it is time
           const end_trial = () => {
@@ -383,7 +392,9 @@ var jsPsychImageButtonResponse = (function (jspsych) {
               var trial_data = {
                   rt: response.rt,
                   stimulus: trial.stimulus,
-                  response: response.button,
+                  response: response.buttons,
+                  tests: response.tests,
+                  trialTime: response.totalTime
               };
               // clear the display
               display_element.innerHTML = "";
