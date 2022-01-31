@@ -2,6 +2,8 @@ let scenarios = [
   {
     "ID": 1,
   	"True Condition": "Unstable Ventricular Tachycardia",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of Anaphylaxis.",
     "Bedside Tests": {
     	"Take Pulse": {
             "Output": "170/min, regular",
@@ -164,6 +166,8 @@ let scenarios = [
   {
     "ID": 2,
     "True Condition": "Acute Exacerbated COPD",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of a Hypertensive Pulonary Edema.",
     "Bedside Tests": {
         "Take Pulse": {
             "Output": "140/min, regular",
@@ -326,6 +330,8 @@ let scenarios = [
   {
     "ID": 3,
     "True Condition": "Hypertensive Pulmonary Edema",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of a Posterior Myocardial Infarction.",
     "Bedside Tests": {
         "Take Pulse": {
             "Output": "130/min, regular",
@@ -488,6 +494,8 @@ let scenarios = [
   {
     "ID": 4,
     "True Condition": "Pneumonia",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of Anaphylaxis.",
     "Bedside Tests": {
         "Take Pulse": {
             "Output": "130/min, regular",
@@ -650,6 +658,8 @@ let scenarios = [
   {
     "ID": 5,
     "True Condition": "Subacute LAE",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of Endocarditis.",
     "Bedside Tests": {
         "Take Pulse": {
             "Output": "130/min, regular",
@@ -812,6 +822,8 @@ let scenarios = [
   {
     "ID": 6,
     "True Condition": "Opiate Overdose",
+    "Prompt": "Patient presents with shortness of breath and high fever. They feel as if their heart is beating out of their chest.",
+    "Suspected": "Your colleague has been handling the patient with a working hypothesis of Hypoglycemic Shock.",
     "Bedside Tests": {
         "Take Pulse": {
             "Output": "70/min, regular",

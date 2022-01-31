@@ -45,7 +45,8 @@ class Structure {
         this.scenarioObject = typeof args.scenarioObject === 'undefined'? [] : args.scenarioObject;
         this.participantID = typeof args.participantID === 'undefined'? "NO_ID" : args.participantID;
         this.complete = typeof args.complete === 'undefined'? false : args.complete;
-        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials);
+        this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
+        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials, this.expConditionOrder);
     }
 
      /**
@@ -53,13 +54,16 @@ class Structure {
      * @param {Object[]} trials - trials stored as JSON-compressed objects
      * @return {Trial[]} - trials expanded to be Trial objects
      */
-    static addTrials(scenarioObject, len) 
+    static addTrials(scenarioObject, len, expConditions) 
     {
         let out = [];
         for(let i=0; i<len; i++) {
             out[i] = new Trial(i+1, {
             	scenarioID: scenarioObject[i]["ID"], 
-            	trueCondition: scenarioObject[i]["True Condition"], 
+            	trueCondition: scenarioObject[i]["True Condition"],
+                expCondition: expConditions[i],
+                presentation: scenarioObject[i]["Prompt"],  
+                prompt: scenarioObject[i]["Suspected"],  
                 trialInfoSet: scenarioObject[i]
             });
         }
@@ -146,6 +150,27 @@ class Structure {
         }
     }
 
+    saveTopDiagnoses(trial)
+    {
+        this.currentTrial.topDiagnoses = trial.response;
+    }
+
+    getTopDiagnoses()
+    {
+        return this.currentTrial.topDiagnoses;
+    }
+
+    getCaseIntro()
+    {
+        let currentExpCondition = this.currentTrial.expCondition;
+        let prompt = this.currentTrial.presentation;
+        if (currentExpCondition == "Directed")
+        {
+            prompt = prompt + " " + this.currentTrial.prompt;
+        }
+        return prompt;
+    }
+
     processData(data) 
     {
         // Data about the participant
@@ -185,6 +210,25 @@ class Structure {
             }
         }
 
+        if (participantData.completionCheck == true)
+        {
+            let corrects = trials.map(function (el) { return el.correct; });
+            let tests = trials.map(function (el) { return el.numOfRequestedTests; });
+            let testTimes = trials.map(function (el) { return el.totalInfoSeekingTime; });
+            let testDurations = trials.map(function (el) { return el.totalTestDuration; });
+            let confidences = trials.map(function (el) { return el.confidence; });
+            let startingHypotheses = trials.map(function (el) { return el.numOfStartingHypotheses; });
+
+            const average = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
+
+            participantData.overallAccuracy = average(corrects);
+            participantData.meanNumOfTests = average(tests);
+            participantData.meanTestTime = average(testTimes);
+            participantData.meantestDuration = average(testDurations);
+            participantData.meanFinalConfidence = average(confidences);
+            participantData.meanStartingHypotheses = average(startingHypotheses);
+        }
+
         return participantData;
     }
 
@@ -200,15 +244,19 @@ class Structure {
         out.scenarioID = trial.id;
         out.trueCondition = trial.trueCondition;
         out.startingHypotheses = trial.startingHypotheses;
+        out.numOfStartingHypotheses = trial.startingHypotheses.length;
         out.hypothesisOptions = trial.hypothesisOptions;
-        out.requestedTests = trial.requestedTests;
+        out.requestedTestsIdxs = trial.requestedTests;
+        out.requestedTestsText = requestedTestsIdxs.map(i => trial.availableTests[i-1])
+        out.numOfRequestedTests = trial.requestedTests.length;
         out.availableTests = trial.availableTests;
         out.rts = trial.rts;
         out.totalInfoSeekingTime = trial.totalInfoSeekingTime;
         out.totalTestDuration = trial.totalTestDuration;
-        out.finalDiagnosis = trial.finalDiagnosis;
+        out.finalDiagnosis = trial.finalDiagnosis["finalDiagnosis"];
         out.finalDiagnosisRT = trial.finalDiagnosisRT;
         out.confidence = trial.confidence;
+        out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
 
         return out;
     }

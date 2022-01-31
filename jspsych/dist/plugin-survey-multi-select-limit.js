@@ -165,6 +165,8 @@ var jsPsychSurveyMultiSelectLimit = (function (jspsych) {
                       question.prompt +
                       "</p>";
               // create option check boxes
+              let numOfOptions = trial.limit;
+              let numOfSelected = 0;
               for (var j = 0; j < question.options.length; j++) {
                   var option_id_name = _join(plugin_id_name, "option", question_id, j);
                   // add check box container
@@ -184,13 +186,6 @@ var jsPsychSurveyMultiSelectLimit = (function (jspsych) {
                   input.setAttribute("name", input_name);
                   input.setAttribute("id", input_id);
                   input.setAttribute("value", question.options[j]);
-                  input.onclick = function()
-                  {
-                    input.setAttribute("checked", true);
-                    var checkedChecks = document.querySelectorAll("input[type=checkbox&checked=true]");
-                    if (checkedChecks.length >= trial.limit + 1)
-                      return false;
-                  };
                   form.appendChild(label);
                   label.insertBefore(input, label.firstChild);
               }
@@ -226,6 +221,10 @@ var jsPsychSurveyMultiSelectLimit = (function (jspsych) {
               }
               trial_form.reportValidity();
           });
+          let errorStyle = "style='color: red;position: absolute;left: 50%;transform: translate(-50%, -50%);top: 80%;'";
+          let advError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
+          advError.innerHTML = "<div " + errorStyle + ">Please provide exactly " + trial.limit + " diagnoses" + "</div>";
+          advError.classList.add('hidden');
           trial_form.addEventListener("submit", (event) => {
               event.preventDefault();
               // measure response time
@@ -233,6 +232,7 @@ var jsPsychSurveyMultiSelectLimit = (function (jspsych) {
               var response_time = Math.round(endTime - startTime);
               // create object to hold responses
               var question_data = {};
+              var answers;
               for (var index = 0; index < trial.questions.length; index++) {
                   var match = display_element.querySelector("#jspsych-survey-multi-select-" + index);
                   var val = [];
@@ -248,18 +248,30 @@ var jsPsychSurveyMultiSelectLimit = (function (jspsych) {
                       name = match.attributes["data-name"].value;
                   }
                   obje[name] = val;
+                  answers = val;
                   Object.assign(question_data, obje);
                   if (val.length == 0) ;
               }
-              // save data
-              var trial_data = {
-                  rt: response_time,
-                  response: question_data,
-                  question_order: question_order,
-              };
-              display_element.innerHTML = "";
-              // next trial
-              this.jsPsych.finishTrial(trial_data);
+
+              if (answers.length !== trial.limit)
+              {
+                advError.classList.remove('hidden');
+                return false;
+              }
+
+              else
+              {
+                advError.remove();
+                // save data
+                var trial_data = {
+                    rt: response_time,
+                    response: question_data,
+                    question_order: question_order,
+                };
+                display_element.innerHTML = "";
+                // next trial
+                this.jsPsych.finishTrial(trial_data);
+              }
           });
           var startTime = performance.now();
       }
