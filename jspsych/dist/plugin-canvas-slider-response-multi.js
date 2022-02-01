@@ -96,11 +96,6 @@ var jsPsychCanvasSliderResponseMulti = (function (jspsych) {
               type: jspsych.ParameterType.INT,
               pretty_name: "Slider Prompts",
               default: 1
-          },
-          struct_object: {
-            type: Object,
-            pretty_name: "Structure Object",
-            default: {},
           }
       },
   };

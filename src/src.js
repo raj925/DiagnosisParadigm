@@ -132,6 +132,14 @@ class Structure {
         this.currentTrial.totalTestDuration = trial.totalTestDuration;
     }
 
+    saveLikelihoodData(trial)
+    {
+        this.currentTrial.topDiagnoses = trial.response_answers;
+        this.currentTrial.topLikelihoods = trial.response_confidence;
+        this.currentTrial.topDiagnosesRT = trial.rt_ans;
+        this.currentTrial.topLikelihoodsRT = trial.rt_conf;
+    }
+
     saveFinalDiagnosis(trial)
     {
         //this.storePluginData(trial);
@@ -148,16 +156,6 @@ class Structure {
         {
             this.complete = true;
         }
-    }
-
-    saveTopDiagnoses(trial)
-    {
-        this.currentTrial.topDiagnoses = trial.response;
-    }
-
-    getTopDiagnoses()
-    {
-        return this.currentTrial.topDiagnoses;
     }
 
     getCaseIntro()
@@ -197,7 +195,7 @@ class Structure {
 
         // Trials
         let trialData = [];
-        for (let t=0; t<data.trials.length; t++)
+        for (let t=0; t<this.currentTrialIndex; t++)
             trialData.push(this.flattenTrialData(data.trials[t], participantData.id));
         participantData.trials = trialData;
 
@@ -243,11 +241,15 @@ class Structure {
         out.participantID = id;
         out.scenarioID = trial.id;
         out.trueCondition = trial.trueCondition;
-        out.startingHypotheses = trial.startingHypotheses;
-        out.numOfStartingHypotheses = trial.startingHypotheses.length;
-        out.hypothesisOptions = trial.hypothesisOptions;
+        out.expCondition = trial.expCondition
+        if (trial.expCondition == "Generation")
+        {
+            out.startingHypotheses = trial.startingHypotheses;
+            out.numOfStartingHypotheses = trial.startingHypotheses.length;
+            out.hypothesisOptions = trial.hypothesisOptions;
+        }
         out.requestedTestsIdxs = trial.requestedTests;
-        out.requestedTestsText = requestedTestsIdxs.map(i => trial.availableTests[i-1])
+        out.requestedTestsText = (trial.requestedTests).map(i => trial.availableTests[i-1])
         out.numOfRequestedTests = trial.requestedTests.length;
         out.availableTests = trial.availableTests;
         out.rts = trial.rts;
