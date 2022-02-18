@@ -39,7 +39,7 @@
 <body>
     <div id="banner">
         <div class="left">
-            <a href="https://www.ox.ac.uk/"><img id="oxLogo" class="logo" src="assets/image/oxweb-logo.gif" alt="University of Oxford"/></a>
+            <a href="https://www.ox.ac.uk/"><img id="oxLogo" class="logo" src="assets/oxweb-logo.gif" alt="University of Oxford"/></a>
         </div>
         <div class="center">
             <div class="middle">
@@ -49,8 +49,8 @@
             </div>
         </div>
         <div class="right">
-            <a href="https://www.oxacclab.org/"><img id="accLogo" class="logo" src="assets/image/acclab.jpg" alt="Attention and Cognitive Control Lab"/></a>
-            <a href="https://www.psy.ox.ac.uk/"><img id="epLogo" class="logo" src="assets/image/ep-logo-with-msd.jpg" alt="Department of Experimental Psychology"/></a>
+            <a href="https://www.oxacclab.org/"><img id="accLogo" class="logo" src="assets/acclab.jpg" alt="Attention and Cognitive Control Lab"/></a>
+            <a href="https://www.psy.ox.ac.uk/"><img id="epLogo" class="logo" src="assets/ep-logo-with-msd.jpg" alt="Department of Experimental Psychology"/></a>
         </div>
     </div>
     <div id="panel">
@@ -81,10 +81,10 @@
                 <p><span class="lead">Ethical approval</span> for this study has been granted by Oxford Tropical Research Ethics Committee (OxTREC). There are no significant risks or benefits to you, although the data will contribute to scientific discovery.</p>
             </section>
             <section id="contact">
-                <p><span class="lead">If you have a concern</span> about any aspect of this project, please speak to the researcher, <a class="mailto" href="mailto:matt.jaquiery@psy.ox.ac.uk?subject=Exploring Social Metacognition query">Sriraj Aiyer [sriraj.aiyer@psy.ox.ac.uk]</a>, or the principal investigator, <a class="mailto" href="mailto:nicholas.yeung@psy.ox.ac.uk?subject=Exploring Social Metacognition query">Prof Nick Yeung [nicholas.yeung@psy.ox.ac.uk]</a>, who will do their best to answer your query. The researcher should acknowledge your concern within 10 working days and give you an indication of how they intend to deal with it. If you remain unhappy or wish to make a formal complaint, please contact the Chair of the Research Ethics Committee at the University of Oxford: Chair, Medical Sciences Inter-Divisional Research Ethics Committee; Email: <a class="mailto" href="mailto:ethics@medsci.ox.ac.uk">ethics@medsci.ox.ac.uk</a>; Address: Research Services, University of Oxford, Wellington Square, Oxford OX1 2JD.</p>
+                <p><span class="lead">If you have a concern</span> about any aspect of this project, please speak to the researcher, <a class="mailto" href="mailto:sriraj.aiyer@psy.ox.ac.uk?subject=Diagnosis Study query">Sriraj Aiyer [sriraj.aiyer@psy.ox.ac.uk]</a>, or the principal investigator, <a class="mailto" href="mailto:nicholas.yeung@psy.ox.ac.uk?subject=Diagnosis Study query">Prof Nick Yeung [nicholas.yeung@psy.ox.ac.uk]</a>, who will do their best to answer your query. The researcher should acknowledge your concern within 10 working days and give you an indication of how they intend to deal with it. If you remain unhappy or wish to make a formal complaint, please contact the Chair of the Research Ethics Committee at the University of Oxford: Chair, Medical Sciences Inter-Divisional Research Ethics Committee; Email: <a class="mailto" href="mailto:ethics@medsci.ox.ac.uk">ethics@medsci.ox.ac.uk</a>; Address: Research Services, University of Oxford, Wellington Square, Oxford OX1 2JD.</p>
             </section>
             <section id="funding">
-                <p><span class="lead">The study is funded</span> by the <a class="link" href="https://www.oxacclab.org/" target="_blank">Attention and Cognitive Control Laboratory <i class="fas fa-external-link-alt fa-xs"></i></a> at Oxford University, and by the U.S. Department of Defense.</p>
+                <p><span class="lead">The study is funded</span> by the <a class="link" href="https://www.oxacclab.org/" target="_blank">Attention and Cognitive Control Laboratory <i class="fas fa-external-link-alt fa-xs"></i></a> at Oxford University</p>
             </section>
         </div>
         <div id="foot">
@@ -148,15 +148,13 @@
         }
         // Proceed with the study
         // Navigate to the appropriate place
-        let prolificID = window.location.search.match('[?&]PROLIFIC_PID=\\w+');
-        if(prolificID !== null)
-            prolificID = prolificID[0].substring(14);
-        if(study !== "") {
-            redirectURL = study + "/" + page + "?consent=true";
-            if(prolificID !== null)
-                redirectURL += "&PROLIFIC_PID=" + prolificID;
-            window.location.href =  redirectURL; // forward as if user clicked a link
-        }
+        let participantID = window.location.search.match('[?&]ParticipantID=\\w+');
+        if(participantID !== null)
+        participantID = participantID[0].substring(15);
+        redirectURL = "/" + page + "?consent=true";
+        if(participantID !== null)
+            redirectURL += "&ParticipantID=" + participantID;
+        window.location.href =  redirectURL; // forward as if user clicked a link
 
     }
 </script>

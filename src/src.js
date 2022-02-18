@@ -1,6 +1,7 @@
 "use strict";
 
-import * as utils from "./utils.js"
+//import * as utils from "./utils.js"
+//import processData from "./saveData.js";
 
 /**
  * A Trial aggregates the information needed to run a single judge-advisor system trial.
@@ -19,6 +20,8 @@ class Trial
         this.scenarioID = typeof args.scenarioID === 'undefined'? null : args.scenarioID;
         this.trueCondition = typeof args.trueCondition === 'undefined'? null : args.trueCondition;
         this.trialInfoSet = typeof args.trialInfoSet === 'undefined'? {} : args.trialInfoSet;
+        this.trialCost = typeof args.trialCost === 'undefined'? 0 : args.trialCost
+
     }
 }
 
@@ -35,16 +38,15 @@ class Structure {
      */
 	constructor(args = {}) 
 	{
-        for (let key in args) {
-            if (args.hasOwnProperty(key))
-                this[key] = args[key];
-        }
         this.numOfTrials = args.numOfTrials || 0;
         this.currentTrialIndex = args.currentTrialIndex || 0;
         this.completionURL = typeof args.completionURL === 'undefined'? '' : args.completionURL;
         this.timeStart = typeof args.timeStart === 'undefined' ? (new Date).getTime(): args.timeStart;
-        this.scenarioObject = typeof args.scenarioObject === 'undefined' ? {} : args.scenarioObject;
-        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Governor.addTrials(numOfTrials);
+        this.scenarioObject = typeof args.scenarioObject === 'undefined'? [] : args.scenarioObject;
+        this.participantID = typeof args.participantID === 'undefined'? "NO_ID" : args.participantID;
+        this.complete = typeof args.complete === 'undefined'? false : args.complete;
+        this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
+        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials, this.expConditionOrder);
     }
 
      /**
@@ -52,14 +54,17 @@ class Structure {
      * @param {Object[]} trials - trials stored as JSON-compressed objects
      * @return {Trial[]} - trials expanded to be Trial objects
      */
-    static addTrials(len) 
+    static addTrials(scenarioObject, len, expConditions) 
     {
         let out = [];
         for(let i=0; i<len; i++) {
             out[i] = new Trial(i+1, {
             	scenarioID: scenarioObject[i]["ID"], 
-            	trueCondition: scenarioObject[i]["True Condition"], 
-            	trialInfoSet: ((scenarioObject[i]).delete["True Condition"]).delete["ID"];
+            	trueCondition: scenarioObject[i]["True Condition"],
+                expCondition: expConditions[i],
+                presentation: scenarioObject[i]["Prompt"],  
+                prompt: scenarioObject[i]["Suspected"],  
+                trialInfoSet: scenarioObject[i]
             });
         }
         return out;
@@ -104,6 +109,160 @@ class Structure {
         }
     }
 
+    saveQuestionnaire(trial)
+    {
+        //this.storePluginData(trial);
+        this.demoQuestionnaire = trial.response;
+    }
+
+    saveHypotheses(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.startingHypotheses = trial.response;
+        this.currentTrial.hypothesisOptions = trial.question_order;
+    }
+
+    saveInfoSeeking(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.requestedTests = trial.response;
+        this.currentTrial.availableTests = trial.tests;
+        this.currentTrial.rts = trial.rt;
+        this.currentTrial.totalInfoSeekingTime = trial.trialTime;
+        this.currentTrial.totalTestDuration = trial.totalTestDuration;
+    }
+
+    saveLikelihoodData(trial)
+    {
+        this.currentTrial.topDiagnoses = trial.response_answers;
+        this.currentTrial.topLikelihoods = trial.response_confidence;
+        this.currentTrial.topDiagnosesRT = trial.rt_ans;
+        this.currentTrial.topLikelihoodsRT = trial.rt_conf;
+    }
+
+    saveFinalDiagnosis(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.finalDiagnosis = trial.response;
+        this.currentTrial.finalDiagnosisRT = trial.rt;
+    }
+
+    saveConfidence(trial)
+    {
+        //this.storePluginData(trial);
+        this.currentTrial.confidence = trial.response;
+        this.currentTrialIndex++;
+        if (this.currentTrialIndex > this.numOfTrials)
+        {
+            this.complete = true;
+        }
+    }
+
+    getCaseIntro()
+    {
+        let currentExpCondition = this.currentTrial.expCondition;
+        let prompt = this.currentTrial.presentation;
+        if (currentExpCondition == "Directed")
+        {
+            prompt = prompt + " " + this.currentTrial.prompt;
+        }
+        return prompt;
+    }
+
+    processData(data) 
+    {
+        // Data about the participant
+        let participantData = {
+            id: data.participantID,
+            numOfScenarios: data.numOfTrials,
+            completionCheck: data.complete,
+            scenarioOrder: data.order,
+            hypothesisCondition: data.condition,
+            timeStart: data.timeStart,
+            timeEnd: data.timeEnd,
+            experimentDuration: data.timeEnd - data.timeStart
+        };
+
+        // Questionnaires
+        let questionnaireData = [];
+        if(typeof data.demoQuestionnaire !== 'undefined')
+            for (let q=0; q<data.demoQuestionnaire.length; q++)
+                if(data.demoQuestionnaire[q])
+                {
+                    questionnaireData.push(this.flattenQuestionnaireData(data.demoQuestionnaire[q], participantData.id))
+                }
+        participantData.demoQuestionnaire = questionnaireData;
+
+        // Trials
+        let trialData = [];
+        for (let t=0; t<this.currentTrialIndex; t++)
+            trialData.push(this.flattenTrialData(data.trials[t], participantData.id));
+        participantData.trials = trialData;
+
+        // Debrief stuff
+        participantData.debrief = [];
+        if(typeof data.debrief !== 'undefined') {
+            if(data.debrief)
+            {
+                participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
+            }
+        }
+
+        if (participantData.completionCheck == true)
+        {
+            let corrects = trials.map(function (el) { return el.correct; });
+            let tests = trials.map(function (el) { return el.numOfRequestedTests; });
+            let testTimes = trials.map(function (el) { return el.totalInfoSeekingTime; });
+            let testDurations = trials.map(function (el) { return el.totalTestDuration; });
+            let confidences = trials.map(function (el) { return el.confidence; });
+            let startingHypotheses = trials.map(function (el) { return el.numOfStartingHypotheses; });
+
+            const average = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
+
+            participantData.overallAccuracy = average(corrects);
+            participantData.meanNumOfTests = average(tests);
+            participantData.meanTestTime = average(testTimes);
+            participantData.meantestDuration = average(testDurations);
+            participantData.meanFinalConfidence = average(confidences);
+            participantData.meanStartingHypotheses = average(startingHypotheses);
+        }
+
+        return participantData;
+    }
+
+    /** Return a trial squeezed into a format suitable for saving as .csv
+     * @param {Trial} trial - trial object to squeeze
+     * @param {int} id - id of the participant (inserted as first column)
+     * @returns {Object} - slim representation of trial object
+     */
+    flattenTrialData(trial, id) 
+    {
+        let out = {};
+        out.participantID = id;
+        out.scenarioID = trial.id;
+        out.trueCondition = trial.trueCondition;
+        out.expCondition = trial.expCondition
+        if (trial.expCondition == "Generation")
+        {
+            out.startingHypotheses = trial.startingHypotheses;
+            out.numOfStartingHypotheses = trial.startingHypotheses.length;
+            out.hypothesisOptions = trial.hypothesisOptions;
+        }
+        out.requestedTestsIdxs = trial.requestedTests;
+        out.requestedTestsText = (trial.requestedTests).map(i => trial.availableTests[i-1])
+        out.numOfRequestedTests = trial.requestedTests.length;
+        out.availableTests = trial.availableTests;
+        out.rts = trial.rts;
+        out.totalInfoSeekingTime = trial.totalInfoSeekingTime;
+        out.totalTestDuration = trial.totalTestDuration;
+        out.finalDiagnosis = trial.finalDiagnosis["finalDiagnosis"];
+        out.finalDiagnosisRT = trial.finalDiagnosisRT;
+        out.confidence = trial.confidence;
+        out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
+
+        return out;
+    }
+
     /**
      * Compile the data in this governor ready for sending, including a processed form
      * @return {Object} a JSON object with JSON strings containing rawData and processedData
@@ -112,7 +271,7 @@ class Structure {
     {
         return {
             rawData: JSON.stringify(this),
-            processedData: JSON.stringify(processData(this))
+            processedData: JSON.stringify(this.processData(this))
         }
     }
 
@@ -155,5 +314,17 @@ class Structure {
         let bla = decodeURI(info).substr(5);
         this.authenticate(info);
        // ask.send(info);
+    }
+
+        /**
+     * Save the data sent from the plugin in the Trial object
+     *
+     * @param {Object} pluginData - response data sent by a jsPsych plugin
+     */
+    storePluginData(pluginData) {
+        if (Object.keys(this.currentTrial).indexOf('pluginResponse') === -1)
+            this.currentTrial.pluginResponse = [];
+        // Save this trial data (jspsych would do this for us, but we have access to a bunch of stuff it doesn't
+        this.currentTrial.pluginResponse.push(pluginData);
     }
 }

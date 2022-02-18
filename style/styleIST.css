@@ -740,6 +740,29 @@ button, .button {
   -webkit-user-select: none;
 }
 
+div.jspsych-image-button-response-button button {
+  color: red;
+  margintop: 2em;
+}
+
+#jspsych-survey-multi-choice-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  border: 0;
+  padding: 1.5vmax;
+  font-family: europa, Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-weight: bolder;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+}
+
 button.large-green-button, .button.large-green-button {
   width: 30vmax;
   margin: 5vh auto;
