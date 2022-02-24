@@ -28,6 +28,7 @@
     <script src="/jspsych/dist/plugin-survey-multi-select-limit-sliders.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-survey-text.js" type="text/javascript"></script>
     <script src="/jspsych/dist/plugin-canvas-slider-response.js" type="text/javascript"></script>
+    <script src="/jspsych/dist/plugin-free-text-ranked-list.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../style/styleIST.css"/>
     <link rel="shortcut icon" href="#" />
 </head>
@@ -345,6 +346,20 @@
         }
     }
 
+    const differentialDiagnoses = 
+    {
+    	type: jsPsychFreeTextRankedList,
+    	prompt: "<p>Input your diagnoses</p>",
+        start_empty: false,
+        starting_list: ["Pneumothorax","COPD", "Sepsis"],
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.exportGovernor();
+        }
+    }
+
     const debrief = {
         type: jsPsychSurveyText,
         preamble: "Please take some time to answer a couple of final questions.",
@@ -358,7 +373,7 @@
         }
     }
 
-    let trial = [infoSeeking, finalDiagnosis, confidence];
+    let trial = [differentialDiagnoses, infoSeeking, finalDiagnosis, confidence];
 
     if (hypothesisGenerationTrials == true)
     {
