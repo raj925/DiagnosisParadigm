@@ -70,7 +70,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           max: {
               type: jspsych.ParameterType.INT,
               pretty_name: "Max slider",
-              default: 100,
+              default: 10,
           },
           /** Sets the starting value of the sliders */
           slider_start: {
@@ -89,7 +89,21 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               type: jspsych.ParameterType.INT,
               pretty_name: "Slider width",
               default: null,
-          }
+          },
+          /** Array containing the height (first value) and width (second value) of the canvas element. */
+          canvas_size: {
+              type: jspsych.ParameterType.INT,
+              array: true,
+              pretty_name: "Canvas size",
+              default: [500, 100],
+          },
+          /** Array containing the labels for the slider. Labels will be displayed at equidistant locations along the slider. */
+          slider_labels: {
+              type: jspsych.ParameterType.HTML_STRING,
+              pretty_name: "Slider Labels",
+              default: [],
+              array: true,
+          },
       }
   };
   /**
@@ -141,14 +155,57 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           	var startingList = trial.starting_list;
           	response.startinglist = startingList;
           	response.responses = startingList;
+          	let liHTML;
           	for (let i=0; i<startingList.length; i++)
           	{
           		let li = document.createElement("li");
-          		li.innerHTML = '<li>' + startingList[i] + '<span class="close">x</span></li>';
+          		liHTML = "<li>" + startingList[i];
+
+          		liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
+	              liHTML +=
+	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; margin: 0 5em 3em auto; width:';
+	              if (trial.slider_width !== null) {
+	                  liHTML += trial.slider_width + "px;";
+	              }
+	              else {
+	                  liHTML += trial.canvas_size[1] + "px;";
+	              }
+	              liHTML += '">';
+	              liHTML +=
+	                  '<input type="range" value="' +
+	                      trial.slider_start +
+	                      '" min="' +
+	                      trial.min +
+	                      '" max="' +
+	                      trial.max +
+	                      '" step="' +
+	                      trial.step +
+	                      '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
+	              liHTML += "<div>";
+	              for (var j = 0; j < trial.slider_labels.length; j++) {
+	                  var width = 100 / (trial.slider_labels.length - 1);
+	                  var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
+	                  liHTML +=
+	                      '<div style="display: inline-block; position: absolute; left:' +
+	                          left_offset +
+	                          "%; text-align: center; width: " +
+	                          width +
+	                          '%;">';
+	                  liHTML += '<span style="text-align: center; font-size: 80%;">' + trial.slider_labels[j] + "</span>";
+	                  liHTML += "</div>";
+	              }
+	              liHTML += '</div>';
+	              liHTML += '</div>';
+	              liHTML += '</div>';  
+	              liHTML += '<span class="close">x</span></li>';
+
+
+          		li.innerHTML = liHTML;
           		li.id = "ListElement" + i;
           		li.className = "ListElement";
           		li.draggable = true;
           		sortList.appendChild(li);
+
           	}
 
           	let items = sortList.getElementsByTagName("li"), current=null;
@@ -224,22 +281,78 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 	      }
 
         let plus = document.createElement("li");
+        plus.id = "addBox";
       	sortList.appendChild(plus);
   		plus.innerHTML = '<li><span class="add">+</span></li>';
   		plus.addEventListener("click", function() 
 		{
-			plus.innerHTML = '<li><input type="text" id="inputText" autofocus placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></li>';
+			plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+			var q_element = document.getElementById("inputText");
+			display_element.querySelector(q_element.focus());
+			q_element.onclick = function(e) {
+				q_element.focus();
+			};
+			q_element.onfocus = function(e) {
+				q_element.select();
+			};
 			let confirm = document.getElementById("confirm"); 
 			confirm.addEventListener("click", function()
 			{
 				var q_element = document.getElementById("inputText");
               	var val = q_element.value;
 				response.responses.push(val);
-				let num = response.response.length;
-				let li = document.createElement("li");
-				sortList.appendChild(li);
-      			li.innerHTML = '<li>' + val + '<span class="close">x</span></li>';
-      			li.id = "ListElement" + num; 
+				let num = response.responses.length;
+				let add = document.getElementById("addBox"); 
+      			add.remove();
+
+      			let li = document.createElement("li");
+          		let liHTML = "<li>" + startingList[i];
+
+          		liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
+	              liHTML +=
+	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; margin: 0 5em 3em auto; width:';
+	              if (trial.slider_width !== null) {
+	                  liHTML += trial.slider_width + "px;";
+	              }
+	              else {
+	                  liHTML += trial.canvas_size[1] + "px;";
+	              }
+	              liHTML += '">';
+	              liHTML +=
+	                  '<input type="range" value="' +
+	                      trial.slider_start +
+	                      '" min="' +
+	                      trial.min +
+	                      '" max="' +
+	                      trial.max +
+	                      '" step="' +
+	                      trial.step +
+	                      '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
+	              liHTML += "<div>";
+	              for (var j = 0; j < trial.slider_labels.length; j++) {
+	                  var width = 100 / (trial.slider_labels.length - 1);
+	                  var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
+	                  liHTML +=
+	                      '<div style="display: inline-block; position: absolute; left:' +
+	                          left_offset +
+	                          "%; text-align: center; width: " +
+	                          width +
+	                          '%;">';
+	                  liHTML += '<span style="text-align: center; font-size: 80%;">' + trial.slider_labels[j] + "</span>";
+	                  liHTML += "</div>";
+	              }
+	              liHTML += '</div>';
+	              liHTML += '</div>';
+	              liHTML += '</div>';  
+	              liHTML += '<span class="close">x</span></li>';
+
+
+          		li.innerHTML = liHTML;
+          		li.id = "ListElement" + i;
+          		li.className = "ListElement";
+          		li.draggable = true;
+          		sortList.appendChild(li);
+				
       			let plus = document.createElement("li");
       			sortList.appendChild(plus);
   				plus.innerHTML = '<li><span class="add">+</span></li>';
