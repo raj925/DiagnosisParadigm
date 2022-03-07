@@ -78,6 +78,12 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               pretty_name: "Slider starting value",
               default: 50,
           },
+          /** Put this prompt above the scale*/
+          slider_label: {
+              type: jspsych.ParameterType.STRING,
+              pretty_name: "Slider Label",
+              default: "",
+          },
           /** Sets the step of the sliders */
           step: {
               type: jspsych.ParameterType.INT,
@@ -104,6 +110,24 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               default: [],
               array: true,
           },
+          /** If true, scale question is included for each element in the list.**/
+          scale_questions: {
+              type: jspsych.ParameterType.BOOL,
+              pretty_name: "Scale Questions",
+              default: false,
+          },
+          /** What labels to use for the scale questions if scale_questions is true. Number of elements = number of options**/
+          scale_labels: {
+              type: jspsych.ParameterType.STRING,
+              pretty_name: "Scale Labels",
+              default: [],
+              array: true,
+          },
+          scale_prompt: {
+            type: jspsych.ParameterType.STRING,
+              pretty_name: "Scale Prompt",
+              default: "",
+          }
       }
   };
   /**
@@ -159,45 +183,74 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           	for (let i=0; i<startingList.length; i++)
           	{
           		let li = document.createElement("li");
-          		liHTML = "<li>" + startingList[i];
+              liHTML = "<table style='width: 100%; table-layout: fixed;'><tr><td>"
+          		liHTML += "<li>" + startingList[i];
+              liHTML += "</td><td>";
 
-          		liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
-	              liHTML +=
-	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; margin: 0 5em 3em auto; width:';
-	              if (trial.slider_width !== null) {
-	                  liHTML += trial.slider_width + "px;";
-	              }
-	              else {
-	                  liHTML += trial.canvas_size[1] + "px;";
-	              }
-	              liHTML += '">';
-	              liHTML +=
-	                  '<input type="range" value="' +
-	                      trial.slider_start +
-	                      '" min="' +
-	                      trial.min +
-	                      '" max="' +
-	                      trial.max +
-	                      '" step="' +
-	                      trial.step +
-	                      '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
-	              liHTML += "<div>";
-	              for (var j = 0; j < trial.slider_labels.length; j++) {
-	                  var width = 100 / (trial.slider_labels.length - 1);
-	                  var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
-	                  liHTML +=
-	                      '<div style="display: inline-block; position: absolute; left:' +
-	                          left_offset +
-	                          "%; text-align: center; width: " +
-	                          width +
-	                          '%;">';
-	                  liHTML += '<span style="text-align: center; font-size: 80%;">' + trial.slider_labels[j] + "</span>";
-	                  liHTML += "</div>";
-	              }
-	              liHTML += '</div>';
-	              liHTML += '</div>';
-	              liHTML += '</div>';  
-	              liHTML += '<span class="close">x</span></li>';
+                // add question
+                liHTML += '<label class="jspsych-survey-likert-statement">' + trial.scale_prompt + "</label>";
+                // add options
+                var width = 100 / trial.scale_labels.length;
+                var options_string = '<ul class="jspsych-survey-likert-opts"><table><tr>';
+                for (var j = 0; j < trial.scale_labels.length; j++) {
+                    options_string +=
+                        '<th><li style=" list-style-type:none; width:' +
+                            width +
+                            '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" name="Q' +
+                            trial.scale_labels[i] +
+                            '" value="' +
+                            j +
+                            '"';
+                    options_string += " required";
+                    options_string += ">" + trial.scale_labels[j] + "</label></li></th>";
+                }
+                options_string += "</tr></table></ul>";
+                liHTML += options_string;
+                liHTML += "</td><td>";
+
+
+                // add slider
+
+                  liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
+                liHTML +=
+                    '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
+                if (trial.slider_width !== null) {
+                    liHTML += trial.slider_width + "px;";
+                }
+                else {
+                    liHTML += trial.canvas_size[1] + "px;";
+                }
+                liHTML += '">';
+                liHTML +=
+                    '<input type="range" value="' +
+                        trial.slider_start +
+                        '" min="' +
+                        trial.min +
+                        '" max="' +
+                        trial.max +
+                        '" step="' +
+                        trial.step +
+                        '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
+                liHTML += "<div>";
+                for (var j = 0; j < trial.slider_labels.length; j++) {
+                    var width = 100 / (trial.slider_labels.length - 1);
+                    var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
+                    liHTML +=
+                        '<div style="display: inline-block; position: absolute; left:' +
+                            left_offset +
+                            "%; text-align: center; width: " +
+                            width +
+                            '%;">';
+                    liHTML += '<span style="text-align: center; font-size: 60%;">' + trial.slider_labels[j] + "</span>";
+                    liHTML += "</div>";
+                }
+                liHTML += '</div>';
+                liHTML += '</div>';
+                liHTML += '</div>';  
+                liHTML += "</td><td>";
+
+
+	              liHTML += '<span class="close">x</span></td></tr></table></li>';
 
 
           		li.innerHTML = liHTML;
@@ -310,7 +363,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 
           		liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
 	              liHTML +=
-	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; margin: 0 5em 3em auto; width:';
+	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
 	              if (trial.slider_width !== null) {
 	                  liHTML += trial.slider_width + "px;";
 	              }
@@ -338,7 +391,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 	                          "%; text-align: center; width: " +
 	                          width +
 	                          '%;">';
-	                  liHTML += '<span style="text-align: center; font-size: 80%;">' + trial.slider_labels[j] + "</span>";
+	                  liHTML += '<span style="text-align: center; font-size: 60%;">' + trial.slider_labels[j] + "</span>";
 	                  liHTML += "</div>";
 	              }
 	              liHTML += '</div>';

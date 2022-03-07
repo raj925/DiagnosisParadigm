@@ -315,7 +315,7 @@
         stimulus: '',
         labels: ["Not At All Confident", "Fully Confident"],
         require_movement: false,
-        prompt: "<p>Record your confidence in your diagnosis.</p>",
+        prompt: "<p>Record how confident you are that you would be ready to start treating this patient.</p>",
         response_ends_trial: true,
         on_load: ()=>{
             exp.fullscreenMode();
@@ -354,6 +354,10 @@
         starting_list: ["Pneumothorax","COPD", "Sepsis"],
         slider_labels: ["Not At All Likely", "Extremely Likely"],
         slider_start: 5,
+        slider_prompt: "Likelihood",
+        scale_questions: true,
+        scale_labels: ["Mild","Moderate","Severe"],
+        scale_prompt: "Severity",
         on_load: ()=>{
             exp.fullscreenMode();
         },
