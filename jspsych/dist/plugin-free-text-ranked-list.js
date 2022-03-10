@@ -130,6 +130,190 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           }
       }
   };
+
+  function populateButtons (list,trial,display_element) 
+  {
+
+      let liHTML;
+      let sortList = document.getElementById("sortList");
+      sortList.innerHTML = "";
+      for (let i=0; i<list.length; i++)
+      {
+        let li = document.createElement("li");
+        liHTML = "<table style='width: 100%; table-layout: fixed;'><tr><td>"
+        liHTML += "<li style='color:red;'>" + list[i];
+        liHTML += "</td><td>";
+
+          // add question
+          //liHTML += '<label class="jspsych-survey-likert-statement">' + trial.scale_prompt + "</label>";
+          // add options
+          var width = 100 / trial.scale_labels.length;
+          var options_string = '<ul class="jspsych-survey-likert-opts"><table><tr>';
+          for (var j = 0; j < trial.scale_labels.length; j++) {
+              options_string +=
+                  '<th><li style=" list-style-type:none; width:' +
+                      width +
+                      '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" name="Q' +
+                      trial.scale_labels[i] +
+                      '" value="' +
+                      j +
+                      '"';
+              options_string += " required";
+              options_string += ">" + trial.scale_labels[j] + "</label></li></th>";
+          }
+          options_string += "</tr></table></ul>";
+          liHTML += options_string;
+          liHTML += "</td><td>";
+
+
+          // add slider
+
+            liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
+          liHTML +=
+              '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
+          if (trial.slider_width !== null) {
+              liHTML += trial.slider_width + "px;";
+          }
+          else {
+              liHTML += trial.canvas_size[1] + "px;";
+          }
+          liHTML += '">';
+          liHTML +=
+              '<input type="range" value="' +
+                  trial.slider_start +
+                  '" min="' +
+                  trial.min +
+                  '" max="' +
+                  trial.max +
+                  '" step="' +
+                  trial.step +
+                  '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
+          liHTML += "<div>";
+          for (var j = 0; j < trial.slider_labels.length; j++) {
+              var width = 100 / (trial.slider_labels.length - 1);
+              var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
+              liHTML +=
+                  '<div style="display: inline-block; position: absolute; left:' +
+                      left_offset +
+                      "%; text-align: center; width: " +
+                      width +
+                      '%;">';
+              liHTML += '<span style="text-align: center; font-size: 60%;">' + trial.slider_labels[j] + "</span>";
+              liHTML += "</div>";
+          }
+          liHTML += '</div>';
+          liHTML += '</div>';
+          liHTML += '</div>';  
+          liHTML += "</td><td>";
+
+
+          liHTML += '<span class="close" style="color:red;">x</span></td></tr></table></li>';
+
+
+        li.innerHTML = liHTML;
+        li.id = "ListElement" + i;
+        li.className = "ListElement";
+        li.draggable = true;
+        sortList.appendChild(li);
+
+      }
+
+      /* Get all elements with class="close" */
+      var closebtns = document.getElementsByClassName("close");
+      console.log(closebtns);
+
+      /* Loop through the elements, and hide the parent, when clicked on */
+      for (var i = 0; i < closebtns.length; i++) 
+      {
+        let id = "ListElement" + i;
+        console.log(id);
+        closebtns[i].addEventListener("click", function() 
+        {
+          let ele = document.getElementById(id);
+          ele.style.display = 'none';
+          ele.remove();
+        });
+      }
+
+      let items = sortList.getElementsByTagName("li"), current=null;
+
+      // MAKE ITEMS DRAGGABLE + SORTABLE
+      for (let i of items) 
+      {
+          // ATTACH DRAGGABLE
+          //i.draggable = true;
+          
+          // DRAG START - YELLOW HIGHLIGHT DROPZONES
+          i.ondragstart = (ev) => {
+            current = i;
+            for (let it of items) {
+              if (it != current) { it.classList.add("hint"); }
+            }
+          };
+          
+          // DRAG ENTER - RED HIGHLIGHT DROPZONE
+          i.ondragenter = (ev) => {
+            //if (i != current) { i.classList.add("active"); }
+            i.classList.add("active");
+          };
+
+          // DRAG LEAVE - REMOVE RED HIGHLIGHT
+          i.ondragleave = () => {
+            i.classList.remove("active");
+          };
+
+          // DRAG END - REMOVE ALL HIGHLIGHTS
+          i.ondragend = () => { for (let it of items) {
+              it.classList.remove("hint");
+              it.classList.remove("active");
+          }};
+       
+          // DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
+          i.ondragover = (evt) => { evt.preventDefault(); };
+     
+          // ON DROP - DO SOMETHING
+          i.ondrop = (evt) => {
+            evt.preventDefault();
+            if (i != current) {
+              let currentpos = 0, droppedpos = 0;
+              for (let it=0; it<items.length; it++) {
+                if (current == items[it]) { currentpos = it; }
+                if (i == items[it]) { droppedpos = it; }
+              }
+              if (currentpos < droppedpos) {
+                i.parentNode.insertBefore(current, i.nextSibling);
+              } else {
+                i.parentNode.insertBefore(current, i);
+              }
+            }
+          };
+       }
+
+        let plus = document.createElement("li");
+        plus.id = "addBox";
+        sortList.appendChild(plus);
+        plus.innerHTML = '<li><span class="add">+</span></li>';
+        plus.addEventListener("click", function() 
+        {
+            plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+            var q_element = document.getElementById("inputText");
+            display_element.querySelector(q_element.focus());
+            q_element.onclick = function(e) {
+              q_element.focus();
+            };
+            q_element.onfocus = function(e) {
+              q_element.select();
+            };
+            let confirm = document.getElementById("confirm"); 
+            confirm.addEventListener("click", function()
+            {
+              var q_element = document.getElementById("inputText");
+              var val = q_element.value;
+              response.responses.push(val);
+              populateButtons(response.responses,trial,display_element);
+            });
+        });
+  }
   /**
    * **free-text-ranked-list**
    *
@@ -148,11 +332,12 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
       { 
       	  var height, width;
           var html = "";
-	  	  // store response
+	  	    // store response
           var response = {
               rt: null,
               responses: [],
-              confidence: [],
+              sliderValues: [],
+              scalesValues: [],
               startinglist: []
           };
 
@@ -173,244 +358,20 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           display_element.innerHTML = html;
 
           let sortList = document.getElementById("sortList");
+          let plus = document.createElement("li");
+          plus.id = "addBox";
+          sortList.appendChild(plus);
+          plus.innerHTML = '<li><span class="add">+</span></li>';
 
           if (!(trial.start_empty)) 
           {
           	var startingList = trial.starting_list;
           	response.startinglist = startingList;
           	response.responses = startingList;
-          	let liHTML;
-          	for (let i=0; i<startingList.length; i++)
-          	{
-          		let li = document.createElement("li");
-              liHTML = "<table style='width: 100%; table-layout: fixed;'><tr><td>"
-          		liHTML += "<li>" + startingList[i];
-              liHTML += "</td><td>";
-
-                // add question
-                liHTML += '<label class="jspsych-survey-likert-statement">' + trial.scale_prompt + "</label>";
-                // add options
-                var width = 100 / trial.scale_labels.length;
-                var options_string = '<ul class="jspsych-survey-likert-opts"><table><tr>';
-                for (var j = 0; j < trial.scale_labels.length; j++) {
-                    options_string +=
-                        '<th><li style=" list-style-type:none; width:' +
-                            width +
-                            '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" name="Q' +
-                            trial.scale_labels[i] +
-                            '" value="' +
-                            j +
-                            '"';
-                    options_string += " required";
-                    options_string += ">" + trial.scale_labels[j] + "</label></li></th>";
-                }
-                options_string += "</tr></table></ul>";
-                liHTML += options_string;
-                liHTML += "</td><td>";
-
-
-                // add slider
-
-                  liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
-                liHTML +=
-                    '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
-                if (trial.slider_width !== null) {
-                    liHTML += trial.slider_width + "px;";
-                }
-                else {
-                    liHTML += trial.canvas_size[1] + "px;";
-                }
-                liHTML += '">';
-                liHTML +=
-                    '<input type="range" value="' +
-                        trial.slider_start +
-                        '" min="' +
-                        trial.min +
-                        '" max="' +
-                        trial.max +
-                        '" step="' +
-                        trial.step +
-                        '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
-                liHTML += "<div>";
-                for (var j = 0; j < trial.slider_labels.length; j++) {
-                    var width = 100 / (trial.slider_labels.length - 1);
-                    var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
-                    liHTML +=
-                        '<div style="display: inline-block; position: absolute; left:' +
-                            left_offset +
-                            "%; text-align: center; width: " +
-                            width +
-                            '%;">';
-                    liHTML += '<span style="text-align: center; font-size: 60%;">' + trial.slider_labels[j] + "</span>";
-                    liHTML += "</div>";
-                }
-                liHTML += '</div>';
-                liHTML += '</div>';
-                liHTML += '</div>';  
-                liHTML += "</td><td>";
-
-
-	              liHTML += '<span class="close">x</span></td></tr></table></li>';
-
-
-          		li.innerHTML = liHTML;
-          		li.id = "ListElement" + i;
-          		li.className = "ListElement";
-          		li.draggable = true;
-          		sortList.appendChild(li);
-
-          	}
-
-          	let items = sortList.getElementsByTagName("li"), current=null;
-
-          	// MAKE ITEMS DRAGGABLE + SORTABLE
-			  for (let i of items) 
-			  {
-			    // ATTACH DRAGGABLE
-			    //i.draggable = true;
-			    
-			    // DRAG START - YELLOW HIGHLIGHT DROPZONES
-			    i.ondragstart = (ev) => {
-			      current = i;
-			      for (let it of items) {
-			        if (it != current) { it.classList.add("hint"); }
-			      }
-			    };
-			    
-			    // DRAG ENTER - RED HIGHLIGHT DROPZONE
-			    i.ondragenter = (ev) => {
-			      //if (i != current) { i.classList.add("active"); }
-			      i.classList.add("active");
-			    };
-
-			    // DRAG LEAVE - REMOVE RED HIGHLIGHT
-			    i.ondragleave = () => {
-			      i.classList.remove("active");
-			    };
-
-			    // DRAG END - REMOVE ALL HIGHLIGHTS
-			    i.ondragend = () => { for (let it of items) {
-			        it.classList.remove("hint");
-			        it.classList.remove("active");
-			    }};
-			 
-			    // DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
-			    i.ondragover = (evt) => { evt.preventDefault(); };
-			 
-			    // ON DROP - DO SOMETHING
-			    i.ondrop = (evt) => {
-			      evt.preventDefault();
-			      if (i != current) {
-			        let currentpos = 0, droppedpos = 0;
-			        for (let it=0; it<items.length; it++) {
-			          if (current == items[it]) { currentpos = it; }
-			          if (i == items[it]) { droppedpos = it; }
-			        }
-			        if (currentpos < droppedpos) {
-			          i.parentNode.insertBefore(current, i.nextSibling);
-			        } else {
-			          i.parentNode.insertBefore(current, i);
-			        }
-			      }
-			    };
-	         }
-
-	         /* Get all elements with class="close" */
-			var closebtns = document.getElementsByClassName("close");
-			console.log(closebtns);
-
-			/* Loop through the elements, and hide the parent, when clicked on */
-			for (var i = 0; i < closebtns.length; i++) 
-			{
-			  let id = "ListElement" + i;
-			  console.log(id);
-			  closebtns[i].addEventListener("click", function() 
-			  {
-			  	let ele = document.getElementById(id);
-			    ele.style.display = 'none';
-			    ele.remove();
-			  });
-			}
-	      }
-
-        let plus = document.createElement("li");
-        plus.id = "addBox";
-      	sortList.appendChild(plus);
-  		plus.innerHTML = '<li><span class="add">+</span></li>';
-  		plus.addEventListener("click", function() 
-		{
-			plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
-			var q_element = document.getElementById("inputText");
-			display_element.querySelector(q_element.focus());
-			q_element.onclick = function(e) {
-				q_element.focus();
-			};
-			q_element.onfocus = function(e) {
-				q_element.select();
-			};
-			let confirm = document.getElementById("confirm"); 
-			confirm.addEventListener("click", function()
-			{
-				var q_element = document.getElementById("inputText");
-              	var val = q_element.value;
-				response.responses.push(val);
-				let num = response.responses.length;
-				let add = document.getElementById("addBox"); 
-      			add.remove();
-
-      			let li = document.createElement("li");
-          		let liHTML = "<li>" + startingList[i];
-
-          		liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
-	              liHTML +=
-	                  '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';
-	              if (trial.slider_width !== null) {
-	                  liHTML += trial.slider_width + "px;";
-	              }
-	              else {
-	                  liHTML += trial.canvas_size[1] + "px;";
-	              }
-	              liHTML += '">';
-	              liHTML +=
-	                  '<input type="range" value="' +
-	                      trial.slider_start +
-	                      '" min="' +
-	                      trial.min +
-	                      '" max="' +
-	                      trial.max +
-	                      '" step="' +
-	                      trial.step +
-	                      '" style="width: 100%;" class="jspsych-canvas-slider-response-response" id="jspsych-canvas-slider-response-response-' + (i+1) + '"></input>';
-	              liHTML += "<div>";
-	              for (var j = 0; j < trial.slider_labels.length; j++) {
-	                  var width = 100 / (trial.slider_labels.length - 1);
-	                  var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
-	                  liHTML +=
-	                      '<div style="display: inline-block; position: absolute; left:' +
-	                          left_offset +
-	                          "%; text-align: center; width: " +
-	                          width +
-	                          '%;">';
-	                  liHTML += '<span style="text-align: center; font-size: 60%;">' + trial.slider_labels[j] + "</span>";
-	                  liHTML += "</div>";
-	              }
-	              liHTML += '</div>';
-	              liHTML += '</div>';
-	              liHTML += '</div>';  
-	              liHTML += '<span class="close">x</span></li>';
-
-
-          		li.innerHTML = liHTML;
-          		li.id = "ListElement" + i;
-          		li.className = "ListElement";
-          		li.draggable = true;
-          		sortList.appendChild(li);
-				
-      			let plus = document.createElement("li");
-      			sortList.appendChild(plus);
-  				plus.innerHTML = '<li><span class="add">+</span></li>';
-			});
-		});
+            let add = document.getElementById("addBox");
+            addBox.remove();
+            populateButtons(startingList,trial,display_element);
+				  }
 
           // function to end trial when it is time
           const end_trial = () => {
@@ -420,7 +381,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               var trial_data = {
                   rt: response.rt,
                   response: response.responses,
-                  confidence: response.confidence,
+                  sliderValues: response.sliderValues,
+                  scaleValues: response.scaleValues,
                   startinglist: response.startinglist
               };
               // clear the display

@@ -7,6 +7,7 @@
     </title> -->
     <script src="/src/utils.js"></script>
     <script src="/src/scenarioFile.js"></script>
+    <script src="/src/scenarioFile2.js"></script>
     <script src="/src/src.js"></script>
     <script type="text/javascript">
         const chars = shuffle(["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","1","2","3","4","5","6","7","8","9"]);
@@ -60,6 +61,9 @@
     const hypothesisGenerationTrials = false; // If true, run trials with starting part where participants say which diagnoses they are considering at the start.
     const doLikelihoodEstimates = true;
     const topXLikelihood = 3;
+    const informationStages = true;
+    const pastInformationAvailable = true;
+    const randomiseTestOrder = true;
 
     const endRedirectURL = 'https://bbc.co.uk'; //What URL to redirect to after the experiment.
 
@@ -83,39 +87,39 @@
     let dateCompleted = longformDate();
 
     // What independent and dependent data variables do we have? 
-    let hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
-    let shuffledScenarios = shuffle(scenarios);
-    let scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
-    scenarioOrder = scenarioOrder.join('');
-    let buttons = shuffledScenarios[0];
-    buttons = Object.keys(buttons);
-    buttons.splice(buttons.indexOf("ID"), 1);
-    buttons.splice(buttons.indexOf("True Condition"), 1);
-    buttons.splice(buttons.indexOf("Prompt"), 1);
-    buttons.splice(buttons.indexOf("Suspected"), 1);
-    buttons.push("RECORD FINAL DIAGNOSIS")
+    let hypothesisCondition = 0;
+    let shuffledScenarios;
+    let scenarioOrder;
+    let buttons;
 
-    // Trial level data
-    let numOfTestsArray;
-    let totalTestTimeArray;
-    let trialTimeArray;
-    let finalConfidenceArray;
-    let subjDifficultyArray;
+    if (informationStages)
+    {   
+        hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
+        shuffledScenarios = shuffle(scenarios2);
 
-    // Aggregate data
-    let correctTrials;
-    let meanNumOfTests;
-    let meanTestTime;
-    let meanTrialTime;
-    let meanFinalConfidence;
-    let meanSubjDifficulty;
+    }
+    else
+    {
+        hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
+        shuffledScenarios = shuffle(scenarios);
+    }
+
+        scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
+        scenarioOrder = scenarioOrder.join('');
+        buttons = shuffledScenarios[0];
+        buttons = Object.keys(buttons);
+        buttons.splice(buttons.indexOf("ID"), 1);
+        buttons.splice(buttons.indexOf("True Condition"), 1);
+        buttons.splice(buttons.indexOf("Prompt"), 1);
+        buttons.splice(buttons.indexOf("Suspected"), 1);
+        buttons.push("RECORD DIAGNOSIS");
 
     // Likelihood data?
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
-    let numOfScenarios = scenarios.length;
+    let numOfScenarios = shuffledScenarios.length;
     var conditions = [];
     if (hypothesisGenerationTrials)
     {
@@ -221,7 +225,7 @@
     	choices: buttons,
     	response_ends_trial: false,
     	scenarioObject: exp.currentTrial.trialInfoSet,
-    	prompt: "<p>Click a button to gather information or click RECORD FINAL DIAGNOSIS to report your final answer.</p>",
+    	prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
         on_load: ()=>{
             exp.fullscreenMode();
         },
@@ -355,6 +359,7 @@
         slider_labels: ["Not At All Likely", "Extremely Likely"],
         slider_start: 5,
         slider_prompt: "Likelihood",
+        slider_width:200,
         scale_questions: true,
         scale_labels: ["Mild","Moderate","Severe"],
         scale_prompt: "Severity",
@@ -379,23 +384,56 @@
         }
     }
 
-    let trial = [differentialDiagnoses, infoSeeking, finalDiagnosis, confidence];
+    let trial;
+    if (informationStages)
+    {
+        trial = [];
+        let currentButtons = buttons;
+        currentButtons.pop();
+        for (let i = 1;i<buttons.length;i++)
+        {
+            currentButtons = currentButtons.slice(0,i);
+            console.log(currentButtons);
+            currentButtons.push("RECORD DIAGNOSIS");
+            var infoSeekingStage = {
+                type: jsPsychImageButtonResponse,
+                stimulus: '',
+                choices: currentButtons,
+                response_ends_trial: false,
+                scenarioObject: exp.currentTrial.trialInfoSet,
+                prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
+                on_load: ()=>{
+                    exp.fullscreenMode();
+                },
+                on_finish: (trial)=>{
+                    exp.saveInfoSeeking(trial);
+                }
+            }
+            trial.push(infoSeekingStage);
+            trial.push(differentialDiagnoses);
+            trial.push(confidence);
+        } 
+    }   
+    else
+    {
+        trial = [infoSeeking, differentialDiagnoses, finalDiagnosis, confidence];
+    }
 
-    if (hypothesisGenerationTrials == true)
+    if (hypothesisGenerationTrials)
     {
         trial.unshift(hypothesisGeneration);
     }
 
     trial.unshift(caseIntro);
 
-    if (doDifficulty == true)
+    if (doDifficulty)
     {
         trial.push(perceivedDifficulty);
     }
 
     timeline.push(welcome);
 
-    if (demoQuestions == true)
+    if (demoQuestions)
     {
         timeline.push(demoQuestionnaire);
     }
@@ -408,7 +446,7 @@
     	timeline.push({timeline: trial});
     }
 
-    if (doDebrief == true)
+    if (doDebrief)
     {
         timeline.push(debrief);
     }

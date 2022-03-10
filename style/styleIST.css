@@ -886,7 +886,7 @@ button.default-white-button.start-tutorial, .button.default-white-button.start-t
   padding: 12px;
   text-decoration: none;
   font-size: 18px;
-  color: red;
+  color: white;
   display: block;
   position: relative;
 }
@@ -902,7 +902,7 @@ button.default-white-button.start-tutorial, .button.default-white-button.start-t
 
 /* Add a light grey background color on hover */
 #sortList .ListElement:hover {
-  background-color: #eee;
+  background-color: #163300;
 }
 
 .add, .confirm {
@@ -927,7 +927,7 @@ button.default-white-button.start-tutorial, .button.default-white-button.start-t
   transform: translate(0%, -50%);
 }
 
-.close:hover {background: #bbb;}
+.close:hover {background: #361500;}
 
 .add:hover {background: #04AA6D;}
 
