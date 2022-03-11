@@ -147,6 +147,14 @@ class Structure {
         this.currentTrial.finalDiagnosisRT = trial.rt;
     }
 
+    saveDifferentialDiagnoses(trial)
+    {
+        this.currentTrial.diagnoses = trial.response;
+        this.currentTrial.severities = trial.scaleValues;
+        this.currentTrial.likelihoods = trial.sliderValues;
+        this.currentTrial.differentialRT = trial.rt;
+    }
+
     saveConfidence(trial)
     {
         //this.storePluginData(trial);
@@ -255,8 +263,10 @@ class Structure {
         out.rts = trial.rts;
         out.totalInfoSeekingTime = trial.totalInfoSeekingTime;
         out.totalTestDuration = trial.totalTestDuration;
-        out.finalDiagnosis = trial.finalDiagnosis["finalDiagnosis"];
-        out.finalDiagnosisRT = trial.finalDiagnosisRT;
+        out.diagnoses = trial.diagnoses;
+        out.severities = trial.severities;
+        out.likelihoods = trial.likelihoods;
+        out.differentialRT = trial.differentialRT;
         out.confidence = trial.confidence;
         out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
 

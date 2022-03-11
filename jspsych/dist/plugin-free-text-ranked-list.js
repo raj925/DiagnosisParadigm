@@ -141,14 +141,14 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
       {
         let li = document.createElement("li");
         liHTML = "<table style='width: 100%; table-layout: fixed;'><tr><td>"
-        liHTML += "<li style='color:red;'>" + list[i];
+        liHTML += "<li id ='ListElementName" + i + "'; style='color:red;'>" + list[i];
         liHTML += "</td><td>";
 
           // add question
           //liHTML += '<label class="jspsych-survey-likert-statement">' + trial.scale_prompt + "</label>";
           // add options
           var width = 100 / trial.scale_labels.length;
-          var options_string = '<ul class="jspsych-survey-likert-opts"><table><tr>';
+          var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
           for (var j = 0; j < trial.scale_labels.length; j++) {
               options_string +=
                   '<th><li style=" list-style-type:none; width:' +
@@ -179,7 +179,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           }
           liHTML += '">';
           liHTML +=
-              '<input type="range" value="' +
+              '<input type="range" id="slider' + i + '" value="' +
                   trial.slider_start +
                   '" min="' +
                   trial.min +
@@ -215,25 +215,32 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
         li.className = "ListElement";
         li.draggable = true;
         sortList.appendChild(li);
-
       }
 
-      /* Get all elements with class="close" */
-      var closebtns = document.getElementsByClassName("close");
-      console.log(closebtns);
-
-      /* Loop through the elements, and hide the parent, when clicked on */
-      for (var i = 0; i < closebtns.length; i++) 
-      {
-        let id = "ListElement" + i;
-        console.log(id);
-        closebtns[i].addEventListener("click", function() 
+        let plus = document.createElement("li");
+        plus.id = "addBox";
+        sortList.appendChild(plus);
+        plus.innerHTML = '<li><span id="add" class="add">+</span></li>';
+        let add = document.getElementById("add");
+        add.addEventListener("click", function() 
         {
-          let ele = document.getElementById(id);
-          ele.style.display = 'none';
-          ele.remove();
+            plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+            var q_element = document.getElementById("inputText");
+            display_element.querySelector(q_element.focus());
+            q_element.onclick = function(e) {
+              q_element.focus();
+            };
+            q_element.onfocus = function(e) {
+              q_element.select();
+            };
+            let confirm = document.getElementById("confirm"); 
+            confirm.addEventListener("click", function()
+            {
+              let newList = list;
+              newList.push((q_element.value).toUpperCase());
+              populateButtons(newList,trial,display_element);
+            });
         });
-      }
 
       let items = sortList.getElementsByTagName("li"), current=null;
 
@@ -288,31 +295,6 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             }
           };
        }
-
-        let plus = document.createElement("li");
-        plus.id = "addBox";
-        sortList.appendChild(plus);
-        plus.innerHTML = '<li><span class="add">+</span></li>';
-        plus.addEventListener("click", function() 
-        {
-            plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
-            var q_element = document.getElementById("inputText");
-            display_element.querySelector(q_element.focus());
-            q_element.onclick = function(e) {
-              q_element.focus();
-            };
-            q_element.onfocus = function(e) {
-              q_element.select();
-            };
-            let confirm = document.getElementById("confirm"); 
-            confirm.addEventListener("click", function()
-            {
-              var q_element = document.getElementById("inputText");
-              var val = q_element.value;
-              response.responses.push(val);
-              populateButtons(response.responses,trial,display_element);
-            });
-        });
   }
   /**
    * **free-text-ranked-list**
@@ -337,8 +319,10 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               rt: null,
               responses: [],
               sliderValues: [],
-              scalesValues: [],
-              startinglist: []
+              scaleValues: [],
+              startingList: [],
+              startingSliders: [],
+              startingScales: []
           };
 
 
@@ -357,21 +341,90 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   "</button>";
           display_element.innerHTML = html;
 
+          var start_time = performance.now();
+
           let sortList = document.getElementById("sortList");
           let plus = document.createElement("li");
           plus.id = "addBox";
           sortList.appendChild(plus);
-          plus.innerHTML = '<li><span class="add">+</span></li>';
+          plus.innerHTML = '<li><span class="add" id="add">+</span></li>';
+          let add = document.getElementById("add");
+          add.addEventListener("click", function() 
+          {
+              plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+              var q_element = document.getElementById("inputText");
+              display_element.querySelector(q_element.focus());
+              q_element.onclick = function(e) {
+                q_element.focus();
+              };
+              q_element.onfocus = function(e) {
+                q_element.select();
+              };
+              let confirm = document.getElementById("confirm"); 
+              confirm.addEventListener("click", function()
+              {
+                plus.remove();
+                let newList = [];
+                newList.push((q_element.value).toUpperCase());
+                document.getElementById("jspsych-canvas-slider-response-next").disabled = false;
+                populateButtons(newList,trial,display_element);
+              });
+          });
 
+          /* Get all elements with class="close" */
+          var closebtns = document.getElementsByClassName("close");
+          console.log(closebtns);
+
+          /* Loop through the elements, and hide the parent, when clicked on */
+          for (var i = 0; i < closebtns.length; i++) 
+          {
+            let id = "ListElement" + i;
+            closebtns[i].addEventListener("click", function() 
+            {
+              let ele = document.getElementById(id);
+              ele.style.display = 'none';
+              let closed = response.responses[i];
+              response.responses = response.responses.filter(item => item !== closed)
+              ele.remove();
+            });
+          }
+
+          let startingList = [];
           if (!(trial.start_empty)) 
           {
-          	var startingList = trial.starting_list;
+          	startingList = trial.starting_list;
           	response.startinglist = startingList;
           	response.responses = startingList;
-            let add = document.getElementById("addBox");
-            addBox.remove();
-            populateButtons(startingList,trial,display_element);
 				  }
+
+
+          let nextButton = document.getElementById("jspsych-canvas-slider-response-next");
+          nextButton.addEventListener("click", function() {
+            var end_time = performance.now();
+            var rt = Math.round(end_time - start_time);
+            response.totalTime = parseInt(rt);
+            response.responses = [];
+            for (let x = 0; x<1000; x++)
+            {
+              let id = "ListElementName" + x
+              if (document.getElementById(id) == null)
+              {
+                break;
+              }
+              else
+              {
+                response.responses.push((document.getElementById(id)).innerText);
+                let slider = "slider" + x;
+                response.sliderValues.push(parseInt((document.getElementById(slider)).value));
+                let scale = "scale" + x;
+                var match = display_element.querySelector("#" + scale);
+                var inputboxes = match.querySelectorAll("input[type=radio]:checked");
+                response.scaleValues.push(parseInt(inputboxes[0].value)+1);
+              }
+            }
+            console.log(response);
+            end_trial();
+          });      
 
           // function to end trial when it is time
           const end_trial = () => {

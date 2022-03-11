@@ -354,8 +354,6 @@
     {
     	type: jsPsychFreeTextRankedList,
     	prompt: "<p>Input your diagnoses</p>",
-        start_empty: false,
-        starting_list: ["Pneumothorax","COPD", "Sepsis"],
         slider_labels: ["Not At All Likely", "Extremely Likely"],
         slider_start: 5,
         slider_prompt: "Likelihood",
@@ -367,6 +365,7 @@
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
+            exp.saveDifferentialDiagnoses(trial)
             exp.exportGovernor();
         }
     }
@@ -390,15 +389,15 @@
         trial = [];
         let currentButtons = buttons;
         currentButtons.pop();
-        for (let i = 1;i<buttons.length;i++)
+        for (let i = 1;i<buttons.length+1;i++)
         {
-            currentButtons = currentButtons.slice(0,i);
-            console.log(currentButtons);
-            currentButtons.push("RECORD DIAGNOSIS");
+            let stageButtons = currentButtons.slice(0,i);
+            console.log(stageButtons);
+            stageButtons.push("RECORD DIAGNOSIS");
             var infoSeekingStage = {
                 type: jsPsychImageButtonResponse,
                 stimulus: '',
-                choices: currentButtons,
+                choices: stageButtons,
                 response_ends_trial: false,
                 scenarioObject: exp.currentTrial.trialInfoSet,
                 prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
