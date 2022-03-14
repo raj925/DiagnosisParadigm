@@ -131,7 +131,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
       }
   };
 
-  function populateButtons (list,trial,display_element) 
+  function populateButtons (list,trial,display_element,slider_vals=[],scale_vals=[]) 
   {
 
       let liHTML;
@@ -150,10 +150,15 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           var width = 100 / trial.scale_labels.length;
           var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
           for (var j = 0; j < trial.scale_labels.length; j++) {
+              let check = '';
+              if (scale_vals.length > 0 && scale_vals[i] == j)
+              {
+                check = 'checked="checked"';
+              }
               options_string +=
                   '<th><li style=" list-style-type:none; width:' +
                       width +
-                      '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" name="Q' +
+                      '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" ' + check + 'name="Q' +
                       trial.scale_labels[i] +
                       '" value="' +
                       j +
@@ -177,10 +182,22 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           else {
               liHTML += trial.canvas_size[1] + "px;";
           }
+          
           liHTML += '">';
+
+          let sliderStart;
+          if (slider_vals.length > 0)
+          {
+            sliderStart = slider_vals[i];
+          }
+          else
+          {
+            sliderStart = trial.slider_start;
+          }
+
           liHTML +=
               '<input type="range" id="slider' + i + '" value="' +
-                  trial.slider_start +
+                  sliderStart +
                   '" min="' +
                   trial.min +
                   '" max="' +
@@ -238,7 +255,26 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             {
               let newList = list;
               newList.push((q_element.value).toUpperCase());
-              populateButtons(newList,trial,display_element);
+              let sliderValues = [];
+              let scaleValues = [];
+              for (let x = 0; x<1000; x++)
+              {
+                let id = "ListElementName" + x
+                if (document.getElementById(id) == null)
+                {
+                  break;
+                }
+                else
+                {
+                  let slider = "slider" + x;
+                  sliderValues.push(parseInt((document.getElementById(slider)).value));
+                  let scale = "scale" + x;
+                  var match = display_element.querySelector("#" + scale);
+                  var inputboxes = match.querySelectorAll("input[type=radio]:checked");
+                  scaleValues.push(parseInt(inputboxes[0].value));
+                }
+              }
+              populateButtons(newList,trial,display_element,sliderValues,scaleValues);
             });
         });
 
