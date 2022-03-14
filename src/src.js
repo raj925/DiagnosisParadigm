@@ -39,14 +39,16 @@ class Structure {
 	constructor(args = {}) 
 	{
         this.numOfTrials = args.numOfTrials || 0;
+        this.numOfSubtrials = args.numOfSubtrials || 0;
         this.currentTrialIndex = args.currentTrialIndex || 0;
+        this.currentSubtrialIndex = args.currentSubtrialIndex || 0;
         this.completionURL = typeof args.completionURL === 'undefined'? '' : args.completionURL;
         this.timeStart = typeof args.timeStart === 'undefined' ? (new Date).getTime(): args.timeStart;
         this.scenarioObject = typeof args.scenarioObject === 'undefined'? [] : args.scenarioObject;
         this.participantID = typeof args.participantID === 'undefined'? "NO_ID" : args.participantID;
         this.complete = typeof args.complete === 'undefined'? false : args.complete;
         this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
-        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfTrials, this.expConditionOrder);
+        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfSubtrials, this.expConditionOrder);
     }
 
      /**
@@ -57,15 +59,25 @@ class Structure {
     static addTrials(scenarioObject, len, expConditions) 
     {
         let out = [];
+        let trial = 1;
+        let subtrial = 1;
         for(let i=0; i<len; i++) {
             out[i] = new Trial(i+1, {
-            	scenarioID: scenarioObject[i]["ID"], 
-            	trueCondition: scenarioObject[i]["True Condition"],
-                expCondition: expConditions[i],
-                presentation: scenarioObject[i]["Prompt"],  
-                prompt: scenarioObject[i]["Suspected"],  
-                trialInfoSet: scenarioObject[i]
+                trialID: trial,
+                subtrialID: subtrial,
+            	scenarioID: scenarioObject[trial-1]["ID"], 
+            	trueCondition: scenarioObject[trial-1]["True Condition"],
+                expCondition: expConditions[trial-1],
+                presentation: scenarioObject[trial-1]["Prompt"],  
+                prompt: scenarioObject[trial-1]["Suspected"],  
+                trialInfoSet: scenarioObject[trial-1]
             });
+            subtrial++;
+            if (subtrial > this.numOfSubtrials)
+            {
+                trial++;
+                subtrial=1;
+            }
         }
         return out;
     }
@@ -73,7 +85,12 @@ class Structure {
     /**
      * @return {Trial} - the current trial
      */
-    get currentTrial() {return this.trials[this.currentTrialIndex];}
+    //get currentTrial() {return this.trials[this.currentTrialIndex];}
+
+    /**
+     * @return {Trial} - the current subtrial
+     */
+    get currentSubtrial() {return this.trials[this.currentSubtrialIndex];}
 
     /** Enable or disable fullscreen display
      * Adapted from: https://www.w3schools.com/howto/howto_js_fullscreen.asp
@@ -118,48 +135,53 @@ class Structure {
     saveHypotheses(trial)
     {
         //this.storePluginData(trial);
-        this.currentTrial.startingHypotheses = trial.response;
-        this.currentTrial.hypothesisOptions = trial.question_order;
+        this.currentSubtrial.startingHypotheses = trial.response;
+        this.currentSubtrial.hypothesisOptions = trial.question_order;
     }
 
     saveInfoSeeking(trial)
     {
         //this.storePluginData(trial);
-        this.currentTrial.requestedTests = trial.response;
-        this.currentTrial.availableTests = trial.tests;
-        this.currentTrial.rts = trial.rt;
-        this.currentTrial.totalInfoSeekingTime = trial.trialTime;
-        this.currentTrial.totalTestDuration = trial.totalTestDuration;
+        this.currentSubtrial.requestedTests = trial.response;
+        this.currentSubtrial.availableTests = trial.tests;
+        this.currentSubtrial.rts = trial.rt;
+        this.currentSubtrial.totalInfoSeekingTime = trial.trialTime;
+        this.currentSubtrial.totalTestDuration = trial.totalTestDuration;
     }
 
     saveLikelihoodData(trial)
     {
-        this.currentTrial.topDiagnoses = trial.response_answers;
-        this.currentTrial.topLikelihoods = trial.response_confidence;
-        this.currentTrial.topDiagnosesRT = trial.rt_ans;
-        this.currentTrial.topLikelihoodsRT = trial.rt_conf;
+        this.currentSubtrial.topDiagnoses = trial.response_answers;
+        this.currentSubtrial.topLikelihoods = trial.response_confidence;
+        this.currentSubtrial.topDiagnosesRT = trial.rt_ans;
+        this.currentSubtrial.topLikelihoodsRT = trial.rt_conf;
     }
 
     saveFinalDiagnosis(trial)
     {
         //this.storePluginData(trial);
-        this.currentTrial.finalDiagnosis = trial.response;
-        this.currentTrial.finalDiagnosisRT = trial.rt;
+        this.currentSubtrial.finalDiagnosis = trial.response;
+        this.currentSubtrial.finalDiagnosisRT = trial.rt;
     }
 
     saveDifferentialDiagnoses(trial)
     {
-        this.currentTrial.diagnoses = trial.response;
-        this.currentTrial.severities = trial.scaleValues;
-        this.currentTrial.likelihoods = trial.sliderValues;
-        this.currentTrial.differentialRT = trial.rt;
+        this.currentSubtrial.diagnoses = trial.response;
+        this.currentSubtrial.severities = trial.scaleValues;
+        this.currentSubtrial.likelihoods = trial.sliderValues;
+        this.currentSubtrial.differentialRT = trial.rt;
     }
 
     saveConfidence(trial)
     {
         //this.storePluginData(trial);
-        this.currentTrial.confidence = trial.response;
-        this.currentTrialIndex++;
+        this.currentSubtrial.confidence = trial.response;
+        this.currentSubtrialIndex++;
+        if (this.currentSubtrialIndex > this.numOfSubtrials)
+        {
+            this.currentTrialIndex++;
+            this.currentSubtrialIndex = 0;
+        }
         if (this.currentTrialIndex > this.numOfTrials)
         {
             this.complete = true;
@@ -168,11 +190,11 @@ class Structure {
 
     getCaseIntro()
     {
-        let currentExpCondition = this.currentTrial.expCondition;
-        let prompt = this.currentTrial.presentation;
+        let currentExpCondition = this.currentSubtrial.expCondition;
+        let prompt = this.currentSubtrial.presentation;
         if (currentExpCondition == "Directed")
         {
-            prompt = prompt + " " + this.currentTrial.prompt;
+            prompt = prompt + " " + this.currentSubtrial.prompt;
         }
         return prompt;
     }
@@ -203,7 +225,7 @@ class Structure {
 
         // Trials
         let trialData = [];
-        for (let t=0; t<this.currentTrialIndex; t++)
+        for (let t=0; t<this.currentSubtrialIndex; t++)
             trialData.push(this.flattenTrialData(data.trials[t], participantData.id));
         participantData.trials = trialData;
 
@@ -246,6 +268,8 @@ class Structure {
     flattenTrialData(trial, id) 
     {
         let out = {};
+        out.trial = trial.trialID;
+        out.subtrial = trial.subtrialID;
         out.participantID = id;
         out.scenarioID = trial.id;
         out.trueCondition = trial.trueCondition;
@@ -332,9 +356,9 @@ class Structure {
      * @param {Object} pluginData - response data sent by a jsPsych plugin
      */
     storePluginData(pluginData) {
-        if (Object.keys(this.currentTrial).indexOf('pluginResponse') === -1)
-            this.currentTrial.pluginResponse = [];
+        if (Object.keys(this.currentSubtrial).indexOf('pluginResponse') === -1)
+            this.currentSubtrial.pluginResponse = [];
         // Save this trial data (jspsych would do this for us, but we have access to a bunch of stuff it doesn't
-        this.currentTrial.pluginResponse.push(pluginData);
+        this.currentSubtrial.pluginResponse.push(pluginData);
     }
 }

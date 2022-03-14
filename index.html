@@ -62,6 +62,7 @@
     const doLikelihoodEstimates = true;
     const topXLikelihood = 3;
     const informationStages = true;
+    const numOfInformationStages = 4;
     const pastInformationAvailable = true;
     const randomiseTestOrder = true;
 
@@ -119,6 +120,15 @@
     ////////////////////////////////////////////
     ////////////////////////////////////////////
 
+    const jsPsych = initJsPsych({
+      //preload_images: images,
+      show_preload_progress_bar: false,
+      on_finish: function(){
+        var endExperimentTime = Date.now();
+        var expTime = msToMinSec(endExperimentTime - startExperimentTime);
+        jsPsych.data.displayData();
+    }});
+
     let numOfScenarios = shuffledScenarios.length;
     var conditions = [];
     if (hypothesisGenerationTrials)
@@ -140,7 +150,9 @@
 
     let exp = new Structure({
     	numOfTrials: numOfScenarios,
+        numOfSubtrials: numOfInformationStages,
     	currentTrialIndex: 0,
+        currentSubtrialIndex: 0,
     	completionURL: endRedirectURL,
         timeStart: startExperimentTime,
         scenarioObject: shuffledScenarios,
@@ -224,7 +236,7 @@
         stimulus: '',
     	choices: buttons,
     	response_ends_trial: false,
-    	scenarioObject: exp.currentTrial.trialInfoSet,
+    	scenarioObject: exp.currentSubtrial.trialInfoSet,
     	prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
         on_load: ()=>{
             exp.fullscreenMode();
@@ -233,43 +245,6 @@
             exp.saveInfoSeeking(trial);
         }
     }
-
-    // const likelihoodRank = {
-    //     type: jsPsychSurveyMultiSelectLimit,
-    //     questions: [{
-    //       prompt: "Choose from the list below as to what your top " + topXLikelihood + " most likely diagnoses at this stage.", 
-    //       name: 'initalDiagnoses', 
-    //       options: shuffle(diagnoses), 
-    //       required: true
-    //     }],
-    //     hozizontal: false,
-    //     limit: topXLikelihood,
-    //     button_label: "Submit",
-    //     on_load: ()=>{
-    //         exp.fullscreenMode();
-    //     },
-    //     on_finish: (trial)=>{
-    //         exp.saveTopDiagnoses(trial);
-    //     }
-        
-    // }
-
-    // const likelihoodAssign = {
-    //     type: jsPsychCanvasSliderResponseMulti,
-    //     stimulus: '',
-    //     labels: ["Not At All Confident", "Fully Confident"],
-    //     require_movement: false,
-    //     prompt: "<p>Record the likelihood of each of the top " + topXLikelihood + " diagnoses on the scales below.</p>",
-    //     response_ends_trial: true,
-    //     slider_number: topXLikelihood,
-    //     struct_object: exp,
-    //     on_load: ()=>{
-    //         exp.fullscreenMode();
-    //     },
-    //     on_finish: (trial)=>{
-    //         exp.saveLikelihoods(trial);
-    //     }
-    // }
 
     const likelihood = {
         type: jsPsychSurveyMultiSelectLimitSliders,
@@ -363,6 +338,9 @@
         scale_prompt: "Severity",
         on_load: ()=>{
             exp.fullscreenMode();
+            console.log(jsPsych.data.get().last(3)[0].response);
+            console.log(jsPsych.data.get().last(3)[0].sliderValues);
+            console.log(jsPsych.data.get().last(3)[0].scaleValues);
         },
         on_finish: (trial)=>{
             exp.saveDifferentialDiagnoses(trial)
@@ -392,14 +370,13 @@
         for (let i = 1;i<buttons.length+1;i++)
         {
             let stageButtons = currentButtons.slice(0,i);
-            console.log(stageButtons);
             stageButtons.push("RECORD DIAGNOSIS");
             var infoSeekingStage = {
                 type: jsPsychImageButtonResponse,
                 stimulus: '',
                 choices: stageButtons,
                 response_ends_trial: false,
-                scenarioObject: exp.currentTrial.trialInfoSet,
+                scenarioObject: exp.currentSubtrial.trialInfoSet,
                 prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
                 on_load: ()=>{
                     exp.fullscreenMode();
@@ -409,7 +386,45 @@
                 }
             }
             trial.push(infoSeekingStage);
-            trial.push(differentialDiagnoses);
+            if (i==1)
+            {
+                trial.push(differentialDiagnoses);
+            }
+            else
+            {
+                var differentialDiagnosesStage = {
+                    type: jsPsychFreeTextRankedList,
+                    prompt: "<p>Input your diagnoses</p>",
+                    slider_labels: ["Not At All Likely", "Extremely Likely"],
+                    slider_start: 5,
+                    slider_prompt: "Likelihood",
+                    slider_width:200,
+                    scale_questions: true,
+                    scale_labels: ["Mild","Moderate","Severe"],
+                    scale_prompt: "Severity",
+                    start_empty: false,
+                    starting_list: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].response
+                    },
+                    starting_sliders: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].sliderValues
+                    },
+                    starting_scales: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].scaleValues
+                    },
+                    on_load: ()=>{
+                        exp.fullscreenMode();
+                    },
+                    on_finish: (trial)=>{
+                        exp.saveDifferentialDiagnoses(trial)
+                        exp.exportGovernor();
+                    }
+                }
+                trial.push(differentialDiagnosesStage);
+            }
             trial.push(confidence);
         } 
     }   
@@ -451,15 +466,6 @@
     }
 
     console.log(timeline);
-
-	const jsPsych = initJsPsych({
-	  //preload_images: images,
-	  show_preload_progress_bar: false,
-	  on_finish: function(){
-	  	var endExperimentTime = Date.now();
-      	var expTime = msToMinSec(endExperimentTime - startExperimentTime);
-	    jsPsych.data.displayData();
-	}});
 
     jsPsych.run(timeline);
 

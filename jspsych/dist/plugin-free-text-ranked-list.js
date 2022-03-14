@@ -42,6 +42,20 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               default: [],
               array: true,
           },
+          /** If start_empty is false, this is the list of slider values to start with. */
+          starting_sliders: {
+              type: jspsych.ParameterType.INT,
+              pretty_name: "Starting Sliders",
+              default: [],
+              array: true,
+          },
+          /** If start_empty is false, this is the list of scale values to start with. */
+          starting_scales: {
+              type: jspsych.ParameterType.INT,
+              pretty_name: "Starting Scales",
+              default: [],
+              array: true,
+          },
           /** If true, enforce a limit on the number of items that can be added to the list. **/
           item_limit: {
           	type: jspsych.ParameterType.BOOL,
@@ -338,6 +352,23 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             }
           };
        }
+
+        /* Get all elements with class="close" */
+        var closebtns = document.getElementsByClassName("close");
+        /* Loop through the elements, and hide the parent, when clicked on */
+        for (var i = 0; i < closebtns.length; i++) 
+        {
+          let id = "ListElement" + i;
+          closebtns[i].addEventListener("click", function() 
+          {
+            let ele = document.getElementById(id);
+            ele.style.display = 'none';
+            let closed = response.responses[i];
+            //response.responses = response.responses.filter(item => item !== closed)
+            ele.remove();
+          });
+        }
+
   }
   /**
    * **free-text-ranked-list**
@@ -416,8 +447,6 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 
           /* Get all elements with class="close" */
           var closebtns = document.getElementsByClassName("close");
-          console.log(closebtns);
-
           /* Loop through the elements, and hide the parent, when clicked on */
           for (var i = 0; i < closebtns.length; i++) 
           {
@@ -427,7 +456,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               let ele = document.getElementById(id);
               ele.style.display = 'none';
               let closed = response.responses[i];
-              response.responses = response.responses.filter(item => item !== closed)
+              //response.responses = response.responses.filter(item => item !== closed)
               ele.remove();
             });
           }
@@ -438,6 +467,9 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           	startingList = trial.starting_list;
           	response.startinglist = startingList;
           	response.responses = startingList;
+            response.startingSliders = trial.starting_sliders;
+            response.startingScales = trial.starting_scales;
+            populateButtons(startingList,trial,display_element,trial.starting_sliders,trial.starting_scales);
 				  }
 
 
@@ -447,11 +479,20 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             var rt = Math.round(end_time - start_time);
             response.totalTime = parseInt(rt);
             response.responses = [];
+            response.sliderValues = [];
+            response.scaleValues = [];
+            let errorStyle = "style='color: red;position: absolute;left: 50%;transform: translate(-50%, -50%);top: 60%;'";
+            let genError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
+            genError.innerHTML = "<div " + errorStyle + ">Please make sure a severity is provided for all diagnoses!</div>"
+            genError.classList.add('hidden');
+            genError.id = "genError";
+            let success = false;
             for (let x = 0; x<1000; x++)
             {
               let id = "ListElementName" + x
               if (document.getElementById(id) == null)
               {
+                success = true;
                 break;
               }
               else
@@ -462,11 +503,23 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                 let scale = "scale" + x;
                 var match = display_element.querySelector("#" + scale);
                 var inputboxes = match.querySelectorAll("input[type=radio]:checked");
-                response.scaleValues.push(parseInt(inputboxes[0].value)+1);
+                if (inputboxes.length < 1)
+                {
+                 genError.classList.remove('hidden');
+                 break;
+                }
+                else
+                {  
+                  response.scaleValues.push(parseInt(inputboxes[0].value)+1);
+                  let err = document.getElementById("genError");
+                  err.remove();
+                }
               }
             }
-            console.log(response);
-            end_trial();
+            if (success)
+            {
+              end_trial();
+            }
           });      
 
           // function to end trial when it is time
