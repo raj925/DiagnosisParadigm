@@ -271,7 +271,14 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   let scale = "scale" + x;
                   var match = display_element.querySelector("#" + scale);
                   var inputboxes = match.querySelectorAll("input[type=radio]:checked");
-                  scaleValues.push(parseInt(inputboxes[0].value));
+                  if (inputboxes.length < 1)
+                  {
+                    scaleValues.push(-1);
+                  }
+                  else
+                  {  
+                    scaleValues.push(parseInt(inputboxes[0].value));
+                  }
                 }
               }
               populateButtons(newList,trial,display_element,sliderValues,scaleValues);
