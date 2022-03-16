@@ -93,27 +93,19 @@
     let scenarioOrder;
     let buttons;
 
-    if (informationStages)
-    {   
-        hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
-        shuffledScenarios = shuffle(scenarios2);
+    hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
+    shuffledScenarios = shuffle(scenarios2);
 
-    }
-    else
-    {
-        hypothesisCondition = 0; // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
-        shuffledScenarios = shuffle(scenarios);
-    }
 
-        scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
-        scenarioOrder = scenarioOrder.join('');
-        buttons = shuffledScenarios[0];
-        buttons = Object.keys(buttons);
-        buttons.splice(buttons.indexOf("ID"), 1);
-        buttons.splice(buttons.indexOf("True Condition"), 1);
-        buttons.splice(buttons.indexOf("Prompt"), 1);
-        buttons.splice(buttons.indexOf("Suspected"), 1);
-        buttons.push("RECORD DIAGNOSIS");
+    scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;});
+    scenarioOrder = scenarioOrder.join('');
+    buttons = shuffledScenarios[0];
+    buttons = Object.keys(buttons);
+    buttons.splice(buttons.indexOf("ID"), 1);
+    buttons.splice(buttons.indexOf("True Condition"), 1);
+    buttons.splice(buttons.indexOf("Prompt"), 1);
+    buttons.splice(buttons.indexOf("Suspected"), 1);
+    buttons.push("RECORD DIAGNOSIS");
 
     // Likelihood data?
 
@@ -336,6 +328,7 @@
         scale_questions: true,
         scale_labels: ["Mild","Moderate","Severe"],
         scale_prompt: "Severity",
+        draggable_list: false,
         on_load: ()=>{
             exp.fullscreenMode();
             console.log(jsPsych.data.get().last(3)[0].response);

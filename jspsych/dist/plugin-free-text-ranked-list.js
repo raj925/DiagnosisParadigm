@@ -141,13 +141,17 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             type: jspsych.ParameterType.STRING,
               pretty_name: "Scale Prompt",
               default: "",
+          },
+          draggable_list : {
+            type: jspsych.ParameterType.BOOL,
+            pretty_name: "Draggable List",
+            default: true,
           }
       }
   };
 
   function populateButtons (list,trial,display_element,slider_vals=[],scale_vals=[]) 
-  {
-
+  { 
       let liHTML;
       let sortList = document.getElementById("sortList");
       sortList.innerHTML = "";
@@ -165,7 +169,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
           for (var j = 0; j < trial.scale_labels.length; j++) {
               let check = '';
-              if (scale_vals.length > 0 && (scale_vals[i]-1) == j)
+              if (scale_vals.length > 0 && (scale_vals[i]) == j)
               {
                 check = 'checked="checked"';
               }
@@ -267,8 +271,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             let confirm = document.getElementById("confirm"); 
             confirm.addEventListener("click", function()
             {
-              let newList = list;
-              newList.push((q_element.value).toUpperCase());
+              list.push((q_element.value).toUpperCase());
               let sliderValues = [];
               let scaleValues = [];
               for (let x = 0; x<1000; x++)
@@ -295,79 +298,93 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   }
                 }
               }
-              populateButtons(newList,trial,display_element,sliderValues,scaleValues);
+              populateButtons(list,trial,display_element,sliderValues,scaleValues);
             });
         });
 
-      let items = sortList.getElementsByTagName("li"), current=null;
-
-      // MAKE ITEMS DRAGGABLE + SORTABLE
-      for (let i of items) 
+      if (trial.draggable_list)
       {
-          // ATTACH DRAGGABLE
-          //i.draggable = true;
-          
-          // DRAG START - YELLOW HIGHLIGHT DROPZONES
-          i.ondragstart = (ev) => {
-            current = i;
-            for (let it of items) {
-              if (it != current) { it.classList.add("hint"); }
-            }
-          };
-          
-          // DRAG ENTER - RED HIGHLIGHT DROPZONE
-          i.ondragenter = (ev) => {
-            //if (i != current) { i.classList.add("active"); }
-            i.classList.add("active");
-          };
+        let items = sortList.getElementsByTagName("li"), current=null;
 
-          // DRAG LEAVE - REMOVE RED HIGHLIGHT
-          i.ondragleave = () => {
-            i.classList.remove("active");
-          };
-
-          // DRAG END - REMOVE ALL HIGHLIGHTS
-          i.ondragend = () => { for (let it of items) {
-              it.classList.remove("hint");
-              it.classList.remove("active");
-          }};
-       
-          // DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
-          i.ondragover = (evt) => { evt.preventDefault(); };
-     
-          // ON DROP - DO SOMETHING
-          i.ondrop = (evt) => {
-            evt.preventDefault();
-            if (i != current) {
-              let currentpos = 0, droppedpos = 0;
-              for (let it=0; it<items.length; it++) {
-                if (current == items[it]) { currentpos = it; }
-                if (i == items[it]) { droppedpos = it; }
-              }
-              if (currentpos < droppedpos) {
-                i.parentNode.insertBefore(current, i.nextSibling);
-              } else {
-                i.parentNode.insertBefore(current, i);
-              }
-            }
-          };
-       }
-
-        /* Get all elements with class="close" */
-        var closebtns = document.getElementsByClassName("close");
-        /* Loop through the elements, and hide the parent, when clicked on */
-        for (var i = 0; i < closebtns.length; i++) 
+        // MAKE ITEMS DRAGGABLE + SORTABLE
+        for (let i of items) 
         {
-          let id = "ListElement" + i;
-          closebtns[i].addEventListener("click", function() 
+            // ATTACH DRAGGABLE
+            //i.draggable = true;
+            
+            // DRAG START - YELLOW HIGHLIGHT DROPZONES
+            i.ondragstart = (ev) => {
+              current = i;
+              for (let it of items) {
+                if (it != current) { it.classList.add("hint"); }
+              }
+            };
+            
+            // DRAG ENTER - RED HIGHLIGHT DROPZONE
+            i.ondragenter = (ev) => {
+              //if (i != current) { i.classList.add("active"); }
+              i.classList.add("active");
+            };
+
+            // DRAG LEAVE - REMOVE RED HIGHLIGHT
+            i.ondragleave = () => {
+              i.classList.remove("active");
+            };
+
+            // DRAG END - REMOVE ALL HIGHLIGHTS
+            i.ondragend = () => { for (let it of items) {
+                it.classList.remove("hint");
+                it.classList.remove("active");
+            }};
+         
+            // DRAG OVER - PREVENT THE DEFAULT "DROP", SO WE CAN DO OUR OWN
+            i.ondragover = (evt) => { evt.preventDefault(); };
+       
+            // ON DROP - DO SOMETHING
+            i.ondrop = (evt) => {
+              evt.preventDefault();
+              if (i != current) {
+                let currentpos = 0, droppedpos = 0;
+                for (let it=0; it<items.length; it++) {
+                  if (current == items[it]) { currentpos = it; }
+                  if (i == items[it]) { droppedpos = it; }
+                }
+                if (currentpos < droppedpos) {
+                  i.parentNode.insertBefore(current, i.nextSibling);
+                } else {
+                  i.parentNode.insertBefore(current, i);
+                }
+              }
+            };
+         }
+      }
+
+      /* Get all elements with class="close" */
+      var closebtns = document.getElementsByClassName("close");
+
+      /* Loop through the elements, and hide the parent, when clicked on */
+      for (var i = 0; i < closebtns.length; i++) 
+      {
+        let id = "ListElement" + i;
+
+        closebtns[i].addEventListener("click", function() 
+        {
+          let ele = document.getElementById(id);
+          ele.style.display = 'none';
+          ele.remove();
+
+          let num = parseInt(id.replace('ListElement',''));
+          list.splice(num,1);
+
+          let items = document.getElementsByClassName("ListElement");
+          let count = 0;
+          for (let item of items) 
           {
-            let ele = document.getElementById(id);
-            ele.style.display = 'none';
-            let closed = response.responses[i];
-            //response.responses = response.responses.filter(item => item !== closed)
-            ele.remove();
-          });
-        }
+            item.id = "ListElement" + count;
+            count++;
+          }
+        });
+      }
 
   }
   /**
@@ -510,7 +527,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                 }
                 else
                 {  
-                  response.scaleValues.push(parseInt(inputboxes[0].value)+1);
+                  response.scaleValues.push(parseInt(inputboxes[0].value));
                   let err = document.getElementById("genError");
                   if (err !== null)
                   {
