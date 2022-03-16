@@ -165,7 +165,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
           for (var j = 0; j < trial.scale_labels.length; j++) {
               let check = '';
-              if (scale_vals.length > 0 && scale_vals[i] == j)
+              if (scale_vals.length > 0 && (scale_vals[i]-1) == j)
               {
                 check = 'checked="checked"';
               }
@@ -512,7 +512,10 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                 {  
                   response.scaleValues.push(parseInt(inputboxes[0].value)+1);
                   let err = document.getElementById("genError");
-                  err.remove();
+                  if (err !== null)
+                  {
+                    err.remove();
+                  }
                 }
               }
             }
