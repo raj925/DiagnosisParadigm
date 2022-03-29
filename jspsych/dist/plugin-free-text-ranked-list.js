@@ -177,7 +177,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   '<th><li style=" list-style-type:none; width:' +
                       width +
                       '%"><label class="jspsych-survey-likert-opt-label"><input type="radio" ' + check + 'name="Q' +
-                      trial.scale_labels[i] +
+                      list[i] +
                       '" value="' +
                       j +
                       '"';
@@ -276,7 +276,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               let scaleValues = [];
               for (let x = 0; x<1000; x++)
               {
-                let id = "ListElementName" + x
+                let id = "ListElement" + x
                 if (document.getElementById(id) == null)
                 {
                   break;
@@ -298,6 +298,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   }
                 }
               }
+              console.log(scaleValues);
+              console.log(sliderValues);
               populateButtons(list,trial,display_element,sliderValues,scaleValues);
             });
         });
@@ -375,6 +377,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 
           let num = parseInt(id.replace('ListElement',''));
           list.splice(num,1);
+          slider_vals.splice(num,1);
+          scale_vals.splice(num,1)
 
           let items = document.getElementsByClassName("ListElement");
           let count = 0;
@@ -383,6 +387,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             item.id = "ListElement" + count;
             count++;
           }
+          populateButtons(list,trial,display_element,slider_vals,scale_vals);
         });
       }
 

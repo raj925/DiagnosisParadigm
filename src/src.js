@@ -188,6 +188,11 @@ class Structure {
         }
     }
 
+    saveTreatmentPlan(trial)
+    {
+        this.currentSubtrial.treatmentPlan = trial.response;
+    }
+
     getCaseIntro()
     {
         let currentExpCondition = this.currentSubtrial.expCondition;

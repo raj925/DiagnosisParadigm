@@ -331,13 +331,25 @@
         draggable_list: false,
         on_load: ()=>{
             exp.fullscreenMode();
-            console.log(jsPsych.data.get().last(3)[0].response);
-            console.log(jsPsych.data.get().last(3)[0].sliderValues);
-            console.log(jsPsych.data.get().last(3)[0].scaleValues);
         },
         on_finish: (trial)=>{
             exp.saveDifferentialDiagnoses(trial)
             exp.exportGovernor();
+        }
+    }
+
+    const treatmentPlan = {
+        type: jsPsychSurveyText,
+        preamble: "Please explain what your plan of action/treatment would be for this patient.",
+        questions: ["Please use as much detail as you can."],
+        button_label: "Finish",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.saveTreatmentPlan();
+            exp.exportGovernor();
+            jsPsych.finishTrial(trial);
         }
     }
 
@@ -419,11 +431,12 @@
                 trial.push(differentialDiagnosesStage);
             }
             trial.push(confidence);
-        } 
+        }
+        trial.push(treatmentPlan); 
     }   
     else
     {
-        trial = [infoSeeking, differentialDiagnoses, finalDiagnosis, confidence];
+        trial = [infoSeeking, differentialDiagnoses, finalDiagnosis, confidence, treatmentPlan];
     }
 
     if (hypothesisGenerationTrials)
