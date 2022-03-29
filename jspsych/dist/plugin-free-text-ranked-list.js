@@ -271,36 +271,38 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             let confirm = document.getElementById("confirm"); 
             confirm.addEventListener("click", function()
             {
-              list.push((q_element.value).toUpperCase());
-              let sliderValues = [];
-              let scaleValues = [];
-              for (let x = 0; x<1000; x++)
+              let val = (q_element.value).toUpperCase();
+              if (val.length > 2 && !list.includes(val))
               {
-                let id = "ListElement" + x
-                if (document.getElementById(id) == null)
+                list.push(val);
+                let sliderValues = [];
+                let scaleValues = [];
+                for (let x = 0; x<1000; x++)
                 {
-                  break;
-                }
-                else
-                {
-                  let slider = "slider" + x;
-                  sliderValues.push(parseInt((document.getElementById(slider)).value));
-                  let scale = "scale" + x;
-                  var match = display_element.querySelector("#" + scale);
-                  var inputboxes = match.querySelectorAll("input[type=radio]:checked");
-                  if (inputboxes.length < 1)
+                  let id = "ListElement" + x
+                  if (document.getElementById(id) == null)
                   {
-                    scaleValues.push(-1);
+                    break;
                   }
                   else
-                  {  
-                    scaleValues.push(parseInt(inputboxes[0].value));
+                  {
+                    let slider = "slider" + x;
+                    sliderValues.push(parseInt((document.getElementById(slider)).value));
+                    let scale = "scale" + x;
+                    var match = display_element.querySelector("#" + scale);
+                    var inputboxes = match.querySelectorAll("input[type=radio]:checked");
+                    if (inputboxes.length < 1)
+                    {
+                      scaleValues.push(-1);
+                    }
+                    else
+                    {  
+                      scaleValues.push(parseInt(inputboxes[0].value));
+                    }
                   }
                 }
+                populateButtons(list,trial,display_element,sliderValues,scaleValues);
               }
-              console.log(scaleValues);
-              console.log(sliderValues);
-              populateButtons(list,trial,display_element,sliderValues,scaleValues);
             });
         });
 
@@ -459,11 +461,15 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               let confirm = document.getElementById("confirm"); 
               confirm.addEventListener("click", function()
               {
-                plus.remove();
-                let newList = [];
-                newList.push((q_element.value).toUpperCase());
-                document.getElementById("jspsych-canvas-slider-response-next").disabled = false;
-                populateButtons(newList,trial,display_element);
+                let val = q_element.value;
+                if (val.length > 2)
+                {
+                  plus.remove();
+                  let newList = [];
+                  newList.push((q_element.value).toUpperCase());
+                  document.getElementById("jspsych-canvas-slider-response-next").disabled = false;
+                  populateButtons(newList,trial,display_element);
+                }
               });
           });
 
