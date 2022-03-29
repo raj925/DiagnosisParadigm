@@ -341,7 +341,7 @@
     const treatmentPlan = {
         type: jsPsychSurveyText,
         preamble: "Please explain what your plan of action/treatment would be for this patient.",
-        questions: ["Please use as much detail as you can."],
+        questions: [{prompt: "Please use as much detail as you can.", required: true, name: 'Treatment'}],
         button_label: "Finish",
         on_load: ()=>{
             exp.fullscreenMode();
