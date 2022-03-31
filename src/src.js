@@ -176,6 +176,8 @@ class Structure {
     {
         //this.storePluginData(trial);
         this.currentSubtrial.confidence = trial.response;
+        this.currentSubtrial.treatmentPlan = trial.text_response;
+        this.currentSubtrial.readyToTreat = trial.checkbox;
         this.currentSubtrialIndex++;
         if (this.currentSubtrialIndex > this.numOfSubtrials)
         {

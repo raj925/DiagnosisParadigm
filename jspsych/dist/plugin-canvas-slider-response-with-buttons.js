@@ -1,8 +1,8 @@
-var jsPsychCanvasSliderResponse = (function (jspsych) {
+var jsPsychCanvasSliderResponseWithButtons = (function (jspsych) {
   'use strict';
 
   const info = {
-      name: "canvas-slider-response",
+      name: "canvas-slider-response-with-buttons",
       parameters: {
           /** The drawing function to apply to the canvas. Should take the canvas object as argument. */
           stimulus: {
@@ -89,8 +89,44 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
               type: jspsych.ParameterType.INT,
               array: true,
               pretty_name: "Canvas size",
-              default: [500, 500],
+              default: [200, 500],
           },
+          /** Question prompt. */
+          text_prompt: {
+              type: jspsych.ParameterType.HTML_STRING,
+              pretty_name: "Prompt",
+              default: undefined,
+          },
+          /** Placeholder text in the response text box. */
+          text_placeholder: {
+              type: jspsych.ParameterType.STRING,
+              pretty_name: "Placeholder",
+              default: "",
+          },
+          /** The number of rows for the response text box. */
+          text_rows: {
+              type: jspsych.ParameterType.INT,
+              pretty_name: "Rows",
+              default: 1,
+          },
+          /** The number of columns for the response text box. */
+          text_columns: {
+              type: jspsych.ParameterType.INT,
+              pretty_name: "Columns",
+              default: 40,
+          },
+          /** Name of the question in the trial data. If no name is given, the questions are named Q0, Q1, etc. */
+          text_name: {
+              type: jspsych.ParameterType.STRING,
+              pretty_name: "Question Name",
+              default: "",
+          },
+          scale_label : {
+            type: jspsych.ParameterType.STRING,
+              pretty_name: "Scale Label",
+              default: "",
+          }
+          
       },
   };
   /**
@@ -101,12 +137,13 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
    * @author Chris Jungerius (modified from Josh de Leeuw)
    * @see {@link https://www.jspsych.org/plugins/jspsych-canvas-slider-response/ canvas-slider-response plugin documentation on jspsych.org}
    */
-  class CanvasSliderResponsePlugin {
+  class CanvasSliderResponseWithButtonsPlugin {
       constructor(jsPsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
           var html = '<div id="jspsych-canvas-slider-response-wrapper" style="margin: 100px 0px;">';
+
           html +=
               '<div id="jspsych-canvas-slider-response-stimulus">' +
                   '<canvas id="jspsych-canvas-stimulus" height="' +
@@ -150,9 +187,34 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
           html += "</div>";
           html += "</div>";
           html += "</div>";
+
+          html +=
+                '<th><li style=" list-style-type:none; width:100%"><label class="jspsych-survey-likert-opt-label" style="margin-left: 47%;"><input type="checkbox" name="Q" value="1" id="check"';
+          html += ">" + trial.scale_label + "</label></li></th>";
+
           if (trial.prompt !== null) {
               html += trial.prompt;
           }
+
+          // add text box 
+          var question = trial.text_prompt;
+          html +=
+              '<div id="jspsych-survey-text class="jspsych-survey-text-question" style="margin: 2em 0em;">';
+          html += '<p class="jspsych-survey-text" id="textbox-text">' + question + "</p>";
+          var autofocus = "autofocus";
+          html += '<textarea id="input-text" name="#jspsych-survey-text-response" data-name="' +
+                          trial.text_name +
+                          '" cols="' +
+                          trial.text_columns +
+                          '" rows="' +
+                          trial.text_rows +
+                          '" ' +
+                          autofocus +
+                          " " +
+                          ' placeholder="' +
+                          trial.text_placeholder +
+                          '"></textarea>';
+
           // add submit button
           html +=
               '<button id="jspsych-canvas-slider-response-next" class="jspsych-btn" ' +
@@ -161,6 +223,32 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                   trial.button_label +
                   "</button>";
           display_element.innerHTML = html;
+
+          var text = document.getElementById("input-text");
+          text.classList.add("hidden");
+          var textDesc = document.getElementById("textbox-text");
+          textDesc.classList.add("hidden");
+
+          var check = document.getElementById("check");
+          check.addEventListener("click", function()
+          {
+            var text = document.getElementById("input-text");
+            var textDesc = document.getElementById("textbox-text");
+            if (text.classList.contains("hidden"))
+            {
+              text.classList.remove("hidden");
+              textDesc.classList.remove("hidden");
+              response.check = true;
+
+            }
+            else
+            {
+              text.classList.add("hidden");
+              textDesc.classList.add("hidden");
+              response.check = false;
+            }
+          });
+
           // draw
           if (!typeof trial.stimulus === 'undefined')
           {
@@ -170,6 +258,9 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
           var response = {
               rt: null,
               response: null,
+              slider_start: null,
+              text_response: null,
+              check: false
           };
           const end_trial = () => {
               this.jsPsych.pluginAPI.clearAllTimeouts();
@@ -178,6 +269,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
                   rt: response.rt,
                   response: response.response,
                   slider_start: trial.slider_start,
+                  text_response: response.text_response,
+                  check: response.check
               };
               display_element.innerHTML = "";
               // next trial
@@ -204,6 +297,9 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
               var endTime = performance.now();
               response.rt = Math.round(endTime - startTime);
               response.response = display_element.querySelector("#jspsych-canvas-slider-response-response").valueAsNumber;
+              var q_element = document.getElementById("input-text");
+              var val = q_element.value;         
+              response.text_response = val;
               if (trial.response_ends_trial) {
                   end_trial();
               }
@@ -259,8 +355,8 @@ var jsPsychCanvasSliderResponse = (function (jspsych) {
           }
       }
   }
-  CanvasSliderResponsePlugin.info = info;
+  CanvasSliderResponseWithButtonsPlugin.info = info;
 
-  return CanvasSliderResponsePlugin;
+  return CanvasSliderResponseWithButtonsPlugin;
 
 })(jsPsychModule);
