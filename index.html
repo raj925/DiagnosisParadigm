@@ -8,6 +8,7 @@
     <script src="/src/utils.js"></script>
     <script src="/src/scenarioFile.js"></script>
     <script src="/src/scenarioFile2.js"></script>
+    <script src="/src/scenarioFileTutorial.js"></script>
     <script src="/src/src.js"></script>
     <script type="text/javascript">
         const chars = shuffle(["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","1","2","3","4","5","6","7","8","9"]);
@@ -60,12 +61,11 @@
     const doDifficulty = false; //If true, ask participants at the end of each trial how difficult they found the case.
     const trialTime = 0; // If previous conditional is true, this is the amount of time (in seconds) allotted for each scenario.
     const hypothesisGenerationTrials = false; // If true, run trials with starting part where participants say which diagnoses they are considering at the start.
-    const doLikelihoodEstimates = true;
-    const topXLikelihood = 3;
-    const informationStages = true;
-    const numOfInformationStages = 4;
-    const pastInformationAvailable = true;
-    const randomiseTestOrder = true;
+    const informationStages = true; // If true, present information in discrete stages. If false, present all information at once.
+    const numOfInformationStages = 4; // Number of stages that infomration is presented in. Only relevant if informationStages is true.
+    const pastInformationAvailable = true; // If true, at each information stage, all information from the previous stage is available to view. If false, only the current stage's information is available.
+    const randomiseTestOrder = true; // If true, shuffles the order of tests shown on screen for each trial and information stage. If false, the order is fixed to the order in which tests are shown in the scenario files.
+    const runTutorial = false; // If true, runs a tutorial for the experiment before the main trials.
 
     const endRedirectURL = 'https://bbc.co.uk'; //What URL to redirect to after the experiment.
 
@@ -224,6 +224,22 @@
         }
     }
 
+    const tutorialCase = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '',
+        choices: buttons,
+        response_ends_trial: false,
+        scenarioObject: tutorialScenario,
+        prompt: "<p>Below you will find a series of tests or information that you can request.</p><p>Information is split into four stages: Patient History, Physical Examination, Generalised Testing and Specialised Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.",
+        shuffle_buttons: randomiseTestOrder,
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.fullscreenMode();
+        }
+    }
+
     const infoSeeking = {
         type: jsPsychImageButtonResponse,
         stimulus: '',
@@ -231,37 +247,13 @@
     	response_ends_trial: false,
     	scenarioObject: exp.currentSubtrial.trialInfoSet,
     	prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
+        shuffle_buttons: randomiseTestOrder,
         on_load: ()=>{
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
             exp.saveInfoSeeking(trial);
         }
-    }
-
-    const likelihood = {
-        type: jsPsychSurveyMultiSelectLimitSliders,
-        questions: [{
-          prompt: "Choose from the list below as to what your top " + topXLikelihood + " most likely diagnoses at this stage.", 
-          name: 'initalDiagnoses', 
-          options: shuffle(diagnoses), 
-          required: true
-        }],
-        hozizontal: false,
-        limit: topXLikelihood,
-        button_labels: "Submit",
-        stimulus: '',
-        labels: ["Not At All Confident", "Fully Confident"],
-        require_movement: false,
-        prompt: "<p>Record the likelihood of each of the top " + topXLikelihood + " diagnoses on the scales below.</p>",
-        canvas_size:[0,500],
-        on_load: ()=>{
-            exp.fullscreenMode();
-        },
-        on_finish: (trial)=>{
-            exp.saveLikelihoodData(trial);
-        }
-        
     }
 
     const finalDiagnosis = {
@@ -301,6 +293,28 @@
         on_finish: (trial)=>{
             exp.saveConfidence(trial);
             exp.exportGovernor();
+        }
+    }
+
+    const confidenceTutorial = {
+        type: jsPsychCanvasSliderResponseWithButtons,
+        stimulus: '',
+        labels: ["Not At All Confident", "Fully Confident"],
+        require_movement: false,
+        prompt: "<p>Once you have recorded your diagnosis list, you should indicate using the slider how confident you are that you have the information you would need to be ready to treat this patient.</p><p>Bear in mind that there are three stages of information gathering left for this patient, so it is fine to not be very confident yet! Make sure that you are recording your confidence as accurately as possible: try not to be overconfident or underconfident.</p>",
+        response_ends_trial: true,
+        text_prompt: "Record your treatment plan below.",
+        text_placeholder: "Input your treatment plan (eg what further tests you would run, any advice or documentation you would seek)",
+        text_rows: 10,
+        text_columns: 30,
+        text_name: "TreatmentPlan",
+        scale_label: "Ready to Treat",
+        hide_checkbox: true,
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.fullscreenMode();
         }
     }
 
@@ -345,18 +359,23 @@
         }
     }
 
-    const treatmentPlan = {
-        type: jsPsychSurveyText,
-        preamble: "Please explain what your plan of action/treatment would be for this patient.",
-        questions: [{prompt: "Please use as much detail as you can.", required: true, name: 'Treatment'}],
-        button_label: "Finish",
+    const differentialDiagnosesTutorial = 
+    {
+        type: jsPsychFreeTextRankedList,
+        prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. For each differential, you will record how severe this condition could be (Mild, Moderate or Severe) and how likely that diagnosis is on a scale of 1-10.</p><p>Try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided severity and likelihood for all diagnoses before doing so.</p>",
+        slider_labels: ["Not At All Likely", "Extremely Likely"],
+        slider_start: 5,
+        slider_prompt: "Likelihood",
+        slider_width:200,
+        scale_questions: true,
+        scale_labels: ["Mild","Moderate","Severe"],
+        scale_prompt: "Severity",
+        draggable_list: false,
         on_load: ()=>{
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
-            exp.saveTreatmentPlan();
-            exp.exportGovernor();
-            jsPsych.finishTrial(trial);
+            exp.fullscreenMode();
         }
     }
 
@@ -373,7 +392,307 @@
         }
     }
 
+    const preTutorialInstruct = {
+        type: jsPsychInstructions,
+         pages: [
+             "<p>We will present you with a series of patient scenarios, whereby you will gather information and test results about the patient to determine the possible conditions that could be causing their symptoms.</p><p>You will start with an example case, which will follow the same procedure as the main patient cases. Your performance is not being recorded for this example case, as this is to allow you to familiarise yourself with the experiment flow and how the interface works.</p>"
+        ],
+        show_clickable_nav: true,
+        allow_backward: false,
+        on_load: ()=>exp.fullscreenMode(),
+        on_finish: (trial)=>{
+            exp.fullscreenMode();
+        }
+    };
+
+    const postTutorialInstruct = {
+        type: jsPsychInstructions,
+         pages: [
+             "<p>You have completed the tutorial case! Feel free to take a short break before proceeding to the main experiment.</p><p>One final tip: please try to imagine that you are encountering these patients in your everyday work. When making decisions about what information to request and which differential diagnoses you are considering, make sure you do so in a manner as close as possible to your everyday medical decisions</p><p>Click Next to begin the experiment.</p>"
+        ],
+        show_clickable_nav: true,
+        allow_backward: false,
+        on_load: ()=>exp.fullscreenMode(),
+        on_finish: (trial)=>{
+            exp.fullscreenMode();
+        }
+    };
+
+    let tutorialTrial;
     let trial;
+
+    timeline.push(welcome);
+
+    if (runTutorial)
+    {
+        tutorialTrial = [];
+        let currentButtons = buttons;
+        currentButtons.pop();
+
+        //////////////////////////////////////////////
+        // STAGE 1
+        let stageButtons = []
+        if (pastInformationAvailable)
+        {
+            stageButtons = currentButtons.slice(0,1);
+        }
+        else
+        {
+            stageButtons = currentButtons[0]
+        }
+        stageButtons.push("RECORD DIAGNOSIS");
+        var tutorialStage1 = {
+            type: jsPsychImageButtonResponse,
+            stimulus: '',
+            choices: stageButtons,
+            response_ends_trial: false,
+            scenarioObject: tutorialScenario,
+            prompt: "<p>Above you will find a series of tests or information that you can request.</p><p>Information is split into four stages: Patient History, Physical Examination, Generalised Testing and Specialised Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            shuffle_buttons: randomiseTestOrder,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+
+        tutorialTrial.push(tutorialStage1);
+        tutorialTrial.push(differentialDiagnosesTutorial);
+        tutorialTrial.push(confidenceTutorial);
+
+        //////////////////////////////////////////////
+        // STAGE 2
+        if (pastInformationAvailable)
+        {
+            stageButtons = currentButtons.slice(0,2);
+        }
+        else
+        {
+            stageButtons = currentButtons[1]
+        }
+        stageButtons.push("RECORD DIAGNOSIS");
+        var tutorialStage2 = {
+            type: jsPsychImageButtonResponse,
+            stimulus: '',
+            choices: stageButtons,
+            response_ends_trial: false,
+            scenarioObject: tutorialScenario,
+            prompt: "<p>You will now find that the next stage of information, <strong>Physical Examination</strong>, is available to view. Click here to view the available information requests. You can also go back to remind yourself of information about the Patient History. </p><p> When you are done seeking information and ready to record current diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            shuffle_buttons: randomiseTestOrder,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(tutorialStage2);
+
+        var differentialDiagnosesTutorialStage2 = {
+            type: jsPsychFreeTextRankedList,
+            prompt: "<p>You will notice that your diagnosis list from the first stage has been saved for you to now update given the extra information received via Physical Exmination of the patient.</p><p> As before, you can add diagnoses to the list using the plus icon.</p><p> <strong>If a diagnosis is no longer under consideration, you can use the cross icon on the right of the condition to remove it from the list. </strong> </p>",
+            slider_labels: ["Not At All Likely", "Extremely Likely"],
+            slider_start: 5,
+            slider_prompt: "Likelihood",
+            slider_width:200,
+            scale_questions: true,
+            scale_labels: ["Mild","Moderate","Severe"],
+            scale_prompt: "Severity",
+            start_empty: false,
+            starting_list: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].response
+            },
+            starting_sliders: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].sliderValues
+            },
+            starting_scales: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].scaleValues
+            },
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(differentialDiagnosesTutorialStage2);
+        tutorialTrial.push(confidenceTutorial);
+
+        //////////////////////////////////////////////
+        // STAGE 3
+        if (pastInformationAvailable)
+        {
+            stageButtons = currentButtons.slice(0,3);
+        }
+        else
+        {
+            stageButtons = currentButtons[2]
+        }
+        stageButtons.push("RECORD DIAGNOSIS");
+        var tutorialStage3 = {
+            type: jsPsychImageButtonResponse,
+            stimulus: '',
+            choices: stageButtons,
+            response_ends_trial: false,
+            scenarioObject: tutorialScenario,
+            prompt: "<p>Generalised Testing is now available, as well as the information from the previous two infomation stages.</p><p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            shuffle_buttons: randomiseTestOrder,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(tutorialStage3);
+
+        var differentialDiagnosesTutorialStage3 = {
+                    type: jsPsychFreeTextRankedList,
+                    prompt: "<p>Input your diagnoses</p>",
+                    slider_labels: ["Not At All Likely", "Extremely Likely"],
+                    slider_start: 5,
+                    slider_prompt: "Likelihood",
+                    slider_width:200,
+                    scale_questions: true,
+                    scale_labels: ["Mild","Moderate","Severe"],
+                    scale_prompt: "Severity",
+                    start_empty: false,
+                    starting_list: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].response
+                    },
+                    starting_sliders: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].sliderValues
+                    },
+                    starting_scales: function(){
+                        let array = jsPsych.data.get().last(3);
+                        return array.trials[0].scaleValues
+                    },
+                    on_load: ()=>{
+                        exp.fullscreenMode();
+                    },
+                    on_finish: (trial)=>{
+                        exp.fullscreenMode();
+                    }
+        }
+        tutorialTrial.push(differentialDiagnosesTutorialStage3);
+
+        const confidenceTutorialStage3 = {
+            type: jsPsychCanvasSliderResponseWithButtons,
+            stimulus: '',
+            labels: ["Not At All Confident", "Fully Confident"],
+            require_movement: false,
+            prompt: "<p>As before, you can record your confidence using the slider</p><p><strong>If you believe you are ready to start treating the patient, you can check the box below that says 'Ready to Treat'.</strong> If you do, you will be asked to record what your treatment plan would be. Please include details such as any escalations you would make, any further tests you would run, consultants/specialists or documentation you would consult and generally what your immediate course of action would be.</p><p>For the real cases, this checkbox will be available during all four information stages, <strong>but please use this only when you are definitely sure you are ready to treat the patient.</strong></p>",
+            response_ends_trial: true,
+            text_prompt: "Record your treatment plan below.",
+            text_placeholder: "Input your treatment plan (eg what further tests you would run, any advice or documentation you would seek)",
+            text_rows: 10,
+            text_columns: 30,
+            text_name: "TreatmentPlan",
+            scale_label: "Ready to Treat",
+            hide_checkbox: false,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(confidenceTutorialStage3);
+
+        //////////////////////////////////////////////
+        // STAGE 4
+        if (pastInformationAvailable)
+        {
+            stageButtons = currentButtons.slice(0,4);
+        }
+        else
+        {
+            stageButtons = currentButtons[3]
+        }
+        stageButtons.push("RECORD DIAGNOSIS");
+        var tutorialStage4 = {
+            type: jsPsychImageButtonResponse,
+            stimulus: '',
+            choices: stageButtons,
+            response_ends_trial: false,
+            scenarioObject: tutorialScenario,
+            prompt: "<p>This is the final stage of information gathering, where you can request specialised tests, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it will helpful in making your diagnostic decision. </strong></p><p> When you are ready to record your final diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            shuffle_buttons: randomiseTestOrder,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(tutorialStage4);
+
+        var differentialDiagnosesTutorialStage4 = {
+            type: jsPsychFreeTextRankedList,
+            prompt: "<p>This is your last chance to record differential diagnoses for this patient. You can record multiple differentials, and you can record in your treatment plan on the next page what further actions you would take to reduce this list further.</p><p><strong>When you are recording diagnoses during patient cases, record ANY conditions that you are considering. Even if they are a remote possiblity, they are worth recording.</strong></p>",
+            slider_labels: ["Not At All Likely", "Extremely Likely"],
+            slider_start: 5,
+            slider_prompt: "Likelihood",
+            slider_width:200,
+            scale_questions: true,
+            scale_labels: ["Mild","Moderate","Severe"],
+            scale_prompt: "Severity",
+            start_empty: false,
+            starting_list: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].response
+            },
+            starting_sliders: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].sliderValues
+            },
+            starting_scales: function(){
+                let array = jsPsych.data.get().last(3);
+                return array.trials[0].scaleValues
+            },
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(differentialDiagnosesTutorialStage4);
+        
+        const confidenceTutorialStage4 = {
+            type: jsPsychCanvasSliderResponseWithButtons,
+            stimulus: '',
+            labels: ["Not At All Confident", "Fully Confident"],
+            require_movement: false,
+            prompt: "<p>You can record your final confidence here, as well as whether you are ready to start treating the patient using the checkbox. If you do, you will be asked to record what your treatment plan would be. Please include details such as any escalations you would make, any further tests you would run, consultants/specialists or documentation you would consult and generally what your immediate course of action would be.</p>",
+            response_ends_trial: true,
+            text_prompt: "Record your treatment plan below.",
+            text_placeholder: "Input your treatment plan (eg what further tests you would run, any advice or documentation you would seek)",
+            text_rows: 10,
+            text_columns: 30,
+            text_name: "TreatmentPlan",
+            scale_label: "Ready to Treat",
+            hide_checkbox: false,
+            on_load: ()=>{
+                exp.fullscreenMode();
+            },
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        tutorialTrial.push(confidenceTutorialStage4);
+
+        timeline.push(preTutorialInstruct);
+        timeline.push({timeline: tutorialTrial});
+        timeline.push(postTutorialInstruct);
+    }
+
     if (informationStages)
     {
         trial = [];
@@ -381,7 +700,15 @@
         currentButtons.pop();
         for (let i = 1;i<buttons.length+1;i++)
         {
-            let stageButtons = currentButtons.slice(0,i);
+            let stageButtons = []
+            if (pastInformationAvailable)
+            {
+                stageButtons = currentButtons.slice(0,i);
+            }
+            else
+            {
+                stageButtons = currentButtons[i-1]
+            }
             stageButtons.push("RECORD DIAGNOSIS");
             var infoSeekingStage = {
                 type: jsPsychImageButtonResponse,
@@ -390,6 +717,7 @@
                 response_ends_trial: false,
                 scenarioObject: exp.currentSubtrial.trialInfoSet,
                 prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
+                shuffle_buttons: randomiseTestOrder,
                 on_load: ()=>{
                     exp.fullscreenMode();
                 },
@@ -456,8 +784,6 @@
     {
         trial.push(perceivedDifficulty);
     }
-
-    timeline.push(welcome);
 
     if (demoQuestions)
     {

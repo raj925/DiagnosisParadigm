@@ -149,14 +149,6 @@ class Structure {
         this.currentSubtrial.totalTestDuration = trial.totalTestDuration;
     }
 
-    saveLikelihoodData(trial)
-    {
-        this.currentSubtrial.topDiagnoses = trial.response_answers;
-        this.currentSubtrial.topLikelihoods = trial.response_confidence;
-        this.currentSubtrial.topDiagnosesRT = trial.rt_ans;
-        this.currentSubtrial.topLikelihoodsRT = trial.rt_conf;
-    }
-
     saveFinalDiagnosis(trial)
     {
         //this.storePluginData(trial);
@@ -188,11 +180,6 @@ class Structure {
         {
             this.complete = true;
         }
-    }
-
-    saveTreatmentPlan(trial)
-    {
-        this.currentSubtrial.treatmentPlan = trial.response;
     }
 
     getCaseIntro()

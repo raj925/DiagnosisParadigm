@@ -125,6 +125,11 @@ var jsPsychCanvasSliderResponseWithButtons = (function (jspsych) {
             type: jspsych.ParameterType.STRING,
               pretty_name: "Scale Label",
               default: "",
+          },
+          hide_checkbox : {
+            type: jspsych.ParameterType.BOOL,
+            pretty_name: "Hide Checkbox",
+            default: false,
           }
           
       },
@@ -189,7 +194,7 @@ var jsPsychCanvasSliderResponseWithButtons = (function (jspsych) {
           html += "</div>";
 
           html +=
-                '<th><li style=" list-style-type:none; width:100%"><label class="jspsych-survey-likert-opt-label" style="margin-left: 47%;"><input type="checkbox" name="Q" value="1" id="check"';
+                '<th><li style=" list-style-type:none; width:100%"><label class="jspsych-survey-likert-opt-label" id="checkbox-text" style="margin-left: 47%;"><input type="checkbox" name="Q" value="1" id="check"';
           html += ">" + trial.scale_label + "</label></li></th>";
 
           if (trial.prompt !== null) {
@@ -224,12 +229,28 @@ var jsPsychCanvasSliderResponseWithButtons = (function (jspsych) {
                   "</button>";
           display_element.innerHTML = html;
 
+          var response = {
+              rt: null,
+              response: null,
+              slider_start: null,
+              text_response: null,
+              check: false
+          };
+
           var text = document.getElementById("input-text");
           text.classList.add("hidden");
           var textDesc = document.getElementById("textbox-text");
           textDesc.classList.add("hidden");
 
           var check = document.getElementById("check");
+
+          if(trial.hide_checkbox)
+          {
+            check.classList.add("hidden");
+            var checktest = document.getElementById("checkbox-text");
+            checktest.classList.add("hidden");
+          }
+
           check.addEventListener("click", function()
           {
             var text = document.getElementById("input-text");
@@ -255,13 +276,6 @@ var jsPsychCanvasSliderResponseWithButtons = (function (jspsych) {
             let c = document.getElementById("jspsych-canvas-stimulus");
             trial.stimulus(c);
           }
-          var response = {
-              rt: null,
-              response: null,
-              slider_start: null,
-              text_response: null,
-              check: false
-          };
           const end_trial = () => {
               this.jsPsych.pluginAPI.clearAllTimeouts();
               // save data
