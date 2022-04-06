@@ -91,6 +91,11 @@ var jsPsychImageButtonResponse = (function (jspsych) {
               type: Object,
               pretty_name: "Trial Object",
               default: {},
+          },
+          shuffle_buttons : {
+            type: jspsych.ParameterType.BOOL,
+            pretty_name: "Shuffle Buttons",
+            default: false,
           }
       },
   };
@@ -302,7 +307,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   }
                   display_element.querySelector("#jspsych-image-button-response-stimulus").className +=
                   " responded";
-                  if (txt == "RECORD FINAL DIAGNOSIS")
+                  if (txt == "RECORD DIAGNOSIS")
                   {
                     var end_time = performance.now();
                     var rt = Math.round(end_time - start_time);
@@ -324,7 +329,28 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                       divGroup = document.querySelector("#jspsych-image-button-response-btngrouplevel2");
                     }
                     let alphabet = "abcdefghijklmnopqrstuvwxyz";
-                    for (const [innerkey, value] of Object.entries(testObject)) 
+                    let entries = Object.entries(testObject);
+                    if(trial.shuffle_buttons)
+                    {
+                        let array = entries;
+                        let counter = array.length;
+
+                        // While there are elements in the array
+                        while (counter > 0) {
+                            // Pick a random index
+                            let index = Math.floor(Math.random() * counter);
+
+                            // Decrease counter by 1
+                            counter--;
+
+                            // And swap the last element with it
+                            let temp = array[counter];
+                            array[counter] = array[index];
+                            array[index] = temp;
+                        }
+                        entries = array;
+                    }
+                    for (const [innerkey, value] of entries) 
                     {
                       let btnDiv = divGroup.appendChild(document.createElement("div"));
                       btnDiv.className = "jspsych-image-button-response-button-level2";
