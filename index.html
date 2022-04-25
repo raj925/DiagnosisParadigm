@@ -53,7 +53,6 @@
 
     const betaTest = true; // If true, only shows a single trial
     const doInstruct = true; // If true, shows instructions.
-    const doTutorial = true; // If true, shows tutorial of how to use platform.
     const doQuestionnaire = true; // If true, includes questionnaires. 
     const demoQuestions = false; // If true, asks participants for age, gender and medical experience.
     const doDebrief = false; // If true, run debrief questionnaire at the end.
@@ -362,7 +361,7 @@
     const differentialDiagnosesTutorial = 
     {
         type: jsPsychFreeTextRankedList,
-        prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. For each differential, you will record how severe this condition could be (Mild, Moderate or Severe) and how likely that diagnosis is on a scale of 1-10.</p><p>Try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided severity and likelihood for all diagnoses before doing so.</p>",
+        prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. Once you type in the diagnosis, click the plus again or Enter on your keyboard. For each differential, you will record how severe this condition could be (Mild, Moderate or Severe) and how likely that diagnosis is on a scale of 1-10.</p><p>Try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided severity and likelihood for all diagnoses before doing so.</p>",
         slider_labels: ["Not At All Likely", "Extremely Likely"],
         slider_start: 5,
         slider_prompt: "Likelihood",

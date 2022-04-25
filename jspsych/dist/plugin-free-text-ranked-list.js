@@ -304,6 +304,44 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                 populateButtons(list,trial,display_element,sliderValues,scaleValues);
               }
             });
+
+            q_element.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    let val = (q_element.value).toUpperCase();
+                    if (val.length > 2 && !list.includes(val))
+                    {
+                      list.push(val);
+                      let sliderValues = [];
+                      let scaleValues = [];
+                      for (let x = 0; x<1000; x++)
+                      {
+                        let id = "ListElement" + x
+                        if (document.getElementById(id) == null)
+                        {
+                          break;
+                        }
+                        else
+                        {
+                          let slider = "slider" + x;
+                          sliderValues.push(parseInt((document.getElementById(slider)).value));
+                          let scale = "scale" + x;
+                          var match = display_element.querySelector("#" + scale);
+                          var inputboxes = match.querySelectorAll("input[type=radio]:checked");
+                          if (inputboxes.length < 1)
+                          {
+                            scaleValues.push(-1);
+                          }
+                          else
+                          {  
+                            scaleValues.push(parseInt(inputboxes[0].value));
+                          }
+                        }
+                      }
+                      populateButtons(list,trial,display_element,sliderValues,scaleValues);
+                    }
+                }
+            });
         });
 
       if (trial.draggable_list)
@@ -458,6 +496,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               q_element.onfocus = function(e) {
                 q_element.select();
               };
+
               let confirm = document.getElementById("confirm"); 
               confirm.addEventListener("click", function()
               {
@@ -471,6 +510,22 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                   populateButtons(newList,trial,display_element);
                 }
               });
+
+              q_element.addEventListener("keypress", function(event) {
+                  if (event.key === "Enter") {
+                      event.preventDefault();
+                      let val = q_element.value;
+                      if (val.length > 2)
+                      {
+                        plus.remove();
+                        let newList = [];
+                        newList.push((q_element.value).toUpperCase());
+                        document.getElementById("jspsych-canvas-slider-response-next").disabled = false;
+                        populateButtons(newList,trial,display_element);
+                      }
+                  }
+              });
+
           });
 
           /* Get all elements with class="close" */
