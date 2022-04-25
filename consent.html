@@ -43,14 +43,15 @@
         </div>
         <div class="center">
             <div class="middle">
-                <section id="title">Decision Confidence in Human-Machine Teaming</section>
+                <section id="title">Investigating Diagnostic Decision Making</section>
                 <section id="subtitle">Participant Information</section>
-                <section id="lastupdate">Updated 23 July 2019</section>
+                <section id="lastupdate">Updated 25 April 2022</section>
             </div>
         </div>
         <div class="right">
             <a href="https://www.oxacclab.org/"><img id="accLogo" class="logo" src="assets/acclab.jpg" alt="Attention and Cognitive Control Lab"/></a>
             <a href="https://www.psy.ox.ac.uk/"><img id="epLogo" class="logo" src="assets/ep-logo-with-msd.jpg" alt="Department of Experimental Psychology"/></a>
+            <a href="https://www.oxstar.ox.ac.uk//"><img id="oxstarLogo" class="logo" src="assets/oxstar.png" alt="OxSTaR Centre"/></a>
         </div>
     </div>
     <div id="panel">
@@ -59,26 +60,23 @@
                 <p><span class="lead">Welcome</span>. Below you will find information that will help you to decide whether to take part in this study. If you have questions about anything, please feel free to contact us.</p>
             </section>
             <section id="purpose">
-                <p><span class="lead">In this study</span> we are interested in understanding how the brain is organized, processes information and performs skills such as decision making. We can investigate this using computer-based behavioural tasks which are safe and non-invasive. Using many different techniques available on a computer program, we can gain information about human behaviour. We are interested in investigating the processes of decision making, especially as it pertains to comparisons between different types of advice.</p>
+                <p><span class="lead">In this study</span> we are interested in understanding how diagnostic decisions are made about patients. We can investigate this using computer-based behavioural tasks. Using many different techniques available on a computer program, we can gain information about human behaviour.</p>
             </section>
             <section id="procedure">
-                <p><span class="lead">During the study</span> you will be performing computer-based tasks and will be asked to respond to stimuli appearing on the screen and respond via button presses.</p>
+                <p><span class="lead">During the study</span> you will be performing computer-based tasks and will be asked to make decisions about patient cases as you would in your everyday work. </p>
             </section>
             <section id="withdraw">
-                <p><span class="lead">You are free</span> to withdraw from the study at any point. To do so, simply close your browser tab. There will be no penalty for doing so. Data will not be stored until the study is complete. Once the study is complete, we are unlikely to be able to remove data from analysis.</p>
+                <p><span class="lead">You are free</span> to withdraw from the study at any point. To do so, simply close your browser tab. There will be no penalty for doing so. Data will not be analysed until the study is complete. Once the study is complete, we are unlikely to be able to remove data from analysis.</p>
             </section>
             <section id="privacy">
-                <p><span class="lead">We collect data</span> on your performance during the study. Any information collected about you during this study would be kept strictly confidential. Any data (including task performance/questionnaire answers) will be anonymised with a code so that the results could not be linked back to you. All the data is kept on firewall and password- protected computers. Any personal information about you would be destroyed at the end of the study. Sometimes, new methods to analyze data become available after a study has ended. Therefore we would ask for your permission to use your anonymised data in future studies, and to share data, such as your anonymised scan data, with other researchers both inside and outside the European Union. Responsible members of the University of Oxford may be given access to data for monitoring and/or audit of the study to ensure we are complying with guidelines.</p>
+                <p><span class="lead">We collect data</span> on your performance during the study. Any information collected about you during this study would be kept strictly confidential. Any data (including task performance/questionnaire answers) will be anonymised with a code so that the results could not be linked back to you. All the data is kept on firewall and password- protected computers. Any personal information about you would be destroyed at the end of the study. Sometimes, new methods to analyze data become available after a study has ended. Therefore we would ask for your permission to use your anonymised data in future studies, and to share data with other researchers both inside and outside the European Union. Responsible members of the University of Oxford may be given access to data for monitoring and/or audit of the study to ensure we are complying with guidelines.</p>
                 <p><span class="lead">Personal data</span>, specifically IP addresses, are logged by the server as part of the normal process of providing secure and stable service. The University of Oxford is the data controller with respect to these data. Your personal data are stored separately and will not be linked to your performance. Your personal data will not be shared, and only responsible members of the University of Oxford will be allowed access for monitoring, audit, or server administration purposes.</p>
             </section>
-            <!--section id="cookies">
-                <p><span class="lead">We use cookies</span> to help track participation (so we don't have to record things our end). For more information about cookies, see <a class="link" href="https://ico.org.uk/your-data-matters/online/cookies/" target="_blank">ico.org.uk <i class="fas fa-external-link-alt fa-xs"></i></a>.</p>
-            </section-->
             <section id="payment">
                 <p><span class="lead">Payment rates</span> and conditions, where applicable, will have been made clear previously. If you are unsure about payment, please contact us.</p>
             </section>
             <section id="oversight">
-                <p><span class="lead">Ethical approval</span> for this study has been granted by Oxford Tropical Research Ethics Committee (OxTREC). There are no significant risks or benefits to you, although the data will contribute to scientific discovery.</p>
+                <p><span class="lead">Ethical approval</span> for this study has been granted by the Central University Research Ethics Committee (CUREC) at the University of Oxford. There are no significant risks or benefits to you, although the data will contribute to scientific discovery.</p>
             </section>
             <section id="contact">
                 <p><span class="lead">If you have a concern</span> about any aspect of this project, please speak to the researcher, <a class="mailto" href="mailto:sriraj.aiyer@psy.ox.ac.uk?subject=Diagnosis Study query">Sriraj Aiyer [sriraj.aiyer@psy.ox.ac.uk]</a>, or the principal investigator, <a class="mailto" href="mailto:nicholas.yeung@psy.ox.ac.uk?subject=Diagnosis Study query">Prof Nick Yeung [nicholas.yeung@psy.ox.ac.uk]</a>, who will do their best to answer your query. The researcher should acknowledge your concern within 10 working days and give you an indication of how they intend to deal with it. If you remain unhappy or wish to make a formal complaint, please contact the Chair of the Research Ethics Committee at the University of Oxford: Chair, Medical Sciences Inter-Divisional Research Ethics Committee; Email: <a class="mailto" href="mailto:ethics@medsci.ox.ac.uk">ethics@medsci.ox.ac.uk</a>; Address: Research Services, University of Oxford, Wellington Square, Oxford OX1 2JD.</p>
@@ -121,7 +119,7 @@
     let ps = document.querySelectorAll('p');
     for(let i=0; i<ps.length; i++) {
         let p = ps[i];
-        p.innerHTML = p.innerHTML.replace("contact us", '<a class="mailto" href="mailto:matt.jaquiery@psy.ox.ac.uk?subject=' + study + ' Query">contact us</a>');
+        p.innerHTML = p.innerHTML.replace("contact us", '<a class="mailto" href="mailto:sriraj.aiyer@psy.ox.ac.uk?subject=Diagnosis Study Query">contact us</a>');
     }
 
     function checkForm() {
