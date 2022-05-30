@@ -41,3 +41,16 @@ for (id in ids)
   }
   count <- count + 1
 }
+
+aggData <- data.frame()
+
+
+## Per stage and per case:
+## Across experience::
+## Average Confidence
+## Information requests
+## Starting + final differentials
+## Starting differentials as a function of information requests
+## Differentials as a function of confidence
+## Repeat tests as a function of confidence
+## Difficulty via total accuracy across all ppts

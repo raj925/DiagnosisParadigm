@@ -1,3 +1,9 @@
+/*
+* This is an altered version of the image-button-response plugin
+* It has been edited to allow for a dropdown selection of nested buttons.
+* It also allows certain data from a file to be shown on a button press.
+*/
+
 var jsPsychImageButtonResponse = (function (jspsych) {
   'use strict';
 

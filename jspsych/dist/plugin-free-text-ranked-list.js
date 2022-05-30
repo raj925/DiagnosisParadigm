@@ -1,3 +1,11 @@
+/** This jspysch plugin allows for trials where participant responses
+* comprise of a ranked/ordered list of items, that they input via free text.
+* Each item then has an attached scale and slider.
+*
+* Author: Sriraj Aiyer.
+*
+*/
+
 var jsPsychFreeTextRankedList = (function (jspsych) {
   'use strict';
 
@@ -137,11 +145,25 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               default: [],
               array: true,
           },
+          /** Text to show on screen when the participant adds an element to the list. **/
+          add_button_prompt: {
+              type: jspsych.ParameterType.STRING,
+              pretty_name: "Scale Prompt",
+              default: "Enter the name of the element that you want to add",
+          },
+          /** Text to show above the scale **/
           scale_prompt: {
             type: jspsych.ParameterType.STRING,
               pretty_name: "Scale Prompt",
               default: "",
           },
+          /** Error message to show if participant has not filled in a scale option (so all scales are mandatory) **/
+          blank_scale_error: {
+            type: jspsych.ParameterType.STRING,
+              pretty_name: "Scale Prompt",
+              default: "A scale option has not been provided!",
+          },
+          /** If true, allow the participant to reorder list elements by dragging and dropping **/
           draggable_list : {
             type: jspsych.ParameterType.BOOL,
             pretty_name: "Draggable List",
@@ -150,6 +172,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
       }
   };
 
+  // We reload the current list of elements every time there is an 'update'
+  // (eg an element is added, an element is removed)
   function populateButtons (list,trial,display_element,slider_vals=[],scale_vals=[]) 
   { 
       let liHTML;
@@ -159,11 +183,9 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
       {
         let li = document.createElement("li");
         liHTML = "<table style='width: 100%; table-layout: fixed;'><tr><td>"
-        liHTML += "<li id ='ListElementName" + i + "'; style='color:red;'>" + list[i];
+        liHTML += "<li id ='ListElementName" + i + "'; style='color:red;'>" + list[i]; // Element name
         liHTML += "</td><td>";
 
-          // add question
-          //liHTML += '<label class="jspsych-survey-likert-statement">' + trial.scale_prompt + "</label>";
           // add options
           var width = 100 / trial.scale_labels.length;
           var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
@@ -171,7 +193,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               let check = '';
               if (scale_vals.length > 0 && (scale_vals[i]) == j)
               {
-                check = 'checked="checked"';
+                check = 'checked="checked"'; // check in the right scale option if previous done
               }
               options_string +=
                   '<th><li style=" list-style-type:none; width:' +
@@ -206,7 +228,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           let sliderStart;
           if (slider_vals.length > 0)
           {
-            sliderStart = slider_vals[i];
+            sliderStart = slider_vals[i]; // Get the previous slider value 
           }
           else
           {
@@ -252,27 +274,27 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
         sortList.appendChild(li);
       }
 
-        let plus = document.createElement("li");
-        plus.id = "addBox";
+        let plus = document.createElement("li"); 
+        plus.id = "addBox"; // Button for participant to add a new element to the list.
         sortList.appendChild(plus);
         plus.innerHTML = '<li><span id="add" class="add">+</span></li>';
         let add = document.getElementById("add");
-        add.addEventListener("click", function() 
+        add.addEventListener("click", function() // when the plus button is clicked
         {
-            plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+            plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder=' + trial.add_button_prompt + '></input><span class="confirm" id="confirm">+</span></form></li>';
             var q_element = document.getElementById("inputText");
-            display_element.querySelector(q_element.focus());
+            display_element.querySelector(q_element.focus()); // add a new textbox when participants add the name of the element.
             q_element.onclick = function(e) {
               q_element.focus();
             };
             q_element.onfocus = function(e) {
               q_element.select();
             };
-            let confirm = document.getElementById("confirm"); 
+            let confirm = document.getElementById("confirm"); // participant types the element and then clicks to add it to the list.
             confirm.addEventListener("click", function()
             {
               let val = (q_element.value).toUpperCase();
-              if (val.length > 2 && !list.includes(val))
+              if (val.length > 2 && !list.includes(val)) // if they input a blank string or a single letter, do not add to list.
               {
                 list.push(val);
                 let sliderValues = [];
@@ -280,12 +302,13 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                 for (let x = 0; x<1000; x++)
                 {
                   let id = "ListElement" + x
-                  if (document.getElementById(id) == null)
+                  if (document.getElementById(id) == null) // run through current list elements
                   {
                     break;
                   }
                   else
-                  {
+                  { // we need the current slider and scale values so that when a new element is added
+                    // and the list is relaoded, those values are preserved.
                     let slider = "slider" + x;
                     sliderValues.push(parseInt((document.getElementById(slider)).value));
                     let scale = "scale" + x;
@@ -301,12 +324,12 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
                     }
                   }
                 }
-                populateButtons(list,trial,display_element,sliderValues,scaleValues);
+                populateButtons(list,trial,display_element,sliderValues,scaleValues); 
               }
             });
 
             q_element.addEventListener("keypress", function(event) {
-                if (event.key === "Enter") {
+                if (event.key === "Enter") { // do same thing if participant presses enter after typing element.
                     event.preventDefault();
                     let val = (q_element.value).toUpperCase();
                     if (val.length > 2 && !list.includes(val))
@@ -344,6 +367,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             });
         });
 
+      // participants can reorder the list by dragging and dropping elements in the list.
+      // if draggable_list is false, the elements are fixed in their position when added.
       if (trial.draggable_list)
       {
         let items = sortList.getElementsByTagName("li"), current=null;
@@ -487,7 +512,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           let add = document.getElementById("add");
           add.addEventListener("click", function() 
           {
-              plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder="Enter the diagnosis that you want to add"></input><span class="confirm" id="confirm">+</span></form></li>';
+              plus.innerHTML = '<li><form action=""><input type="text" id="inputText" placeholder=' + trial.add_button_prompt + '></input><span class="confirm" id="confirm">+</span></form></li>';
               var q_element = document.getElementById("inputText");
               display_element.querySelector(q_element.focus());
               q_element.onclick = function(e) {
@@ -539,13 +564,12 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               let ele = document.getElementById(id);
               ele.style.display = 'none';
               let closed = response.responses[i];
-              //response.responses = response.responses.filter(item => item !== closed)
               ele.remove();
             });
           }
 
           let startingList = [];
-          if (!(trial.start_empty)) 
+          if (!(trial.start_empty)) //start trial with preloaded list of elements if provided.
           {
           	startingList = trial.starting_list;
           	response.startinglist = startingList;
@@ -566,7 +590,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             response.scaleValues = [];
             let errorStyle = "style='color: red;position: absolute;left: 50%;transform: translate(-50%, -50%);top: 60%;'";
             let genError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
-            genError.innerHTML = "<div " + errorStyle + ">Please make sure a severity is provided for all diagnoses!</div>"
+            genError.innerHTML = "<div " + errorStyle + ">" + trial.blank_scale_error + "</div>"; //check that all scales are filled in.
             genError.classList.add('hidden');
             genError.id = "genError";
             let success = false;

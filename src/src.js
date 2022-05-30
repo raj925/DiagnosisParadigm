@@ -48,6 +48,7 @@ class Structure {
         this.participantID = typeof args.participantID === 'undefined'? "NO_ID" : args.participantID;
         this.complete = typeof args.complete === 'undefined'? false : args.complete;
         this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
+        this.trueConditions = [];
         this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfSubtrials, this.expConditionOrder);
     }
 
@@ -75,6 +76,7 @@ class Structure {
             subtrial++;
             if (subtrial > this.numOfSubtrials)
             {
+                trueConditions.push(scenarioObject[trial-1]["True Condition"]);
                 trial++;
                 subtrial=1;
             }
@@ -181,6 +183,17 @@ class Structure {
             this.complete = true;
         }
     }
+
+    saveDebrief(trial)
+    {
+        this.debrief = trial.response;
+    }
+
+    // getConditions()
+    // {
+    //     let intro = "<p>Thank you again for participating in our experiment! You have now completed all patient cases!</p>"
+    //     return this.trueConditions;
+    // }
 
     getCaseIntro()
     {
@@ -292,6 +305,32 @@ class Structure {
     }
 
     /**
+     * Loop through the keys in all objects in data and pad each object to contain all keys (pad with null)
+     * @param {Object[]} data debrief questions
+     * @param {int} id participant id
+     * @return {Object[]}
+     */
+    flattenDebriefData(data, id) {
+        // List keys
+        let keys = [];
+        data.forEach(function(q) {
+            Object.keys(q).forEach(function(key) {
+                if(q.hasOwnProperty(key) && keys.indexOf(key) === -1)
+                    keys.push(key);
+            });
+        });
+
+        // Pad missing keys with null
+        data.forEach(function(q) {
+            q.participantId = id;
+            q.id = data.indexOf(q);
+            keys.forEach((k)=>{if(typeof q[k] === 'undefined') q[k] = null})
+        });
+
+        return data;
+    }
+
+    /**
      * Compile the data in this governor ready for sending, including a processed form
      * @return {Object} a JSON object with JSON strings containing rawData and processedData
      */
@@ -340,8 +379,8 @@ class Structure {
         ask.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         let info = encodeURI('data='+JSON.stringify(this.compileSelf()));
         let bla = decodeURI(info).substr(5);
+        ask.send(info);
         this.authenticate(info);
-       // ask.send(info);
     }
 
         /**
