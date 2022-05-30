@@ -100,8 +100,8 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
               pretty_name: "Slider starting value",
               default: 50,
           },
-          /** Put this prompt above the scale*/
-          slider_label: {
+          /** Put this prompt above the slider*/
+          slider_prompt: {
               type: jspsych.ParameterType.STRING,
               pretty_name: "Slider Label",
               default: "",
@@ -189,6 +189,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           // add options
           var width = 100 / trial.scale_labels.length;
           var options_string = '<ul class="jspsych-survey-likert-opts" id="scale' + i + '"><table><tr>';
+          options_string += '<li id="scaleLabel" style="list-style-type: none; font-size: small; color:skyblue; transform: translate(15%, -20%)">' + trial.scale_prompt + '</li>'
           for (var j = 0; j < trial.scale_labels.length; j++) {
               let check = '';
               if (scale_vals.length > 0 && (scale_vals[i]) == j)
@@ -212,7 +213,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
 
 
           // add slider
-
+            liHTML +='<li id="scaleLabel" style="list-style-type: none; font-size: small; color:skyblue; transform: translate(15%, -100%)">' + trial.slider_prompt + '</li>'
             liHTML += '<div id="jspsych-canvas-slider-response-wrapper-' + (i+1);
           liHTML +=
               '<div class="jspsych-canvas-slider-response-container" style="position:relative; width:';

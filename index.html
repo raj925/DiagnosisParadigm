@@ -69,7 +69,8 @@
     const sliderName = "Likelihood";
     const sliderLabels = ["Not At All Likely", "Extremely Likely"];
     const scaleName = "Level of Concern";
-    const scaleLabels = ["Not at All Concerned","Somewhat Concerned","Highly Concerned", "Emergency"];
+    //const scaleLabels = ["Not at All Concerned","Somewhat Concerned","Highly Concerned", "Emergency"];
+    const scaleLabels = ["Low","Medium","High","Emergency"];
     const confidenceLabels = ["Not At All Confident", "Fully Confident"]
     const addButtonPrompt = "Enter the diagnosis that you want to add";
     const scaleError = "Please provide a severity for all diagnoses!"
@@ -542,7 +543,7 @@
             slider_width:200,
             scale_questions: true,
             scale_labels: scaleLabels,
-            scale_prompt: sliderName,
+            scale_prompt: scaleName,
             add_button_prompt: addButtonPrompt,
             blank_scale_error: scaleError,
             start_empty: false,
