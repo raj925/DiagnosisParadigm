@@ -49,6 +49,7 @@ class Structure {
         this.complete = typeof args.complete === 'undefined'? false : args.complete;
         this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
         this.trueConditions = [];
+        this.difficulties = [];
         this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfSubtrials, this.expConditionOrder);
     }
 
@@ -149,6 +150,11 @@ class Structure {
         this.currentSubtrial.rts = trial.rt;
         this.currentSubtrial.totalInfoSeekingTime = trial.trialTime;
         this.currentSubtrial.totalTestDuration = trial.totalTestDuration;
+    }
+
+    saveDifficulty(trial)
+    {
+        this.difficulties.push(trial.response);
     }
 
     saveFinalDiagnosis(trial)

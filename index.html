@@ -6,7 +6,6 @@
           This experiment looks at information seeking and confidence in diagnostic decisions.
     </title> -->
     <script src="./src/utils.js"></script>
-    <script src="./src/scenarioFile.js"></script>
     <script src="./src/scenarioFile2.js"></script>
     <script src="./src/scenarioFileTutorial.js"></script>
     <script src="./src/src.js"></script>
@@ -48,7 +47,7 @@
     // You can control the whole program for here by changing the value
     // of the parameters here.
 
-    const betaTest = true; // If true, only shows a single trial
+    const betaTest = false; // If true, only shows a single trial
     const doInstruct = true; // If true, shows instructions.
     const doQuestionnaire = true; // If true, includes questionnaires. 
     const demoQuestions = true; // If true, asks participants for age, gender and medical experience.
@@ -81,6 +80,10 @@
     ////////////////////////////////////////////
 
     let shuffledScenarios = shuffle(scenarios2); // load our scenarios from the scenario file and shuffle order.
+    if (betaTest)
+    {
+        shuffledScenarios = [shuffledScenarios[0]];
+    }
     let scenarioOrder;
     let buttons;
     let dateCompleted = Date.now();
@@ -91,9 +94,15 @@
         feedback = feedback + "<p>Case " + (i+1) + ": " + condition;
     }
 
-
-    scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;}); //record the order that participants see the scenarios 
-    scenarioOrder = scenarioOrder.join('');
+    if (betaTest)
+    {
+        scenarioOrder = shuffledScenarios[0].id;
+    }
+    else
+    {
+        scenarioOrder = shuffledScenarios.map(function(a) {return a.ID;}); //record the order that participants see the scenarios 
+        scenarioOrder = scenarioOrder.join('');
+    }
     buttons = shuffledScenarios[0]; // get the tests from the first scenario.
     buttons = Object.keys(buttons); // note this only works if all scenarios have same buttons/tests/information requests
     buttons.splice(buttons.indexOf("ID"), 1);
@@ -112,6 +121,7 @@
         var endExperimentTime = Date.now();
         var expTime = msToMinSec(endExperimentTime - startExperimentTime);
         jsPsych.data.displayData();
+        window.location.replace(endRedirectURL);
     }});
 
     let numOfScenarios = shuffledScenarios.length;
@@ -122,10 +132,18 @@
     }
     else // manipulation of starting prompt of working hypothesis to see how this affects differential generation. 
     {
-        conditions = Array(numOfScenarios/2).fill("Directed");
-        conditions.push(Array(numOfScenarios/2).fill("Non-Directed"));
-        conditions = conditions.flat();
-        conditions = shuffle(conditions);
+        let split;
+        if (betaTest)
+        {
+            conditions = ["Non-Directed"];
+        }
+        else
+        {
+            conditions = Array(numOfScenarios/2).fill("Directed");
+            conditions.push(Array(numOfScenarios/2).fill("Non-Directed"));
+            conditions = conditions.flat();
+            conditions = shuffle(conditions);
+        }
     }
     var startExperimentTime = Date.now();
     let timeline = [];
@@ -348,7 +366,7 @@
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
-            exp.saveConfidence(trial);
+            exp.saveDifficulty(trial);
             exp.exportGovernor();
         }
     }
@@ -382,7 +400,7 @@
         prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. Once you type in the diagnosis, click the plus again or Enter on your keyboard. For each differential, you will record how severe this condition could be (Mild, Moderate or Severe) and how likely that diagnosis is on a scale of 1-10.</p><p>Try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided your level of concern and likelihood for all diagnoses before doing so.</p>",
         slider_labels: sliderLabels,
         slider_start: 5,
-        slider_prompt: sliderLabels,
+        slider_prompt: sliderName,
         slider_width:200,
         scale_questions: true,
         scale_labels: scaleLabels,
@@ -432,7 +450,7 @@
     const postTutorialInstruct = {
         type: jsPsychInstructions,
          pages: [
-             "<p>You have completed the tutorial case! Feel free to take a short break before proceeding to the main experiment.</p><p>One final tip: please try to imagine that you are encountering these patients in your everyday work. When making decisions about what information to request and which differential diagnoses you are considering, make sure you do so in a manner as close as possible to your everyday medical decisions</p><p>Click Next to begin the experiment.</p>"
+             "<p>You have completed the tutorial case! Feel free to take a short break before proceeding to the main experiment. The main patient cases will vary in difficulty, so do your best to report your differentials and report your confidence accurately.</p><p>One final tip: please try to imagine that you are encountering these patients in your everyday work. When making decisions about what information to request and which differential diagnoses you are considering, make sure you do so in a manner as close as possible to your everyday medical decisions.</p><p>Click Next to begin the experiment.</p>"
         ],
         show_clickable_nav: true,
         allow_backward: false,
@@ -756,14 +774,14 @@
 
     trial.unshift(caseIntro);
 
-    if (doDifficulty)
-    {
-        trial.push(perceivedDifficulty);
-    }
 
     for (let i = 0; i < numOfScenarios; i++)
     {
     	timeline.push({timeline: trial});
+        if (doDifficulty)
+        {
+            timeline.push(perceivedDifficulty);
+        }
     }
 
     if (doFeedback)
