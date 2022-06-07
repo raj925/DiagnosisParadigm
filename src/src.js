@@ -50,7 +50,7 @@ class Structure {
         this.expConditionOrder = typeof args.expConditionOrder === 'undefined' ? [] : args.expConditionOrder;
         this.trueConditions = [];
         this.difficulties = [];
-        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfSubtrials, this.expConditionOrder);
+        this.trials = typeof args.scenarioObject === 'undefined' ? [] : Structure.addTrials(this.scenarioObject, this.numOfSubtrials*this.numOfTrials, this.expConditionOrder, this.numOfSubtrials);
     }
 
      /**
@@ -58,7 +58,7 @@ class Structure {
      * @param {Object[]} trials - trials stored as JSON-compressed objects
      * @return {Trial[]} - trials expanded to be Trial objects
      */
-    static addTrials(scenarioObject, len, expConditions) 
+    static addTrials(scenarioObject, len, expConditions, subtrials) 
     {
         let out = [];
         let trial = 1;
@@ -75,9 +75,9 @@ class Structure {
                 trialInfoSet: scenarioObject[trial-1]
             });
             subtrial++;
-            if (subtrial > this.numOfSubtrials)
+            if (subtrial > subtrials)
             {
-                trueConditions.push(scenarioObject[trial-1]["True Condition"]);
+                this.trueConditions.push(scenarioObject[trial-1]["True Condition"]);
                 trial++;
                 subtrial=1;
             }
@@ -179,12 +179,12 @@ class Structure {
         this.currentSubtrial.treatmentPlan = trial.text_response;
         this.currentSubtrial.readyToTreat = trial.checkbox;
         this.currentSubtrialIndex++;
-        if (this.currentSubtrialIndex > this.numOfSubtrials)
-        {
-            this.currentTrialIndex++;
-            this.currentSubtrialIndex = 0;
-        }
-        if (this.currentTrialIndex > this.numOfTrials)
+        //if (this.currentSubtrialIndex > this.numOfSubtrials)
+        //{
+        //    this.currentTrialIndex++;
+            //this.currentSubtrialIndex = 0;
+        //}
+        if (this.currentSubtrialIndex > (this.numOfTrials*this.numOfSubtrials))
         {
             this.complete = true;
         }
@@ -232,14 +232,14 @@ class Structure {
             for (let q=0; q<data.demoQuestionnaire.length; q++)
                 if(data.demoQuestionnaire[q])
                 {
-                    questionnaireData.push(this.flattenQuestionnaireData(data.demoQuestionnaire[q], participantData.id))
+                    questionnaireData.push(data.demoQuestionnaire[q])
                 }
         participantData.demoQuestionnaire = questionnaireData;
 
         // Trials
         let trialData = [];
         for (let t=0; t<this.currentSubtrialIndex; t++)
-            trialData.push(this.flattenTrialData(data.trials[t], participantData.id));
+            trialData.push(this.flattenTrialData(data.trials[t], participantData.id, t));
         participantData.trials = trialData;
 
         // Debrief stuff
@@ -251,25 +251,6 @@ class Structure {
             }
         }
 
-        if (participantData.completionCheck == true)
-        {
-            let corrects = trials.map(function (el) { return el.correct; });
-            let tests = trials.map(function (el) { return el.numOfRequestedTests; });
-            let testTimes = trials.map(function (el) { return el.totalInfoSeekingTime; });
-            let testDurations = trials.map(function (el) { return el.totalTestDuration; });
-            let confidences = trials.map(function (el) { return el.confidence; });
-            let startingHypotheses = trials.map(function (el) { return el.numOfStartingHypotheses; });
-
-            const average = arr => arr.reduce((a,b) => a + b, 0) / arr.length;
-
-            participantData.overallAccuracy = average(corrects);
-            participantData.meanNumOfTests = average(tests);
-            participantData.meanTestTime = average(testTimes);
-            participantData.meantestDuration = average(testDurations);
-            participantData.meanFinalConfidence = average(confidences);
-            participantData.meanStartingHypotheses = average(startingHypotheses);
-        }
-
         return participantData;
     }
 
@@ -278,7 +259,7 @@ class Structure {
      * @param {int} id - id of the participant (inserted as first column)
      * @returns {Object} - slim representation of trial object
      */
-    flattenTrialData(trial, id) 
+    flattenTrialData(trial, id, trialNum) 
     {
         let out = {};
         out.trial = trial.trialID;
@@ -306,6 +287,7 @@ class Structure {
         out.differentialRT = trial.differentialRT;
         out.confidence = trial.confidence;
         out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
+        out.difficulty = this.difficulties[trialNum];
 
         return out;
     }
@@ -352,7 +334,7 @@ class Structure {
     {
         try
         {
-            fetch("../saveJSONerr.php",
+            fetch("./saveJSONerr.php",
             {method: "POST", body: datum});
         }
         catch(e)
@@ -371,7 +353,7 @@ class Structure {
     exportGovernor() 
     {
         let ask = new XMLHttpRequest();
-        ask.open('POST', '../saveJSONerr.php', true);
+        ask.open('POST', './saveJSONerr.php', true);
         ask.onreadystatechange = function() {
             if (this.readyState===4 && this.status===200) {
                 let text = "";
@@ -384,6 +366,7 @@ class Structure {
         };
         ask.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         let info = encodeURI('data='+JSON.stringify(this.compileSelf()));
+	console.log(info);
         let bla = decodeURI(info).substr(5);
         ask.send(info);
         this.authenticate(info);

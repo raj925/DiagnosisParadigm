@@ -98,27 +98,27 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.34 (Normal: 7.33 – 7.44), PCO2 – 5.6 (Normal: 5 – 6.4kPa), PO2 – 6.0  (Normal:  > 5.3 kPa), HCO3 – 24 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 73 (Normal: 72 – 75%), Lactate – 1.6 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.34 (Normal: 7.33 to 7.44), PCO2: 5.6 (Normal: 5 to 6.4kPa), PO2: 6.0  (Normal: > 5.3 kPa), HCO3: 24 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 73 (Normal: 72 to 75%), Lactate: 1.6 (Normal: 0.5 to 2.2  mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 139 (Normal: 135-145 mmol/L), Potassium – 4.4 (Normal: 3.5-5.0 mmol/L), Urea – 5.1 (Normal: 2.5-6.7 mmol/L), Creatinine – 88 (Normal: 70-150 micromol/L), eGFR – >90 (Normal:  >90ml/min/1.73m2)",
+            "Output": "Sodium: 139 (Normal: 135 to 145 mmol/L), Potassium: 4.4 (Normal: 3.5 to 5.0 mmol/L), Urea: 5.1 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 88 (Normal: 70 to 150 micromol/L), eGFR: >90 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 30mm/hr (Normal: 0-12), CRP – 22mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 30mm/hr (Normal: 0 to 12), CRP: 22mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 11 (Normal: 10-14 seconds), APTT – 30 (Normal: 22-36 seconds), Fibrinogen – 2.9 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 11 (Normal: 10 to 14 seconds), APTT: 30 (Normal: 22 to 36 seconds), Fibrinogen: 2.9 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 93 (Normal: 130-180 g/L), Hct – 0.28 (Normal: 0.40-0.54 L/L), MCV - 73.9 (Normal: 80-100 fl), WBC - 9.2 (Normal: 3.6-11.0 x 109/L), Neut – 7.6 (Normal: 1.8-7.5  x 109/L), Lymph’s – 1.4 (Normal: 1.0-4.0  x 109/L), Platelet Count - 490 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 93 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 73.9 (Normal: 80 to 100 fl), WBC: 9.2 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.6 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 1.4 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 490 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 101 (Normal: 95-105 mmol/l), Glucose - 5.1 (Normal: 3.5-5.5 mmol/L), Protein Total - 66 (Normal: 60-80 g/L), Albumin - 22 (Normal: 36-50 g/L), AST (SGOT) - 35 (Normal: 5-35 U/L), ALP - 97 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 101 (Normal: 95 to 105 mmol/l), Glucose: 5.1 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 66 (Normal: 60 to 80 g/L), Albumin: 22 (Normal: 36 to 50 g/L), AST (SGOT): 35 (Normal: 5 to 35 U/L), ALP: 97 (Normal: 30 to 150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {
@@ -231,27 +231,27 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.39 (Normal: 7.33 – 7.44), PCO2 – 5.6 (Normal: 5 – 6.4kPa), PO2 – 5.7 (Normal:  > 5.3 kPa), HCO3 – 28 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 74 (Normal: 72 – 75%), Lactate – 0.9 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.39 (Normal: 7.33 to 7.44), PCO2: 5.6 (Normal: 5 to 6.4kPa), PO2: 5.7 (Normal: >5.3 kPa), HCO3: 28 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 74 (Normal: 72 to 75%), Lactate: 0.9 (Normal: 0.5 to 2.2  mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 125 (Normal: 135-145 mmol/L), Potassium – 2.9 (Normal: 3.5-5.0 mmol/L), Urea – 8.7 (Normal: 2.5-6.7 mmol/L), Creatinine – 89 (Normal: 70-150 micromol/L), eGFR – >90 (Normal: >90ml/min/1.73m2)",
+            "Output": "Sodium: 125 (Normal: 135 to 145 mmol/L), Potassium: 2.9 (Normal: 3.5 to 5.0 mmol/L), Urea: 8.7 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 89 (Normal: 70 to 150 micromol/L), eGFR: >90 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 35mm/hr (Normal: 0-12), CRP – 17mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 35mm/hr (Normal: 0 to 12), CRP: 17mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 12 (Normal: 10-14 seconds), APTT – 28 (Normal: 22-36 seconds), Fibrinogen – 3.6 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 12 (Normal: 10 to 14 seconds), APTT: 28 (Normal: 22 to 36 seconds), Fibrinogen: 3.6 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 50 (Normal: 130-180 g/L), Hct – 0.37 (Normal: 0.40-0.54 L/L), MCV - 55.4 (Normal: 80-100 fl), WBC - 7.9 (Normal: 3.6-11.0 x 109/L), Neut – 7.7 (Normal: 1.8-7.5  x 109/L), Lymph’s – 0.7 (Normal: 1.0-4.0  x 109/L), Platelet Count - 273 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 50 (Normal: 130 to 180 g/L), Hct: 0.37 (Normal: 0.40 to 0.54 L/L), MCV: 55.4 (Normal: 80 to 100 fl), WBC: 7.9 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.7 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.7 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 273 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 91 (Normal: 95-105 mmol/l), Glucose - 6.2 (Normal: 3.5-5.5 mmol/L), Protein Total - 57 (Normal: 60-80 g/L), Albumin - 31 (Normal: 36-50 g/L), AST (SGOT) - 42 (Normal: 5-35 U/L), ALP - 98 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 91 (Normal: 95 to 105 mmol/l), Glucose: 6.2 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 57 (Normal: 60 to 80 g/L), Albumin: 31 (Normal: 36 to 50 g/L), AST (SGOT): 42 (Normal: 5 to 35 U/L), ALP - 98 (Normal: 30-150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {
@@ -351,7 +351,7 @@ let scenarios2 = [
     },
     "Testing": {
         "Urine Dipstick": {
-            "Output": "Specific gravity 1.020 (normal: 1.005-1.025), 3-5 RBC (normal: <3 RBC) 0-3 WBC, no casts.",
+            "Output": "Specific gravity 1.020 (normal: 1.005 to 1.025), 3 to 5 RBC (normal: <3 RBC) 0 to 3 WBC, no casts.",
             "Duration": 200
         },
         "ECG": {
@@ -363,27 +363,27 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.47 (Normal: 7.33 – 7.44), PCO2 – 6.1 (Normal: 5 – 6.4kPa), PO2 – 6.1 (Normal:  > 5.3 kPa), HCO3 – 27 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 72 (Normal: 72 – 75%), Lactate – 1.2 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.47 (Normal: 7.33 to 7.44), PCO2: 6.1 (Normal: 5 to 6.4kPa), PO2: 6.1 (Normal: > 5.3 kPa), HCO3: 27 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 72 (Normal: 72 to 75%), Lactate: 1.2 (Normal: 0.5 to 2.2  mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 129 (Normal: 135-145 mmol/L), Potassium – 3.5 (Normal: 3.5-5.0 mmol/L), Urea – 5.5 (Normal: 2.5-6.7 mmol/L), Creatinine – 145 (Normal: 70-150 micromol/L), eGFR – 42.8 (Normal: >90ml/min/1.73m2)",
+            "Output": "Sodium: 129 (Normal: 135 to 145 mmol/L), Potassium: 3.5 (Normal: 3.5 to 5.0 mmol/L), Urea: 5.5 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 145 (Normal: 70 to 150 micromol/L), eGFR: 42.8 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 35mm/hr (Normal: 0-12), CRP – 17mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 35mm/hr (Normal: 0 to 12), CRP: 17mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 11 (Normal: 10-14 seconds), APTT – 23 (Normal: 22-36 seconds), Fibrinogen – 2.2 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 11 (Normal: 10 to 14 seconds), APTT: 23 (Normal: 22 to 36 seconds), Fibrinogen: 2.2 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 94 (Normal: 130-180 g/L), Hct – 0.28 (Normal: 0.40-0.54 L/L), MCV - 87 (Normal: 80-100 fl), WBC - 6.3 (Normal: 3.6-11.0 x 109/L), Neut – 5.5 (Normal: 1.8-7.5  x 109/L), Lymph’s – 0.6 (Normal: 1.0-4.0  x 109/L), Platelet Count - 85 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 94 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 87 (Normal: 80 to 100 fl), WBC: 6.3 (Normal: 3.6 to 11.0 x 109/L), Neut: 5.5 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.6 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 85 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 90 (Normal: 95-105 mmol/l), Glucose - 8.5 (Normal: 3.5-5.5 mmol/L), Protein Total - 66 (Normal: 60-80 g/L), Albumin - 29 (Normal: 36-50 g/L), AST (SGOT) - 49 (Normal: 5-35 U/L), ALP - 151 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 90 (Normal: 95 to 105 mmol/l), Glucose: 8.5 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 66 (Normal: 60 to 80 g/L), Albumin: 29 (Normal: 36 to 50 g/L), AST (SGOT): 49 (Normal: 5 to 35 U/L), ALP: 151 (Normal: 30 to 150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {
@@ -483,7 +483,7 @@ let scenarios2 = [
     },
     "Testing": {
         "Urine Dipstick": {
-            "Output": "Trace protein, no blood, 1+ nitrites. 3-7 WBC's, no RBC's, 10-15 squamous epithelial cells, and 3+ bacteria.",
+            "Output": "Trace protein, no blood, 1+ nitrites. 3 to 7 WBC's, no RBC's, 10 to 15 squamous epithelial cells, and 3+ bacteria.",
             "Duration": 200
         },
         "ECG": {
@@ -495,31 +495,31 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.36 (Normal: 7.33 – 7.44), PCO2 – 5.7 (Normal: 5 – 6.4kPa), PO2 – 5.9 (Normal:  > 5.3 kPa), HCO3 – 23 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 74 (Normal: 72 – 75%), Lactate – 1.6 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.36 (Normal: 7.33 to 7.44), PCO2: 5.7 (Normal: 5 to 6.4kPa), PO2: 5.9 (Normal: > 5.3 kPa), HCO3: 23 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 74 (Normal: 72 to 75%), Lactate: 1.6 (Normal: 0.5 to 2.2 mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 142 (Normal: 135-145 mmol/L), Potassium – 3.9 (Normal: 3.5-5.0 mmol/L), Urea – 5.5 (Normal: 2.5-6.7 mmol/L), Creatinine – 102 (Normal: 70-150 micromol/L), eGFR – 58.5 (Normal: >90ml/min/1.73m2)",
+            "Output": "Sodium: 142 (Normal: 135 to 145 mmol/L), Potassium: 3.9 (Normal: 3.5 to 5.0 mmol/L), Urea: 5.5 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 102 (Normal: 70 to 150 micromol/L), eGFR: 58.5 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 9mm/hr (Normal: 0-12), CRP – 8mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 9mm/hr (Normal: 0 to 12), CRP: 8mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 11 (Normal: 10-14 seconds), APTT – 23 (Normal: 22-36 seconds), Fibrinogen – 2.2 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 11 (Normal: 10 to 14 seconds), APTT: 23 (Normal: 22 to 36 seconds), Fibrinogen: 2.2 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 87 (Normal: 130-180 g/L), Hct – 0.28 (Normal: 0.40-0.54 L/L), MCV - 76 (Normal: 80-100 fl), WBC - 8.1 (Normal: 3.6-11.0 x 109/L), Neut – 7.4 (Normal: 1.8-7.5  x 109/L), Lymph’s – 0.8 (Normal: 1.0-4.0  x 109/L), Platelet Count - 472 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 87 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 76 (Normal: 80 to 100 fl), WBC: 8.1 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.4 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.8 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 472 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 99 (Normal: 95-105 mmol/l), Glucose - 5.7 (Normal: 3.5-5.5 mmol/L), Protein Total - 63 (Normal: 60-80 g/L), Albumin - 31 (Normal: 36-50 g/L), AST (SGOT) - 116 (Normal: 5-35 U/L), ALP - 168 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 99 (Normal: 95 to 105 mmol/l), Glucose: 5.7 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 63 (Normal: 60 to 80 g/L), Albumin: 31 (Normal: 36 to 50 g/L), AST (SGOT): 116 (Normal: 5 to 35 U/L), ALP: 168 (Normal: 30 to 150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {
-            "Output": "Globular cardiomegaly with small left pleural effusion and sub-segmental atelectasis or scarring in the right costophrenic angle. Loculated fissural fluid in the left mid lung zone.",
+            "Output": "Globular cardiomegaly with small left pleural effusion and subsegmental atelectasis or scarring in the right costophrenic angle. Loculated fissural fluid in the left mid lung zone.",
             "Duration": 20
         }
     }
@@ -627,27 +627,27 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.47 (Normal: 7.33 – 7.44), PCO2 – 5 (Normal: 5 – 6.4kPa), PO2 – 7.8 (Normal:  > 5.3 kPa), HCO3 – 26 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 71 (Normal: 72 – 75%), Lactate – 2.0 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.47 (Normal: 7.33 to 7.44), PCO2: 5 (Normal: 5 to 6.4kPa), PO2: 7.8 (Normal: > 5.3 kPa), HCO3: 26 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 71 (Normal: 72 to 75%), Lactate: 2.0 (Normal: 0.5 to 2.2 mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 141 (Normal: 135-145 mmol/L), Potassium – 4.2 (Normal: 3.5-5.0 mmol/L), Urea – 6.0 (Normal: 2.5-6.7 mmol/L), Creatinine – 110 (Normal: 70-150 micromol/L), eGFR – 63 (Normal: >90ml/min/1.73m2)",
+            "Output": "Sodium: 141 (Normal: 135 to 145 mmol/L), Potassium: 4.2 (Normal: 3.5 to 5.0 mmol/L), Urea: 6.0 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 110 (Normal: 70 to 150 micromol/L), eGFR: 63 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 6mm/hr (Normal: 0-12), CRP – 5mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 6mm/hr (Normal: 0 to 12), CRP: 5mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 13 (Normal: 10-14 seconds), APTT – 25 (Normal: 22-36 seconds), Fibrinogen – 3.7 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 13 (Normal: 10 to 14 seconds), APTT: 25 (Normal: 22 to 36 seconds), Fibrinogen: 3.7 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 116 (Normal: 130-180 g/L), Hct – 0.35 (Normal: 0.40-0.54 L/L), MCV - 93 (Normal: 80-100 fl), WBC - 8.4 (Normal: 3.6-11.0 x 109/L), Neut – 4.8 (Normal: 1.8-7.5  x 109/L), Lymph’s – 2.1 (Normal: 1.0-4.0  x 109/L), Platelet Count - 298 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 116 (Normal: 130 to 180 g/L), Hct: 0.35 (Normal: 0.40 to 0.54 L/L), MCV: 93 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 4.8 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 2.1 (Normal: 1.0 to 4.0 x 109/L), Platelet Count: 298 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 100 (Normal: 95-105 mmol/l), Glucose - 4.3 (Normal: 3.5-5.5 mmol/L), Protein Total - 72 (Normal: 60-80 g/L), Albumin - 41 (Normal: 36-50 g/L), AST (SGOT) - 28 (Normal: 5-35 U/L), ALP - 64 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 100 (Normal: 95 to 105 mmol/l), Glucose: 4.3 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 72 (Normal: 60 to 80 g/L), Albumin: 41 (Normal: 36 to 50 g/L), AST (SGOT): 28 (Normal: 5 to 35 U/L), ALP: 64 (Normal: 30 to 150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {
@@ -747,7 +747,7 @@ let scenarios2 = [
     },
     "Testing": {
         "Urine Dipstick": {
-            "Output": "3-8 WBCs, 3-10 RBCs, and 3-10 squamous epithelial cells per HPF. 1+ protein, and increased urobilinogen present.",
+            "Output": "3 to 8 WBCs, 3 to 10 RBCs, and 3 to 10 squamous epithelial cells per HPF. 1+ protein, and increased urobilinogen present.",
             "Duration": 200
         },
         "ECG": {
@@ -759,27 +759,27 @@ let scenarios2 = [
             "Duration": 400
         },
         "Venous Blood Gas": {
-            "Output": "pH - 7.35 (Normal: 7.33 – 7.44), PCO2 – 5.2 (Normal: 5 – 6.4kPa), PO2 – 5.9 (Normal:  > 5.3 kPa), HCO3 – 24 (Normal: 22 – 28 mmol/L), Base Excess - +1 (Normal: -/+2), Saturation – 75 (Normal: 72 – 75%), Lactate – 0.7 (Normal: 0.5 – 2.2  mmol/L)",
+            "Output": "pH: 7.35 (Normal: 7.33 to 7.44), PCO2: 5.2 (Normal: 5 to 6.4kPa), PO2: 5.9 (Normal: > 5.3 kPa), HCO3: 24 (Normal: 22 to 28 mmol/L), Base Excess: +1 (Normal: -/+2), Saturation: 75 (Normal: 72 to 75%), Lactate: 0.7 (Normal: 0.5 to 2.2 mmol/L)",
             "Duration": 20
         },
         "UREA and Electrolytes": {
-            "Output": "Sodium - 141 (Normal: 135-145 mmol/L), Potassium – 4.2 (Normal: 3.5-5.0 mmol/L), Urea – 5.6 (Normal: 2.5-6.7 mmol/L), Creatinine – 135 (Normal: 70-150 micromol/L), eGFR – 70 (Normal: >90ml/min/1.73m2)",
+            "Output": "Sodium: 141 (Normal: 135 to 145 mmol/L), Potassium: 4.2 (Normal: 3.5 to 5.0 mmol/L), Urea: 5.6 (Normal: 2.5 to 6.7 mmol/L), Creatinine: 135 (Normal: 70 to 150 micromol/L), eGFR: 70 (Normal: >90ml/min/1.73m2)",
             "Duration": 200
         },
         "CRP and ESR": {
-            "Output": "ESR – 4mm/hr (Normal: 0-12), CRP – 7mm/hr (Normal: 0 -10)",
+            "Output": "ESR: 4mm/hr (Normal: 0 to 12), CRP: 7mm/hr (Normal: 0 to 10)",
             "Duration": 200
         },
         "Clotting Test": {
-            "Output": "Prothrombin Time – 12 (Normal: 10-14 seconds), APTT – 28 (Normal: 22-36 seconds), Fibrinogen – 4.1 (Normal: 1.5-4.5 g/L)",
+            "Output": "Prothrombin Time: 12 (Normal: 10 to 14 seconds), APTT: 28 (Normal: 22 to 36 seconds), Fibrinogen: 4.1 (Normal: 1.5 to 4.5 g/L)",
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb - 74 (Normal: 130-180 g/L), Hct – 0.22 (Normal: 0.40-0.54 L/L), MCV - 100 (Normal: 80-100 fl), WBC - 8.4 (Normal: 3.6-11.0 x 109/L), Neut – 7.2 (Normal: 1.8-7.5  x 109/L), Lymph’s – 3.1 (Normal: 1.0-4.0  x 109/L), Platelet Count - 25 (Normal: 140-400 x 109/L)",
+            "Output": "Hb: 74 (Normal: 130 to 180 g/L), Hct: 0.22 (Normal: 0.40 to 0.54 L/L), MCV: 100 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.2 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 3.1 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 25 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
-            "Output": "Chloride - 103 (Normal: 95-105 mmol/l), Glucose - 4.7 (Normal: 3.5-5.5 mmol/L), Protein Total - 69 (Normal: 60-80 g/L), Albumin - 43 (Normal: 36-50 g/L), AST (SGOT) - 51 (Normal: 5-35 U/L), ALP - 72 (Normal: 30-150 U/L)",
+            "Output": "Chloride: 103 (Normal: 95 to 105 mmol/l), Glucose: 4.7 (Normal: 3.5 to 5.5 mmol/L), Protein Total: 69 (Normal: 60 to 80 g/L), Albumin: 43 (Normal: 36 to 50 g/L), AST (SGOT): 51 (Normal: 5 to 35 U/L), ALP: 72 (Normal: 30 to 150 U/L)",
             "Duration": 20
         },
         "Chest X-Ray": {

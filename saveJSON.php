@@ -51,7 +51,7 @@ $id = $jsonRaw["id"];
 //$id = $json["processedData"]["advisors"]["participantId"]; 
 
 const PATH = "./data/";
-$body = date('Y_m_d_H_i_s') . "_" . $id;
+$body = date('Y_m_d') . "_" . $id;
     //$filename = PATH . $body . ".json";
     //echo $filename;
     $empty = false;
@@ -61,9 +61,9 @@ $body = date('Y_m_d_H_i_s') . "_" . $id;
         mkdir($folder,0755);
     }
     $filename = $folder . "/" . $body . ".json";
-    if(!$empty) {
-        if (!file_exists($filename)) {
-            try {
+   // if(!$empty) {
+       // if (!file_exists($filename)) {
+    try {
                 $handle = fopen($filename, "w+b");
                 stream_copy_to_stream(stripslashes(json_encode($json)), $handle);
                 fwrite($handle, stripslashes(json_encode($json)));
@@ -78,10 +78,10 @@ $body = date('Y_m_d_H_i_s') . "_" . $id;
                 fwrite($errorHandle, $e->getMessage());
                 fclose($errorHandle);
                 sulk("Unable to create file.", 500);
-            }
-        } else
-            sulk("File already exists!", 500);
-    }
+       }
+      //  } else
+      //      sulk("File already exists!", 500);
+   // }
 //}
 // Send back the all clear
 die(json_encode(array(

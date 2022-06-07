@@ -139,10 +139,11 @@
         }
         else
         {
-            conditions = Array(numOfScenarios/2).fill("Directed");
-            conditions.push(Array(numOfScenarios/2).fill("Non-Directed"));
-            conditions = conditions.flat();
-            conditions = shuffle(conditions);
+           // conditions = Array(numOfScenarios/2).fill("Directed");
+          //  conditions.push(Array(numOfScenarios/2).fill("Non-Directed"));
+          //  conditions = conditions.flat();
+          //  conditions = shuffle(conditions);
+		conditions = Array(numOfScenarios).fill("Non-Directed");
         }
     }
     var startExperimentTime = Date.now();
@@ -178,7 +179,7 @@
         type: jsPsychInstructions,
          pages: [
              "<p>Hello and thank you for participating in this study! " +
-             "<p>During this experiment, imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital. Your task is to diagnose the condition that is causing the patient’s symptoms. Please approach these cases as you would in your everyday medical practice. Your performance will be assessed based not only on the diagnosis you come to but also the number of tests you request. <strong>Hence, only request tests that are relevant to the case at hand.</strong></p>" + 
+             "<p>During this experiment, imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital. Your task is to diagnose the condition that is causing the patient's symptoms. Please approach these cases as you would in your everyday medical practice. Your performance will be assessed based not only on the diagnosis you come to but also the number of tests you request. <strong>Hence, only request tests that are relevant to the case at hand.</strong></p>" + 
              "<p>You will start with a sample case as a tutorial for this study." +
             "<p>Click 'next' to proceed.</p>"
         ],
@@ -358,9 +359,9 @@
         require_movement: false,
         prompt: "<p>On a scale from 1 (trivial) to 10 (impossible), how hard did you find it to determine a diagnosis for this case?</p>",
         min: 1,
-        min: 10,
+        max: 10,
         step: 1,
-        slide_start: 5,
+        slider_start: 5,
         response_ends_trial: true,
         on_load: ()=>{
             exp.fullscreenMode();
@@ -677,106 +678,116 @@
         timeline.push(postTutorialInstruct);
     }
 
-    if (informationStages)
-    {
-        trial = [];
-        let currentButtons = buttons;
-        currentButtons.pop();
-        for (let i = 1;i<buttons.length+1;i++)
-        {
-            let stageButtons = []
-            if (pastInformationAvailable)
-            {
-                stageButtons = currentButtons.slice(0,i);
-            }
-            else
-            {
-                stageButtons = currentButtons[i-1]
-            }
-            stageButtons.push("RECORD DIAGNOSIS");
-            var infoSeekingStage = {
-                type: jsPsychImageButtonResponse,
-                stimulus: '',
-                choices: stageButtons,
-                response_ends_trial: false,
-                scenarioObject: exp.currentSubtrial.trialInfoSet,
-                prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
-                shuffle_buttons: randomiseTestOrder,
-                on_load: ()=>{
-                    exp.fullscreenMode();
-                },
-                on_finish: (trial)=>{
-                    exp.saveInfoSeeking(trial);
-                }
-            }
-            trial.push(infoSeekingStage);
-            if (i==1)
-            {
-                trial.push(differentialDiagnoses);
-            }
-            else
-            {
-                var differentialDiagnosesStage = {
-                    type: jsPsychFreeTextRankedList,
-                    prompt: "<p>Input your diagnoses</p>",
-                    slider_labels: sliderLabels,
-                    slider_start: 5,
-                    slider_prompt: sliderName,
-                    slider_width:200,
-                    scale_questions: true,
-                    scale_labels: scaleLabels,
-                    scale_prompt: scaleName,
-                    add_button_prompt: addButtonPrompt,
-                    blank_scale_error: scaleError,
-                    start_empty: false,
-                    starting_list: function(){ // We need to load the differentials, slider and scale values from last subtrial/stage.
-                        let array = jsPsych.data.get().last(3);
-                        return array.trials[0].response
-                    },
-                    starting_sliders: function(){
-                        let array = jsPsych.data.get().last(3);
-                        return array.trials[0].sliderValues
-                    },
-                    starting_scales: function(){
-                        let array = jsPsych.data.get().last(3);
-                        return array.trials[0].scaleValues
-                    },
-                    on_load: ()=>{
-                        exp.fullscreenMode();
-                    },
-                    on_finish: (trial)=>{
-                        exp.saveDifferentialDiagnoses(trial)
-                        exp.exportGovernor();
-                    }
-                }
-                trial.push(differentialDiagnosesStage);
-            }
-
-            if (i == buttons.length)
-            {
-                trial.push(confidenceTreatment);
-            }
-            else
-            {
-                trial.push(confidence);
-            } 
-        }
-    }   
-    else
-    {
-        trial = [infoSeeking, differentialDiagnoses, finalDiagnosis, confidence];
-    }
-
     if (hypothesisGenerationTrials)
     {
         trial.unshift(hypothesisGeneration);
     }
 
-    trial.unshift(caseIntro);
+    //trial.unshift(caseIntro);
 
 
-    for (let i = 0; i < numOfScenarios; i++)
+    for (let x = 0; x < numOfScenarios; x++)
     {
+        var currentCaseIntro = {
+            type: jsPsychInstructions,
+            pages: ["<p>For this case: " + shuffledScenarios[x].Prompt],
+            show_clickable_nav: true,
+            allow_backward: false,
+            on_load: ()=>exp.fullscreenMode(),
+            on_finish: (trial)=>{
+                exp.fullscreenMode();
+            }
+        }
+        timeline.push(currentCaseIntro);
+        if (informationStages)
+        {
+            trial = [];
+            let currentButtons = buttons;
+           // currentButtons.pop();
+            for (let i = 1;i<numOfInformationStages+1;i++)
+            {
+                let stageButtons = []
+                if (pastInformationAvailable)
+                {
+                    stageButtons = currentButtons.slice(0,i);
+                }
+                else
+                {
+                    stageButtons = currentButtons[i-1]
+                }
+                stageButtons.push("RECORD DIAGNOSIS");
+                var infoSeekingStage = {
+                    type: jsPsychImageButtonResponse,
+                    stimulus: '',
+                    choices: stageButtons,
+                    response_ends_trial: false,
+                    scenarioObject: shuffledScenarios[x],
+                    prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
+                    shuffle_buttons: randomiseTestOrder,
+                    on_load: ()=>{
+                        exp.fullscreenMode();
+                    },
+                    on_finish: (trial)=>{
+                        exp.saveInfoSeeking(trial);
+                    }
+                }
+                trial.push(infoSeekingStage);
+                if (i==1)
+                {
+                    trial.push(differentialDiagnoses);
+                }
+                else
+                {
+                    var differentialDiagnosesStage = {
+                        type: jsPsychFreeTextRankedList,
+                        prompt: "<p>Input your diagnoses</p>",
+                        slider_labels: sliderLabels,
+                        slider_start: 5,
+                        slider_prompt: sliderName,
+                        slider_width:200,
+                        scale_questions: true,
+                        scale_labels: scaleLabels,
+                        scale_prompt: scaleName,
+                        add_button_prompt: addButtonPrompt,
+                        blank_scale_error: scaleError,
+                        start_empty: false,
+                        starting_list: function(){ // We need to load the differentials, slider and scale values from last subtrial/stage.
+                            let array = jsPsych.data.get().last(3);
+                            return array.trials[0].response
+                        },
+                        starting_sliders: function(){
+                            let array = jsPsych.data.get().last(3);
+                            return array.trials[0].sliderValues
+                        },
+                        starting_scales: function(){
+                            let array = jsPsych.data.get().last(3);
+                            return array.trials[0].scaleValues
+                        },
+                        on_load: ()=>{
+                            exp.fullscreenMode();
+                        },
+                        on_finish: (trial)=>{
+                            exp.saveDifferentialDiagnoses(trial)
+                            exp.exportGovernor();
+                        }
+                    }
+                    trial.push(differentialDiagnosesStage);
+                }
+
+                if (i == numOfInformationStages)
+                {
+                    trial.push(confidenceTreatment);
+                }
+                else
+                {
+                    trial.push(confidence);
+                } 
+            }
+        }   
+        else
+        {
+            trial = [infoSeeking, differentialDiagnoses, finalDiagnosis, confidence];
+        }
     	timeline.push({timeline: trial});
         if (doDifficulty)
         {
@@ -793,8 +804,6 @@
     {
         timeline.push(debrief);
     }
-
-    console.log(timeline);
 
     jsPsych.run(timeline);
 
