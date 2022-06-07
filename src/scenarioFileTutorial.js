@@ -114,7 +114,7 @@ let tutorialScenario =
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 50 (Normal: 130 to 180 g/L), Hct: 0.17 (Normal: 0.40 to 0.54 L/L), MCV: 55 (Normal: 80 to 100 fl), WBC: 5.2 (Normal: 3.6 to 11.0 x 109/L), Neut: 6.2 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 2.7 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 273 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 50 (Normal: 130 to 180 g/L), Hct: 0.17 (Normal: 0.40 to 0.54 L/L), MCV: 55 (Normal: 80 to 100 fl), WBC: 5.2 (Normal: 3.6 to 11.0 x 109/L), Neut: 6.2 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 2.7 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 273 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {

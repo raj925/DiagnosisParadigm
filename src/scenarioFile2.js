@@ -114,7 +114,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 93 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 73.9 (Normal: 80 to 100 fl), WBC: 9.2 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.6 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 1.4 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 490 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 93 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 73.9 (Normal: 80 to 100 fl), WBC: 9.2 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.6 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 1.4 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 490 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
@@ -247,7 +247,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 50 (Normal: 130 to 180 g/L), Hct: 0.37 (Normal: 0.40 to 0.54 L/L), MCV: 55.4 (Normal: 80 to 100 fl), WBC: 7.9 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.7 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.7 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 273 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 50 (Normal: 130 to 180 g/L), Hct: 0.37 (Normal: 0.40 to 0.54 L/L), MCV: 55.4 (Normal: 80 to 100 fl), WBC: 7.9 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.7 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 0.7 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 273 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
@@ -271,7 +271,7 @@ let scenarios2 = [
     "Suspected": "Your colleague has been handling the patient with a working hypothesis of Miliary TB.",
     "Patient History": {
         "Present Illness History": {
-            "Output": "Ten years prior to admission, the patient developed pancytopenia. Evaluation included a bone marrow biopsy which revealed refractory anaemia. The patient’s myelodysplastic syndrome remained indolent throughout the subsequent 10 years. Three months prior to admission the patient developed daily fevers and fatigue. One month prior to admission the patient presented to an outside hospital for diagnostic evaluation. Examination revealed a high temperature, a right inguinal hernia, and a right axillary mass (3 cm in diameter, no fluctuance, slightly tender).",
+            "Output": "Ten years prior to admission, the patient developed pancytopenia. Evaluation included a bone marrow biopsy which revealed refractory anaemia. The patient's myelodysplastic syndrome remained indolent throughout the subsequent 10 years. Three months prior to admission the patient developed daily fevers and fatigue. One month prior to admission the patient presented to an outside hospital for diagnostic evaluation. Examination revealed a high temperature, a right inguinal hernia, and a right axillary mass (3 cm in diameter, no fluctuance, slightly tender).",
             "Duration": 40
         },
         "Past Medical History": {
@@ -379,7 +379,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 94 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 87 (Normal: 80 to 100 fl), WBC: 6.3 (Normal: 3.6 to 11.0 x 109/L), Neut: 5.5 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.6 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 85 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 94 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 87 (Normal: 80 to 100 fl), WBC: 6.3 (Normal: 3.6 to 11.0 x 109/L), Neut: 5.5 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 0.6 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 85 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
@@ -511,7 +511,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 87 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 76 (Normal: 80 to 100 fl), WBC: 8.1 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.4 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 0.8 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 472 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 87 (Normal: 130 to 180 g/L), Hct: 0.28 (Normal: 0.40 to 0.54 L/L), MCV: 76 (Normal: 80 to 100 fl), WBC: 8.1 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.4 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 0.8 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 472 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
@@ -643,7 +643,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 116 (Normal: 130 to 180 g/L), Hct: 0.35 (Normal: 0.40 to 0.54 L/L), MCV: 93 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 4.8 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 2.1 (Normal: 1.0 to 4.0 x 109/L), Platelet Count: 298 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 116 (Normal: 130 to 180 g/L), Hct: 0.35 (Normal: 0.40 to 0.54 L/L), MCV: 93 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 4.8 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 2.1 (Normal: 1.0 to 4.0 x 109/L), Platelet Count: 298 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {
@@ -775,7 +775,7 @@ let scenarios2 = [
             "Duration": 20
         },
         "FBC": {
-            "Output": "Hb: 74 (Normal: 130 to 180 g/L), Hct: 0.22 (Normal: 0.40 to 0.54 L/L), MCV: 100 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.2 (Normal: 1.8 to 7.5  x 109/L), Lymph’s: 3.1 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 25 (Normal: 140 to 400 x 109/L)",
+            "Output": "Hb: 74 (Normal: 130 to 180 g/L), Hct: 0.22 (Normal: 0.40 to 0.54 L/L), MCV: 100 (Normal: 80 to 100 fl), WBC: 8.4 (Normal: 3.6 to 11.0 x 109/L), Neut: 7.2 (Normal: 1.8 to 7.5  x 109/L), Lymph's: 3.1 (Normal: 1.0 to 4.0  x 109/L), Platelet Count: 25 (Normal: 140 to 400 x 109/L)",
             "Duration": 500
         },
         "Other Biochemistry Tests": {

@@ -6,15 +6,18 @@ lapply(requiredPackages, require, character.only = TRUE)
 wd <- dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(wd, '/', 'processFile.py', sep=""))
 ids <- list.dirs(wd,recursive = FALSE) 
-df <- data.frame(matrix(ncol = 0, nrow = length(ids)*4))
+df <- data.frame(matrix(ncol = 0, nrow = 6))
 count <- 0
 
-infoStages <- c("Patient History", "Physical Exmination", "Generalised Testing", "Specialised Testing")
+infoStages <- c("Patient History", "Physical Exmination", "Testing")
+
+participantIDS <- c()
   
 for (id in ids)
 {
   participantID <- str_split(id, "/", simplify = TRUE)
   participantID <- participantID[length(participantID)]
+  participantIDS <- c(participantIDS, participantID)
   files <- list.files(id) 
   file <- files[length(files)]
   filePath <- paste(wd, "/", participantID, "/", file, sep="")
@@ -25,7 +28,7 @@ for (id in ids)
   
   for (x in 1:length(trials))
   {
-    row <- x + (count*4)
+    row <- x + (count*3)
     trialSelect <- trials[x]
     trialSelect <- trialSelect[[1]]
     df$participantID[row] <- participantID
@@ -45,6 +48,7 @@ for (id in ids)
 aggData <- data.frame()
 
 
+
 ## Per stage and per case:
 ## Across experience::
 ## Average Confidence
@@ -54,3 +58,6 @@ aggData <- data.frame()
 ## Differentials as a function of confidence
 ## Repeat tests as a function of confidence
 ## Difficulty via total accuracy across all ppts
+## Mixed effects on confidence
+## How many differentials have been 'cut down' from start to finish?
+# What proportion of total info has been sought? 

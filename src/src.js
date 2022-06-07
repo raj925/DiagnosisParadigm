@@ -77,7 +77,7 @@ class Structure {
             subtrial++;
             if (subtrial > subtrials)
             {
-                this.trueConditions.push(scenarioObject[trial-1]["True Condition"]);
+                //this.trueConditions.push(scenarioObject[trial-1]["True Condition"]);
                 trial++;
                 subtrial=1;
             }
