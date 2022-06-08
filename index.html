@@ -13,10 +13,19 @@
         const chars = shuffle(["b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z","1","2","3","4","5","6","7","8","9"]);
         const participantID = (chars.slice(1,7)).join('');
         // redirect if we don't have consent for participation
-        let consent = window.location.search.match("[?&]consent=true");
-        if(consent === null) {
-            let redirectURL = "consent.html";
-            redirectURL += "?ParticipantID=" + participantID;
+        const active = true;
+        if (active)
+        {
+            let consent = window.location.search.match("[?&]consent=true");
+            if(consent === null) {
+                let redirectURL = "consent.html";
+                redirectURL += "?ParticipantID=" + participantID;
+                window.location.replace(redirectURL); // simulate redirect (no history)
+            }
+        }
+        else
+        {
+            let redirectURL = "pause.html";
             window.location.replace(redirectURL); // simulate redirect (no history)
         }
     </script>
@@ -584,7 +593,7 @@
     if (doQuestionnaire)
     {
         timeline.push(questionIntro);
-        timeline.push(decisionQuestionnaire);
+        timeline.push(decisionsQuestionnaire);
         timeline.push(bigFiveQuestionnaire);
     }
 
