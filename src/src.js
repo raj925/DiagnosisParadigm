@@ -195,6 +195,18 @@ class Structure {
         this.debrief = trial.response;
     }
 
+    saveDecisionQuestions(trial)
+    {
+        this.decisionQuestions = trial.question_order;
+        this.decisionAnswers = trial.response;
+    }
+
+    saveBigFiveQuestions(trial)
+    {
+        this.bigFiveQuestions = trial.question_order;
+        this.bigFiveAnswers = trial.response;
+    }
+
     // getConditions()
     // {
     //     let intro = "<p>Thank you again for participating in our experiment! You have now completed all patient cases!</p>"

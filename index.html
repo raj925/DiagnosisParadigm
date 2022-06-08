@@ -175,11 +175,109 @@
         allow_backward: false
     };
 
+    const questionIntro = {
+        type: jsPsychInstructions,
+        pages: ["<p>Hello and thank you for participating in this study! " +
+            "<p>Before getting started with the main study, you will first be completing some questions about your decision making style and personality. Please answer these as honestly as possible.</p>" +
+            "<p>Click 'next' to proceed.</p>"],
+        show_clickable_nav: true,
+        allow_backward: false
+    }
+
+    const decisionQuestionnaire = 
+    {
+        type: jsPsychSurveyMultiChoice,
+        preamble: "The following questions relate to how you make decisions. Please rate the following statements from Strongly Disagree to Strongly Agree:",
+        questions:[
+            {name: "RationalInfo", prompt: "I prefer to gather all the necessary information before committing to a decision. ", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "RationalEval", prompt: "I thoroughly evaluate decision alternatives before making a final choice.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "RationalCont", prompt: "In decision making, I take time to contemplate the pros/cons or risks/benefits of a situation.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "RationalDecision", prompt: "Investigating the facts is an important part of my decision-making process.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "RationalWeigh", prompt: "I weigh a number of different factors when making decisions.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "IntuitiveGut", prompt: "When making decisions, I rely mainly on my gut feelings.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "IntuitiveHunch", prompt: "My initial hunch about decisions is generally what I follow.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "IntuitiveDecision", prompt: "I make decisions based on intuition.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "IntuitiveImpress", prompt: "I rely on my first impressions when making decisions.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]},
+            {name: "IntuitiveWeigh", prompt: "I weight feelings more than analysis in making decisions.", required: true, horizontal: true, options: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]}
+        ],
+        randomize_question_order: true,
+        button_label: "Submit",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.saveDebrief(trial);
+            jsPsych.finishTrial(trial);
+        }
+    }
+
+    const bigFiveQuestionnaire = 
+    {
+        type: jsPsychSurveyMultiChoice,
+        preamble: "For this survey, here are a number of characteristics that may or may not apply to you. For example, do you agree that you are someone who likes to spend time with others? Please rate each statement to indicate the extent to which you agree or disagree with that statement.",
+        questions:[
+            {name: "Talk", prompt: "I see myself as someone who is talkative.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Fault", prompt: "I see myself as someone who tends to find fault with others.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Thorough", prompt: "I see myself as someone who does a thorough job.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Blue", prompt: "I see myself as someone who is depressed, blue.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Orig", prompt: "I see myself as someone who is original, comes up with new ideas.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Reserved", prompt: "I see myself as someone who is reserved.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Help", prompt: "I see myself as someone who is helpful and unselfish with others.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Careless", prompt: "I see myself as someone who can be somewhat careless.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Relax", prompt: "I see myself as someone who is relaxed, handles stress well.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Curious", prompt: "I see myself as someone who is curious about many different things.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Energy", prompt: "I see myself as someone who is full of energy.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Quarrel", prompt: "I see myself as someone who starts quarrels with others.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Reliable", prompt: "I see myself as someone who is a reliable worker.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Tense", prompt: "I see myself as someone who can be tense.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Ingenious", prompt: "I see myself as someone who is ingenious, a deep thinker.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Enthusiastic", prompt: "I see myself as someone who generates a lot of enthusiasm.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Forgive", prompt: "I see myself as someone who has a forgiving nature.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Disorganise", prompt: "I see myself as someone who tends to be disorganised.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Worry", prompt: "I see myself as someone who worries a lot.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Active", prompt: "I see myself as someone who has an active imagination.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Quiet", prompt: "I see myself as someone who tends to be quiet.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Trusting", prompt: "I see myself as someone who is generally trusting.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Lazy", prompt: "I see myself as someone who tends to be lazy.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Stable", prompt: "I see myself as someone who is emotionally stable, not easily upset.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Inventive", prompt: "I see myself as someone who is inventive.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Assertive", prompt: "I see myself as someone who has an assertive personality.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Cold", prompt: "I see myself as someone who can be cold and aloof.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Persevere", prompt: "I see myself as someone who perseveres until the task is finished.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Moody", prompt: "I see myself as someone who can be moody.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Art", prompt: "I see myself as someone who values artistic, aesthetic experiences.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Shy", prompt: "I see myself as someone who is sometimes shy, inhibited.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Considerate", prompt: "I see myself as someone who is considerate and kind to almost everyone.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Efficient", prompt: "I see myself as someone who does things efficiently.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Calm", prompt: "I see myself as someone who remains calm in tense situations.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Routine", prompt: "I see myself as someone who prefers work that is routine.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Sociable", prompt: "I see myself as someone who is outgoing, sociable.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Rude", prompt: "I see myself as someone who is sometimes rude to others.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Plan", prompt: "I see myself as someone who makes plans and follows through with them.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Nervous", prompt: "I see myself as someone who gets nervous easily.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Ideas", prompt: "I see myself as someone who likes to reflect, play with ideas.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Artistic", prompt: "I see myself as someone who has few artistic interests.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Cooperate", prompt: "I see myself as someone who likes to cooperate with others.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Distract", prompt: "I see myself as someone who is easily distracted.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+            {name: "Lit", prompt: "I see myself as someone who is sophisticated in art, music or literature.", required: true, horizontal: true, options: ["Disagree Strongly", "Disagree a little", "Neither agree nor disagree", "Agree a little", "Agree Strongly"]},
+
+        ],
+        randomize_question_order: true,
+        button_label: "Submit",
+        on_load: ()=>{
+            exp.fullscreenMode();
+        },
+        on_finish: (trial)=>{
+            exp.saveBigFiveQuestions(trial);
+            jsPsych.finishTrial(trial);
+        }
+    }
+
     const welcome = {
         type: jsPsychInstructions,
          pages: [
-             "<p>Hello and thank you for participating in this study! " +
-             "<p>During this experiment, imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital. Your task is to diagnose the condition that is causing the patient's symptoms. Please approach these cases as you would in your everyday medical practice. Your performance will be assessed based not only on the diagnosis you come to but also the number of tests you request. <strong>Hence, only request tests that are relevant to the case at hand.</strong></p>" + 
+             "<p>Thank you again for participating in this study! " +
+             "<p>During the main task, imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital. Your task is to diagnose the condition that is causing the patient's symptoms. Please approach these cases as you would in your everyday medical practice. Your performance will be assessed based not only on the diagnosis you come to but also the number of tests you request. <strong>Hence, only request tests that are relevant to the case at hand.</strong></p>" + 
              "<p>You will start with a sample case as a tutorial for this study." +
             "<p>Click 'next' to proceed.</p>"
         ],
@@ -481,6 +579,13 @@
     if (demoQuestions)
     {
         timeline.push(demoQuestionnaire);
+    }
+
+    if (doQuestionnaire)
+    {
+        timeline.push(questionIntro);
+        timeline.push(decisionQuestionnaire);
+        timeline.push(bigFiveQuestionnaire);
     }
 
     timeline.push(welcome);
