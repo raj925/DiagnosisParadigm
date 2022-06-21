@@ -132,6 +132,35 @@ class Structure {
     saveQuestionnaire(trial)
     {
         //this.storePluginData(trial);
+        
+        // let age = document.getElementById("input-0").value;
+        // let gender = document.getElementById("input-1").value;
+        // let medExp = document.getElementById("input-2").value;
+
+        // let errorStyle = "style='color: red;position: absolute;left: 50%;transform: translate(-50%, -50%);top: 60%;'";
+        // let ageError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
+        // ageError.innerHTML = "<div " + errorStyle + ">Please provide a valid age!</div>"
+        // ageError.classList.add('hidden');
+
+        // let expError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
+        // expError.innerHTML = "<div " + errorStyle + ">Please provide medical experience as a number!</div>"
+        // expError.classList.add('hidden');
+
+        // if (!(parseInt(age) > 0))
+        // {
+        //     ageError.classList.remove('hidden');
+        //     return false;
+        // }
+        // else if (!(parseInt(medExp) > 0))
+        // {
+        //     expError.classList.remove('hidden');
+        //     return false;
+        // }
+        // else
+        // {
+        //     this.demoQuestionnaire = trial.response;
+        // }
+
         this.demoQuestionnaire = trial.response;
     }
 

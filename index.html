@@ -58,7 +58,7 @@
 
     const betaTest = false; // If true, only shows a single trial
     const doInstruct = true; // If true, shows instructions.
-    const doQuestionnaire = true; // If true, includes questionnaires. 
+    const doQuestionnaire = false; // If true, includes questionnaires. 
     const demoQuestions = true; // If true, asks participants for age, gender and medical experience.
     const doDebrief = true; // If true, run debrief questionnaire at the end.
     const doFeedback = true; //If true, shows what conditions all patients had at the end of the experiment.
@@ -72,7 +72,12 @@
     const randomiseTestOrder = true; // If true, shuffles the order of tests shown on screen for each trial and information stage. If false, the order is fixed to the order in which tests are shown in the scenario files.
     const runTutorial = true; // If true, runs a tutorial for the experiment before the main trials.
 
-    const endRedirectURL = 'https://www.oxstar.ox.ac.uk/'; //What URL to redirect to after the experiment.
+    //const endRedirectURL = 'https://www.oxstar.ox.ac.uk/'; //What URL to redirect to after the experiment.
+    let URL = "end.html";
+    let ID = window.location.search.match('[?&]ParticipantID=\\w+');
+    ID = ID[0].substring(15);
+    URL += "?ParticipantID=" + ID;
+    const endRedirectURL = URL; //What URL to redirect to after the experiment.
 
     const sliderName = "Likelihood";
     const sliderLabels = ["Not At All Likely", "Extremely Likely"];
@@ -215,7 +220,7 @@
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
-            exp.saveDebrief(trial);
+            exp.saveDecisionQuestions(trial);
             jsPsych.finishTrial(trial);
         }
     }
@@ -593,7 +598,7 @@
     if (doQuestionnaire)
     {
         timeline.push(questionIntro);
-        timeline.push(decisionsQuestionnaire);
+        timeline.push(decisionQuestionnaire);
         timeline.push(bigFiveQuestionnaire);
     }
 
