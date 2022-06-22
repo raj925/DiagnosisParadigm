@@ -86,7 +86,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           min: {
               type: jspsych.ParameterType.INT,
               pretty_name: "Min slider",
-              default: 0,
+              default: 1,
           },
           /** Sets the maximum value of the sliders */
           max: {
@@ -98,7 +98,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           slider_start: {
               type: jspsych.ParameterType.INT,
               pretty_name: "Slider starting value",
-              default: 50,
+              default: 5,
           },
           /** Put this prompt above the slider*/
           slider_prompt: {
@@ -249,7 +249,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
           liHTML += "<div>";
           for (var j = 0; j < trial.slider_labels.length; j++) {
               var width = 100 / (trial.slider_labels.length - 1);
-              var left_offset = j * (100 / (trial.slider_labels.length - 1)) - width / 2;
+              var left_offset = (trial.slider_labels.length) * j;
               liHTML +=
                   '<div style="display: inline-block; position: absolute; left:' +
                       left_offset +
@@ -271,7 +271,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
         li.innerHTML = liHTML;
         li.id = "ListElement" + i;
         li.className = "ListElement";
-        li.draggable = true;
+        li.draggable = false;
         sortList.appendChild(li);
       }
 
