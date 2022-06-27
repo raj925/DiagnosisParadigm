@@ -132,7 +132,7 @@ class Structure {
     saveQuestionnaire(trial)
     {
         //this.storePluginData(trial);
-        
+
         // let age = document.getElementById("input-0").value;
         // let gender = document.getElementById("input-1").value;
         // let medExp = document.getElementById("input-2").value;
@@ -284,13 +284,13 @@ class Structure {
         participantData.trials = trialData;
 
         // Debrief stuff
-        participantData.debrief = [];
-        if(typeof data.debrief !== 'undefined') {
-            if(data.debrief)
-            {
-                participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
-            }
-        }
+        participantData.debrief = data.debrief;
+        // if(typeof data.debrief !== 'undefined') {
+        //     if(data.debrief)
+        //     {
+        //         participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
+        //     }
+        // }
 
         return participantData;
     }
@@ -329,6 +329,15 @@ class Structure {
         out.confidence = trial.confidence;
         out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
         out.difficulty = this.difficulties[trialNum];
+        let treatment = trial.treatmentPlan;
+        if (!treatment || treatment.length === 0 )
+        {
+            out.treatmentPlan = "Not Provided";
+        }
+        else
+        {
+            out.treatmentPlan = trial.treatmentPlan;
+        }
 
         return out;
     }

@@ -123,7 +123,7 @@
     buttons.splice(buttons.indexOf("True Condition"), 1);
     buttons.splice(buttons.indexOf("Prompt"), 1); // Remove scenario properties that are not buttons.
     buttons.splice(buttons.indexOf("Suspected"), 1);
-    buttons.push("RECORD DIAGNOSIS"); // Add button to record final diagnosis.
+    buttons.push("ENTER DIFFERENTIALS"); // Add button to record final diagnosis.
 
     ////////////////////////////////////////////
     ////////////////////////////////////////////
@@ -191,8 +191,8 @@
 
     const questionIntro = {
         type: jsPsychInstructions,
-        pages: ["<p>Hello and thank you for participating in this study! " +
-            "<p>Before getting started with the main study, you will first be completing some questions about your decision making style and personality. Please answer these as honestly as possible.</p>" +
+        pages: ["<p>Thank you for completing the main task! " +
+            "<p>For the final part of this experiment, you will be completing some questions about your decision making style and personality. Please answer these as honestly as possible.</p>" +
             "<p>Click 'next' to proceed.</p>"],
         show_clickable_nav: true,
         allow_backward: false
@@ -353,7 +353,7 @@
         choices: buttons,
         response_ends_trial: false,
         scenarioObject: tutorialScenario,
-        prompt: "<p>Below you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.",
+        prompt: "<p>Below you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.",
         shuffle_buttons: randomiseTestOrder,
         on_load: ()=>{
             exp.fullscreenMode();
@@ -369,7 +369,7 @@
     	choices: buttons,
     	response_ends_trial: false,
     	scenarioObject: exp.currentSubtrial.trialInfoSet,
-    	prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>",
+    	prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>",
         shuffle_buttons: randomiseTestOrder,
         on_load: ()=>{
             exp.fullscreenMode();
@@ -595,13 +595,6 @@
         timeline.push(demoQuestionnaire);
     }
 
-    if (doQuestionnaire)
-    {
-        timeline.push(questionIntro);
-        timeline.push(decisionQuestionnaire);
-        timeline.push(bigFiveQuestionnaire);
-    }
-
     timeline.push(welcome);
 
     // Define the tutorial 
@@ -623,14 +616,14 @@
         {
             stageButtons = currentButtons[0]
         }
-        stageButtons.push("RECORD DIAGNOSIS");
+        stageButtons.push("ENTER DIFFERENTIALS");
         var tutorialStage1 = {
             type: jsPsychImageButtonResponse,
             stimulus: '',
             choices: stageButtons,
             response_ends_trial: false,
             scenarioObject: tutorialScenario,
-            prompt: "<p>Above you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            prompt: "<p>Above you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record differential diagnoses for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
             on_load: ()=>{
                 exp.fullscreenMode();
@@ -654,14 +647,14 @@
         {
             stageButtons = currentButtons[1]
         }
-        stageButtons.push("RECORD DIAGNOSIS");
+        stageButtons.push("ENTER DIFFERENTIALS");
         var tutorialStage2 = {
             type: jsPsychImageButtonResponse,
             stimulus: '',
             choices: stageButtons,
             response_ends_trial: false,
             scenarioObject: tutorialScenario,
-            prompt: "<p>You will now find that the next stage of information, <strong>Physical Examination</strong>, is available to view. Click here to view the available information requests. You can also go back to remind yourself of information about the Patient History. </p><p> When you are done seeking information and ready to record current diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            prompt: "<p>You will now find that the next stage of information, <strong>Physical Examination</strong>, is available to view. Click here to view the available information requests. You can also go back to remind yourself of information about the Patient History. </p><p> When you are done seeking information and ready to record your current diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
             on_load: ()=>{
                 exp.fullscreenMode();
@@ -717,14 +710,14 @@
         {
             stageButtons = currentButtons[2]
         }
-        stageButtons.push("RECORD DIAGNOSIS");
+        stageButtons.push("ENTER DIFFERENTIALS");
         var tutorialStage3 = {
             type: jsPsychImageButtonResponse,
             stimulus: '',
             choices: stageButtons,
             response_ends_trial: false,
             scenarioObject: tutorialScenario,
-            prompt: "<p>Testing is now available, as well as the information from the previous two infomation stages.</p><p>This is the final stage of information gathering, where you can request test results, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it to be important for making your diagnostic decision.<p> When you are done seeking information and ready to record diagnoses for the patient, click on RECORD DIAGNOSIS.</p>",
+            prompt: "<p>Testing is now available, as well as the information from the previous two infomation stages.</p><p>This is the final stage of information gathering, where you can request test results, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it to be important for making your diagnostic decision.<p> When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
             on_load: ()=>{
                 exp.fullscreenMode();
@@ -834,14 +827,14 @@
                 {
                     stageButtons = currentButtons[i-1]
                 }
-                stageButtons.push("RECORD DIAGNOSIS");
+                stageButtons.push("ENTER DIFFERENTIALS");
                 var infoSeekingStage = {
                     type: jsPsychImageButtonResponse,
                     stimulus: '',
                     choices: stageButtons,
                     response_ends_trial: false,
                     scenarioObject: shuffledScenarios[x],
-                    prompt: "<p>Click a button to gather information or click RECORD DIAGNOSIS to report your final answer.</p>" + "<p>For this case: " + shuffledScenarios[x].Prompt,
+                    prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>" + "<p>For this case: " + shuffledScenarios[x].Prompt,
                     shuffle_buttons: randomiseTestOrder,
                     on_load: ()=>{
                         exp.fullscreenMode();
@@ -922,6 +915,13 @@
     if (doDebrief)
     {
         timeline.push(debrief);
+    }
+
+    if (doQuestionnaire)
+    {
+        timeline.push(questionIntro);
+        timeline.push(decisionQuestionnaire);
+        timeline.push(bigFiveQuestionnaire);
     }
 
     jsPsych.run(timeline);

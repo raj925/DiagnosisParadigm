@@ -25,8 +25,8 @@ for (id in ids)
   participantID <- str_split(id, "/", simplify = TRUE)
   participantID <- participantID[length(participantID)]
   participantIDS <- c(participantIDS, participantID)
-  files <- list.files(id) 
-  file <- files[length(files)]
+  files <- list.files(paste(wd, "/", participantID, sep="")) 
+  file <- files[1]
   filePath <- paste(wd, "/", participantID, "/", file, sep="")
   processFile(filePath)
   # Give the input file name to the function.

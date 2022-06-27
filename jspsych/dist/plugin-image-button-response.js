@@ -313,7 +313,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   }
                   display_element.querySelector("#jspsych-image-button-response-stimulus").className +=
                   " responded";
-                  if (txt == "RECORD DIAGNOSIS")
+                  if (txt == "ENTER DIFFERENTIALS")
                   {
                     var end_time = performance.now();
                     var rt = Math.round(end_time - start_time);

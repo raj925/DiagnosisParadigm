@@ -16,10 +16,10 @@ function sulk($err, $code) {
     );
 $tmp = file_get_contents("php://input");
 
-$filename = "./endInfo.txt";
+$filename = "./data/endInfo.txt";
 
 $rhandle = fopen($filename, "r");
-$file = fread($rhandle, filesize("./endInfo.txt"));
+$file = fread($rhandle, filesize("./data/endInfo.txt"));
 fclose($rhandle);
 
 $tmp .= $file;
