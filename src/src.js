@@ -253,6 +253,17 @@ class Structure {
         return prompt;
     }
 
+    showCaseNumber()
+    {
+        let currentCase = this.currentSubtrial.trialID;
+        let text = "You are now on case " + currentCase + " of " + this.numOfTrials + ": ";
+        text = text + this.currentSubtrial.presentation;
+        let content = document.getElementById("jspsych-content");
+        let p = document.createElement("p");
+        p.innerHTML = text;
+        content.prepend(p);
+    }
+
     processData(data) 
     {
         // Data about the participant

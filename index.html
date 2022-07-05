@@ -86,7 +86,7 @@
     const scaleLabels = ["Low","Medium","High","Emergency"];
     const confidenceLabels = ["Not At All Confident", "Fully Confident"]
     const addButtonPrompt = "Enter the diagnosis that you want to add";
-    const scaleError = "Please provide a severity for all diagnoses!"
+    const scaleError = "Please provide a Level of Concern for all diagnoses!"
     const hypothesisCondition = 0 // 0: no working diagnosis, 1: initial hypothesis provided, 2: free hypothesis generation
 
 
@@ -184,7 +184,7 @@
     
     const browserInstruct = {
         type: jsPsychInstructions,
-        pages: ["<p>Please do not use the back or forward buttons on your browser during the experiment. Data on your performance will not save until the end of the experiment so do not close your browser unless you would no longer like to participate. Thank you for cooperation!</p>" + "<p>Press Next to begin.</p>"],
+        pages: ["<p>Please do not use the back or forward buttons on your browser during the experiment. Data on your performance will not save until the end of the experiment so do not close your browser unless you would no longer like to participate.</p>" + "<p>This study should take around an hour, so please make sure you have enough time and are in a quiet place where you are unlikely to be interrupted.</p>" + "<p>Thank you for your cooperation!</p>" + "<p>Press Next to begin.</p>"],
         show_clickable_nav: true,
         allow_backward: false
     };
@@ -314,7 +314,7 @@
             exp.fullscreenMode();
         },
         on_finish: (trial)=>{
-            exp.saveQuestionnaire(trial);
+           exp.saveQuestionnaire(trial);
         }
     }
 
@@ -401,7 +401,7 @@
         type: jsPsychCanvasSliderResponseWithButtons,
         stimulus: '',
         labels: confidenceLabels,
-        require_movement: false,
+        require_movement: true,
         prompt: "<p>Record how confident you are that you would be ready to start treating this patient.</p>",
         response_ends_trial: true,
         text_prompt: "Record your treatment plan below.",
@@ -423,7 +423,7 @@
         type: jsPsychCanvasSliderResponseWithButtons,
         stimulus: '',
         labels: confidenceLabels,
-        require_movement: false,
+        require_movement: true,
         prompt: "<p>Record how confident you are that you would be ready to start treating this patient.</p>",
         response_ends_trial: true,
         text_prompt: "Record your treatment plan below.",
@@ -446,8 +446,8 @@
         type: jsPsychCanvasSliderResponseWithButtons,
         stimulus: '',
         labels: confidenceLabels,
-        require_movement: false,
-        prompt: "<p>Once you have recorded your diagnosis list, you should indicate using the slider how confident you are that you have the information you would need to be ready to treat this patient.</p><p>Bear in mind that there are three stages of information gathering left for this patient, so it is fine to not be very confident yet! Make sure that you are recording your confidence as accurately as possible: try not to be overconfident or underconfident.</p>",
+        require_movement: true,
+        prompt: "<p>Once you have recorded your diagnosis list, you should indicate using the slider how confident you are that you have the information you would need to be ready to treat this patient.</p><p>Bear in mind that there are three stages of information gathering left for this patient, so it is fine to not be very confident yet! Make sure that you are recording your confidence as accurately as possible: try not to be overconfident or underconfident. You will not be able to proceed until you indicate your confidence.</p>",
         response_ends_trial: true,
         text_prompt: "Record your treatment plan below.",
         text_placeholder: "Input your treatment plan (eg what further tests you would run, any advice or documentation you would seek)",
@@ -510,7 +510,7 @@
     const differentialDiagnosesTutorial = 
     {
         type: jsPsychFreeTextRankedList,
-        prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. Once you type in the diagnosis, click the plus again or Enter on your keyboard. For each differential, you will record how concerned you would be if the condition were present in this patient (Low, Medium, High, Emergency) and how likely that diagnosis is on a scale of 1-10.</p><p>Try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided your level of concern and likelihood for all diagnoses before doing so.</p>",
+        prompt: "<p>At the end of each information stage, you will record a list of differential diagnoses for this patient.</p><p>Click the plus icon to add a diagnosis to the list. Once you type in the diagnosis, click the plus again or Enter on your keyboard. For each differential, you will record how concerned you would be if the condition were present in this patient (Low, Medium, High, Emergency) and how likely that diagnosis is on a scale of 1-10.</p><p>Now try adding some diagnoses! Once you are done with your list, click Continue. Make sure that you have provided your level of concern and likelihood for all diagnoses before doing so.</p>",
         slider_labels: sliderLabels,
         slider_start: 5,
         slider_prompt: sliderName,
@@ -563,7 +563,7 @@
     const postTutorialInstruct = {
         type: jsPsychInstructions,
          pages: [
-             "<p>You have completed the tutorial case! Feel free to take a short break before proceeding to the main experiment. The main patient cases will vary in difficulty, so do your best to report your differentials and report your confidence accurately.</p><p>One final tip: imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital.<strong>Only request tests that are relevant to the case at hand.</strong> When making decisions about what information to request and which differential diagnoses you are considering, make sure you do so in a manner as close as possible to your everyday medical decisions.</p><p>Click Next to begin the experiment.</p>"
+             "<p>You have completed the tutorial case! Feel free to take a short break before proceeding to the main experiment. There will be 6 patient cases to complete. The patient cases will vary in difficulty, so do your best to report your differentials and report your confidence accurately.</p><p>One final tip: imagine you are on call working in a busy district hospital. You will be presented with patients who are admitted into the hospital.<strong>Only request tests that are relevant to the case at hand.</strong> When making decisions about what information to request and which differential diagnoses you are considering, make sure you do so in a manner as close as possible to your everyday medical decisions.</p><p>Click Next to begin the experiment.</p>"
         ],
         show_clickable_nav: true,
         allow_backward: false,
@@ -717,7 +717,7 @@
             choices: stageButtons,
             response_ends_trial: false,
             scenarioObject: tutorialScenario,
-            prompt: "<p>Testing is now available, as well as the information from the previous two infomation stages.</p><p>This is the final stage of information gathering, where you can request test results, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it to be important for making your diagnostic decision.<p> When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
+            prompt: "<p>Testing is now available, as well as the information from the previous two infomation stages.</p><p>This is the final stage of information gathering, where you can request test results, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it to be important for making your diagnostic decision.<p> Your performance will be better if you request only necessary tests. When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
             on_load: ()=>{
                 exp.fullscreenMode();
@@ -766,7 +766,7 @@
             type: jsPsychCanvasSliderResponseWithButtons,
             stimulus: '',
             labels: confidenceLabels,
-            require_movement: false,
+            require_movement: true,
             prompt: "<p>You can record your final confidence here, as well as whether you are ready to start treating the patient using the checkbox. As before, you can record your confidence using the slider</p><p><strong>If you believe you are ready to start treating the patient, you can check the box below that says 'Ready to Treat'.</strong> If you do, you will be asked to record what your treatment plan would be. Please include details such as any escalations you would make, any further tests you would run, consultants/specialists or documentation you would consult and generally what your immediate course of action would be.</p>",
             response_ends_trial: true,
             text_prompt: "Record your treatment plan below.",
@@ -834,9 +834,10 @@
                     choices: stageButtons,
                     response_ends_trial: false,
                     scenarioObject: shuffledScenarios[x],
-                    prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>" + "<p>For this case: " + shuffledScenarios[x].Prompt,
+                    prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>",
                     shuffle_buttons: randomiseTestOrder,
                     on_load: ()=>{
+                        exp.showCaseNumber();
                         exp.fullscreenMode();
                     },
                     on_finish: (trial)=>{
@@ -876,6 +877,7 @@
                             return array.trials[0].scaleValues
                         },
                         on_load: ()=>{
+                            exp.showCaseNumber();
                             exp.fullscreenMode();
                         },
                         on_finish: (trial)=>{

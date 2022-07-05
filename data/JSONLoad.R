@@ -6,7 +6,7 @@ lapply(requiredPackages, require, character.only = TRUE)
 wd <- dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(wd, '/', 'processFile.py', sep=""))
 ids <- list.dirs(wd,recursive = FALSE) 
-df <- data.frame(matrix(ncol = 0, nrow = 18*length(ids)))
+df <- data.frame(matrix(ncol = 0, nrow = 33))
 count <- 0
 
 infoStages <- c("Patient History", "Physical Exmination", "Testing")
@@ -74,10 +74,11 @@ for (id in ids)
     df$correctDiagnosis[row] <- toupper(trialSelect$trueCondition) %in% trialSelect$diagnoses
     df$perceivedDifficulty[row] <- myData$rawData$difficulties[trialSelect$trial]
     df$highestSeverity[row] <- max(trialSelect$severities)
-    df$hasHighSeverity[row] <- max(trialSelect$severities) > 2
+    df$hasHighSeverity[row] <- max(trialSelect$severities) > 1
     df$highestLikelihood[row] <- max(trialSelect$likelihoods)
     df$competingDifferentials[row] <- length(trialSelect$likelihoods>6)
     df$hasCompetingDifferentials[row] <- df$competingDifferentials[row] > 1
+    df$treatmentPlan[row] <- trialSelect$treatmentPlan
   }
   count <- count + length(trials)
 }

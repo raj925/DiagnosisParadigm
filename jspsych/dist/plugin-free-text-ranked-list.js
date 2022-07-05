@@ -295,7 +295,7 @@ var jsPsychFreeTextRankedList = (function (jspsych) {
             confirm.addEventListener("click", function()
             {
               let val = (q_element.value).toUpperCase();
-              if (val.length > 2 && !list.includes(val)) // if they input a blank string or a single letter, do not add to list.
+              if (val.length > 1 && !list.includes(val)) // if they input a blank string or a single letter, do not add to list.
               {
                 list.push(val);
                 let sliderValues = [];

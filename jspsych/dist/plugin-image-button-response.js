@@ -299,10 +299,10 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   var canvas = document.querySelector('#jspsych-content');
                   let img = display_element.querySelector("#jspsych-image-button-response-stimulus");
                   img.classList.add('hidden');
-                  if (canvas.querySelector('p') != null)
-                  {
-                    canvas.querySelector('p').remove();
-                  }
+                  // if (canvas.querySelector('p') != null)
+                  // {
+                  //   canvas.querySelector('p').remove();
+                  // }
                   if (canvas.querySelector('#currentRes') != null)
                   {
                     canvas.querySelector('#currentRes').remove();
@@ -370,10 +370,10 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                       (response.tests).push(innerkey);
                       innerBtn.addEventListener("click", (e) => 
                       {
-                        if (canvas.querySelector('p') != null)
-                        {
-                          canvas.querySelector('p').remove();
-                        }
+                        // if (canvas.querySelector('p') != null)
+                        // {
+                        //   canvas.querySelector('p').remove();
+                        // }
                         if (canvas.querySelector('#currentRes') != null)
                         {
                           canvas.querySelector('#currentRes').remove();
