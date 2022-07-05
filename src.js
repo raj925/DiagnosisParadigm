@@ -63,6 +63,7 @@ class Structure {
         let out = [];
         let trial = 1;
         let subtrial = 1;
+	    console.log(subtrials);
         for(let i=0; i<len; i++) {
             out[i] = new Trial(i+1, {
                 trialID: trial,
@@ -77,11 +78,12 @@ class Structure {
             subtrial++;
             if (subtrial > subtrials)
             {
-                //this.trueConditions.push(scenarioObject[trial-1]["True Condition"]);
+                this.trueConditions.push(scenarioObject[trial-1]["True Condition"]);
                 trial++;
                 subtrial=1;
             }
         }
+	    console.log(out);
         return out;
     }
 
@@ -132,35 +134,6 @@ class Structure {
     saveQuestionnaire(trial)
     {
         //this.storePluginData(trial);
-
-        // let age = document.getElementById("input-0").value;
-        // let gender = document.getElementById("input-1").value;
-        // let medExp = document.getElementById("input-2").value;
-
-        // let errorStyle = "style='color: red;position: absolute;left: 50%;transform: translate(-50%, -50%);top: 60%;'";
-        // let ageError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
-        // ageError.innerHTML = "<div " + errorStyle + ">Please provide a valid age!</div>"
-        // ageError.classList.add('hidden');
-
-        // let expError = document.querySelector('div.jspsych-content-wrapper').appendChild(document.createElement('div'));
-        // expError.innerHTML = "<div " + errorStyle + ">Please provide medical experience as a number!</div>"
-        // expError.classList.add('hidden');
-
-        // if (!(parseInt(age) > 0))
-        // {
-        //     ageError.classList.remove('hidden');
-        //     return false;
-        // }
-        // else if (!(parseInt(medExp) > 0))
-        // {
-        //     expError.classList.remove('hidden');
-        //     return false;
-        // }
-        // else
-        // {
-        //     this.demoQuestionnaire = trial.response;
-        // }
-
         this.demoQuestionnaire = trial.response;
     }
 
@@ -224,18 +197,6 @@ class Structure {
         this.debrief = trial.response;
     }
 
-    saveDecisionQuestions(trial)
-    {
-        this.decisionQuestions = trial.question_order;
-        this.decisionAnswers = trial.response;
-    }
-
-    saveBigFiveQuestions(trial)
-    {
-        this.bigFiveQuestions = trial.question_order;
-        this.bigFiveAnswers = trial.response;
-    }
-
     // getConditions()
     // {
     //     let intro = "<p>Thank you again for participating in our experiment! You have now completed all patient cases!</p>"
@@ -251,17 +212,6 @@ class Structure {
             prompt = prompt + " " + this.currentSubtrial.prompt;
         }
         return prompt;
-    }
-
-    showCaseNumber()
-    {
-        let currentCase = this.currentSubtrial.trialID;
-        let text = "You are now on case " + currentCase + " of " + this.numOfTrials + ": ";
-        text = text + this.currentSubtrial.presentation;
-        let content = document.getElementById("jspsych-content");
-        let p = document.createElement("p");
-        p.innerHTML = text;
-        content.prepend(p);
     }
 
     processData(data) 
@@ -295,13 +245,13 @@ class Structure {
         participantData.trials = trialData;
 
         // Debrief stuff
-        participantData.debrief = data.debrief;
-        // if(typeof data.debrief !== 'undefined') {
-        //     if(data.debrief)
-        //     {
-        //         participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
-        //     }
-        // }
+        participantData.debrief = [];
+        if(typeof data.debrief !== 'undefined') {
+            if(data.debrief)
+            {
+                participantData.debrief = this.flattenDebriefData(data.debrief, participantData.id);
+            }
+        }
 
         return participantData;
     }
@@ -340,15 +290,6 @@ class Structure {
         out.confidence = trial.confidence;
         out.correct = out.trueCondition == out.finalDiagnosis ? 1 : 0;
         out.difficulty = this.difficulties[trialNum];
-        let treatment = trial.treatmentPlan;
-        if (!treatment || treatment.length === 0 )
-        {
-            out.treatmentPlan = "Not Provided";
-        }
-        else
-        {
-            out.treatmentPlan = trial.treatmentPlan;
-        }
 
         return out;
     }

@@ -62,8 +62,8 @@ $body = date('Y_m_d') . "_" . $id;
     }
     $filename = $folder . "/" . $body . ".json";
    // if(!$empty) {
-       // if (!file_exists($filename)) {
-    try {
+   //     if (!file_exists($filename)) {
+            try {
                 $handle = fopen($filename, "w+b");
                 stream_copy_to_stream(stripslashes(json_encode($json)), $handle);
                 fwrite($handle, stripslashes(json_encode($json)));
@@ -78,9 +78,9 @@ $body = date('Y_m_d') . "_" . $id;
                 fwrite($errorHandle, $e->getMessage());
                 fclose($errorHandle);
                 sulk("Unable to create file.", 500);
-       }
-      //  } else
-      //      sulk("File already exists!", 500);
+            }
+    //    } else
+    //        sulk("File already exists!", 500);
    // }
 //}
 // Send back the all clear

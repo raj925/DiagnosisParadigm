@@ -1,3 +1,9 @@
+/*
+* This is an altered version of the image-button-response plugin
+* It has been edited to allow for a dropdown selection of nested buttons.
+* It also allows certain data from a file to be shown on a button press.
+*/
+
 var jsPsychImageButtonResponse = (function (jspsych) {
   'use strict';
 
@@ -293,10 +299,10 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   var canvas = document.querySelector('#jspsych-content');
                   let img = display_element.querySelector("#jspsych-image-button-response-stimulus");
                   img.classList.add('hidden');
-                  if (canvas.querySelector('p') != null)
-                  {
-                    canvas.querySelector('p').remove();
-                  }
+                  // if (canvas.querySelector('p') != null)
+                  // {
+                  //   canvas.querySelector('p').remove();
+                  // }
                   if (canvas.querySelector('#currentRes') != null)
                   {
                     canvas.querySelector('#currentRes').remove();
@@ -307,7 +313,7 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                   }
                   display_element.querySelector("#jspsych-image-button-response-stimulus").className +=
                   " responded";
-                  if (txt == "RECORD DIAGNOSIS")
+                  if (txt == "ENTER DIFFERENTIALS")
                   {
                     var end_time = performance.now();
                     var rt = Math.round(end_time - start_time);
@@ -364,10 +370,10 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                       (response.tests).push(innerkey);
                       innerBtn.addEventListener("click", (e) => 
                       {
-                        if (canvas.querySelector('p') != null)
-                        {
-                          canvas.querySelector('p').remove();
-                        }
+                        // if (canvas.querySelector('p') != null)
+                        // {
+                        //   canvas.querySelector('p').remove();
+                        // }
                         if (canvas.querySelector('#currentRes') != null)
                         {
                           canvas.querySelector('#currentRes').remove();

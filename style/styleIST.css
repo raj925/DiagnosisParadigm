@@ -195,7 +195,7 @@ body, html {
   -ms-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  font-size: larger;
+  font-size: large;
 }
 
 a {
@@ -610,6 +610,69 @@ section.tutorial-section.section4 .tutorial-text#ISTc-tutorial-text4, .section.t
   color: gray !important;
 }
 
+input[type=range]{
+    -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #FFFFFF;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #015CC8;
+    margin-top: -4px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #FFFFFF;
+}
+
+input[type=range]{
+    /* fix for FF unable to apply focus style bug  */
+    /*border: 1px solid white; */
+
+    /*required for proper track sizing in FF*/
+    width: 300px;
+}
+
+input[type=range]::-moz-range-track {
+    height: 5px;
+    /*background: #FFFFFF;*/
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #015CC8;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+   /* outline: 1px solid white;*/
+    outline-offset: -1px;
+}
+
+input[type=range]:focus::-moz-range-track {
+    background: #ccc;
+}
+
 .question select {
   width: 35vw;
   height: 7vh;
@@ -740,6 +803,7 @@ button, .button {
   -webkit-user-drag: none;
   -webkit-user-select: none;
   font-size: large;
+  background-color: white;
 }
 
 div.jspsych-image-button-response-button button {
