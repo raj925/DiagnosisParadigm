@@ -6,7 +6,7 @@ lapply(requiredPackages, require, character.only = TRUE)
 wd <- dirname(rstudioapi::getSourceEditorContext()$path)
 source_python(paste(wd, '/', 'processFile.py', sep=""))
 ids <- list.dirs(wd,recursive = FALSE) 
-df <- data.frame(matrix(ncol = 0, nrow = 33))
+df <- data.frame(matrix(ncol = 0, nrow = 18))
 count <- 0
 
 infoStages <- c("Patient History", "Physical Exmination", "Testing")
@@ -102,7 +102,8 @@ for (n in 1:length(participantIDS))
   aggData$infoWhenSevere[n] <- mean(pptTrials[pptTrials$hasHighSeverity==TRUE,]$currentTests)
   aggData$infoWhenNotSevere[n] <- mean(pptTrials[pptTrials$hasHighSeverity==FALSE,]$currentTests)
   
-  fileName <- list.files(paste(wd, "/", id, "/", file, sep=""))[1]
+  files <- list.files(paste(wd, "/", id, sep="")) 
+  fileName <- files[1]
   fileName <- paste(wd, "/", id, "/", fileName, sep="")
   processFile(fileName)
   myData <- fromJSON(file=fileName)
@@ -295,22 +296,6 @@ t.test(aggData$infoWhenSevere, aggData$infoWhenNotSevere)
 
 
 ### Relationship between severity and likelihoods
-
-
-
-## Likelihood and severity data.
-## Demographic analysis
-
-## Per stage and per case:
-## Across experience::
-## Average Confidence (by stage)
-## Information requests
-## Starting + final differentials
-## Starting differentials as a function of information requests
-## Differentials as a function of confidence
-## Repeat tests as a function of confidence
-## Difficulty via total accuracy across all ppts
-## Mixed effects on confidence
-## How many differentials have been 'cut down' from start to finish?
-# What proportion of total info has been sought? 
-# Look at tests that have been requested in the previous stages
+### Information in severity should use proportion
+### Look in differentials provided - are they close?
+### 

@@ -72,6 +72,9 @@
     const randomiseTestOrder = true; // If true, shuffles the order of tests shown on screen for each trial and information stage. If false, the order is fixed to the order in which tests are shown in the scenario files.
     const runTutorial = true; // If true, runs a tutorial for the experiment before the main trials.
 
+    //////////////
+    // Future additions (?): multiple cases interleaved, out of order information
+
     //const endRedirectURL = 'https://www.oxstar.ox.ac.uk/'; //What URL to redirect to after the experiment.
     let URL = "end.html";
     let ID = window.location.search.match('[?&]ParticipantID=\\w+');
@@ -355,6 +358,7 @@
         scenarioObject: tutorialScenario,
         prompt: "<p>Below you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.",
         shuffle_buttons: randomiseTestOrder,
+        button_delay: 2000,
         on_load: ()=>{
             exp.fullscreenMode();
         },
@@ -371,6 +375,7 @@
     	scenarioObject: exp.currentSubtrial.trialInfoSet,
     	prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>",
         shuffle_buttons: randomiseTestOrder,
+        button_delay: 2000,
         on_load: ()=>{
             exp.fullscreenMode();
         },
@@ -447,7 +452,7 @@
         stimulus: '',
         labels: confidenceLabels,
         require_movement: true,
-        prompt: "<p>Once you have recorded your diagnosis list, you should indicate using the slider how confident you are that you have the information you would need to be ready to treat this patient.</p><p>Bear in mind that there are three stages of information gathering left for this patient, so it is fine to not be very confident yet! Make sure that you are recording your confidence as accurately as possible: try not to be overconfident or underconfident. You will not be able to proceed until you indicate your confidence.</p>",
+        prompt: "<p>Once you have recorded your diagnosis list, you should indicate using the slider how confident you are that you have the information you would need to be ready to treat this patient.</p><p>It is fine to not be very confident yet! Make sure that you are recording your confidence as accurately as possible: try not to be overconfident or underconfident. You will not be able to proceed until you indicate your confidence.</p>",
         response_ends_trial: true,
         text_prompt: "Record your treatment plan below.",
         text_placeholder: "Input your treatment plan (eg what further tests you would run, any advice or documentation you would seek)",
@@ -623,8 +628,9 @@
             choices: stageButtons,
             response_ends_trial: false,
             scenarioObject: tutorialScenario,
-            prompt: "<p>Above you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. </p><p> When you are done seeking information and ready to record differential diagnoses for the patient, click on ENTER DIFFERENTIALS.</p>",
+            prompt: "<p>Above you will find a series of tests or information that you can request.</p><p>Information is split into three stages: Patient History, Physical Examination and Testing. To start with, only Patient History is available to view. Click on Patient History to view the available information requests. Clicking on each will reveal that information on screen. The test result will take a little while to load. </p><p> When you are done seeking information and ready to record differential diagnoses for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
+            button_delay: 2000,
             on_load: ()=>{
                 exp.fullscreenMode();
             },
@@ -656,6 +662,7 @@
             scenarioObject: tutorialScenario,
             prompt: "<p>You will now find that the next stage of information, <strong>Physical Examination</strong>, is available to view. Click here to view the available information requests. You can also go back to remind yourself of information about the Patient History. </p><p> When you are done seeking information and ready to record your current diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
+            button_delay: 2000,
             on_load: ()=>{
                 exp.fullscreenMode();
             },
@@ -667,7 +674,7 @@
 
         var differentialDiagnosesTutorialStage2 = {
             type: jsPsychFreeTextRankedList,
-            prompt: "<p>You will notice that your diagnosis list from the first stage has been saved for you to now update given the extra information received via Physical Exmination of the patient.</p><p> As before, you can add diagnoses to the list using the plus icon.</p><p> <strong>If a diagnosis is no longer under consideration, you can use the cross icon on the right of the condition to remove it from the list. </strong> </p>",
+            prompt: "<p>You will notice that your diagnosis list from the first stage has been saved for you to now update given the extra information received via Physical Exmination of the patient.</p><p> As before, you can add diagnoses to the list using the plus icon.</p><p> <strong>If a diagnosis is no longer under consideration, you can use the cross icon on the right of the condition to remove it from the list. Make sure to update your differentials in the light of the new information you have received!</strong> </p>",
             slider_labels: sliderLabels,
             slider_start: 5,
             slider_prompt: sliderName,
@@ -719,6 +726,7 @@
             scenarioObject: tutorialScenario,
             prompt: "<p>Testing is now available, as well as the information from the previous two infomation stages.</p><p>This is the final stage of information gathering, where you can request test results, as well as all the previous information that has been made available about this patient.</p><p>For each patient case, you will have no limit to how much information you can gather. However, <strong> only request a piece of information if you believe it to be important for making your diagnostic decision.<p> Your performance will be better if you request only necessary tests. When you are done seeking information and ready to record diagnosis differentials for the patient, click on ENTER DIFFERENTIALS.</p>",
             shuffle_buttons: randomiseTestOrder,
+            button_delay: 2000,
             on_load: ()=>{
                 exp.fullscreenMode();
             },
@@ -836,6 +844,7 @@
                     scenarioObject: shuffledScenarios[x],
                     prompt: "<p>Click a button to gather information or click ENTER DIFFERENTIALS to report your final answer.</p>",
                     shuffle_buttons: randomiseTestOrder,
+                    button_delay: 2000,
                     on_load: ()=>{
                         exp.showCaseNumber();
                         exp.fullscreenMode();
@@ -853,7 +862,7 @@
                 {
                     var differentialDiagnosesStage = {
                         type: jsPsychFreeTextRankedList,
-                        prompt: "<p>Input your diagnoses</p>",
+                        prompt: "<p><strong>Update your diagnoses</strong></p>",
                         slider_labels: sliderLabels,
                         slider_start: 5,
                         slider_prompt: sliderName,

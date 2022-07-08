@@ -102,6 +102,11 @@ var jsPsychImageButtonResponse = (function (jspsych) {
             type: jspsych.ParameterType.BOOL,
             pretty_name: "Shuffle Buttons",
             default: false,
+          },
+          button_delay : {
+            type:jspsych.ParameterType.INT,
+            pretty_name: "Button Delay",
+            default: 0,
           }
       },
   };
@@ -397,10 +402,33 @@ var jsPsychImageButtonResponse = (function (jspsych) {
                         else
                         {
                           // need to add different test results depending on image/text/audio
-                          let testRes = innerBtn.appendChild(document.createElement("p"));
-                          testRes.innerHTML = output
-                          testRes.id = "currentRes";
-                          testRes.style = "color: blue;";
+                          if (trial.button_delay == 0)
+                          {
+                            let testRes = innerBtn.appendChild(document.createElement("p"));
+                            testRes.innerHTML = output
+                            testRes.id = "currentRes";
+                            testRes.style = "color: blue;";
+                          }
+                          else
+                          {
+                            // prevent multiple being clicked whilst loading.
+                            if (canvas.querySelector('#loading') == null)
+                            {
+                              let loading = innerBtn.appendChild(document.createElement("img"));
+                              loading.id = "loading";
+                              loading.src = "./assets/loading.gif";
+                              loading.style = "height: 2em; width: 2em";
+                              setTimeout(function(){
+                                var canvas = document.querySelector('#jspsych-content');
+                                canvas.querySelector('#loading').remove();
+                                let testRes = innerBtn.appendChild(document.createElement("p"));
+                                testRes.innerHTML = output
+                                testRes.id = "currentRes";
+                                testRes.style = "color: blue;";
+
+                              },trial.button_delay);
+                            }
+                          }
                         }
                       });
                       count = count + 1;
